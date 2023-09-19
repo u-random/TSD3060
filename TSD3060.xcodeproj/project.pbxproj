@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4F9DD4272AB9E79C00228689 /* HttpStatus.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD4192AB9E79C00228689 /* HttpStatus.c */; };
-		4F9DD4282AB9E79C00228689 /* ArgumentParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD41D2AB9E79C00228689 /* ArgumentParser.c */; };
-		4F9DD4292AB9E79C00228689 /* Server.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD41E2AB9E79C00228689 /* Server.c */; };
-		4F9DD42A2AB9E79C00228689 /* Mime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD41F2AB9E79C00228689 /* Mime.c */; };
-		4F9DD42B2AB9E79C00228689 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD4202AB9E79C00228689 /* main.c */; };
-		4F9DD42C2AB9E79C00228689 /* Config.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD4212AB9E79C00228689 /* Config.c */; };
-		4F9DD42D2AB9E79C00228689 /* Http.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD4232AB9E79C00228689 /* Http.c */; };
-		4F9DD42E2AB9E79C00228689 /* File.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD4242AB9E79C00228689 /* File.c */; };
+		4FAEEB542ABA009F00FCFB13 /* HttpStatus.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD4192AB9E79C00228689 /* HttpStatus.c */; };
+		4FAEEB552ABA009F00FCFB13 /* ArgumentParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD41D2AB9E79C00228689 /* ArgumentParser.c */; };
+		4FAEEB562ABA009F00FCFB13 /* Server.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD41E2AB9E79C00228689 /* Server.c */; };
+		4FAEEB572ABA009F00FCFB13 /* Mime.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD41F2AB9E79C00228689 /* Mime.c */; };
+		4FAEEB582ABA009F00FCFB13 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD4202AB9E79C00228689 /* main.c */; };
+		4FAEEB592ABA009F00FCFB13 /* Config.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD4212AB9E79C00228689 /* Config.c */; };
+		4FAEEB5A2ABA009F00FCFB13 /* Http.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD4232AB9E79C00228689 /* Http.c */; };
+		4FAEEB5B2ABA009F00FCFB13 /* File.c in Sources */ = {isa = PBXBuildFile; fileRef = 4F9DD4242AB9E79C00228689 /* File.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,7 +30,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4F5D96612AA4DBD0004B386E /* TSD3060-1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "TSD3060-1"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F5D96612AA4DBD0004B386E /* TSD3060 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TSD3060; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F9DD40B2AB9E4BC00228689 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		4F9DD40D2AB9E4BC00228689 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		4F9DD4182AB9E79C00228689 /* Mime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mime.h; sourceTree = "<group>"; };
@@ -76,7 +76,7 @@
 		4F5D96622AA4DBD0004B386E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4F5D96612AA4DBD0004B386E /* TSD3060-1 */,
+				4F5D96612AA4DBD0004B386E /* TSD3060 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,7 +88,6 @@
 				4F9DD4192AB9E79C00228689 /* HttpStatus.c */,
 				4F9DD41A2AB9E79C00228689 /* Http.h */,
 				4F9DD41B2AB9E79C00228689 /* Config.h */,
-				4F9DD41C2AB9E79C00228689 /* File.h */,
 				4F9DD41D2AB9E79C00228689 /* ArgumentParser.c */,
 				4F9DD41E2AB9E79C00228689 /* Server.c */,
 				4F9DD41F2AB9E79C00228689 /* Mime.c */,
@@ -96,6 +95,7 @@
 				4F9DD4212AB9E79C00228689 /* Config.c */,
 				4F9DD4222AB9E79C00228689 /* HttpStatus.h */,
 				4F9DD4232AB9E79C00228689 /* Http.c */,
+				4F9DD41C2AB9E79C00228689 /* File.h */,
 				4F9DD4242AB9E79C00228689 /* File.c */,
 				4F9DD4252AB9E79C00228689 /* Server.h */,
 				4F9DD4262AB9E79C00228689 /* ArgumentParser.h */,
@@ -106,9 +106,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4F5D96602AA4DBD0004B386E /* TSD3060-1 */ = {
+		4F5D96602AA4DBD0004B386E /* TSD3060 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4F5D96682AA4DBD0004B386E /* Build configuration list for PBXNativeTarget "TSD3060-1" */;
+			buildConfigurationList = 4F5D96682AA4DBD0004B386E /* Build configuration list for PBXNativeTarget "TSD3060" */;
 			buildPhases = (
 				4F5D965D2AA4DBD0004B386E /* Sources */,
 				4F5D965E2AA4DBD0004B386E /* Frameworks */,
@@ -118,9 +118,9 @@
 			);
 			dependencies = (
 			);
-			name = "TSD3060-1";
-			productName = "TSD3060-Webserver-1";
-			productReference = 4F5D96612AA4DBD0004B386E /* TSD3060-1 */;
+			name = TSD3060;
+			productName = "TSD3060";
+			productReference = 4F5D96612AA4DBD0004B386E /* TSD3060 */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -149,7 +149,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4F5D96602AA4DBD0004B386E /* TSD3060-1 */,
+				4F5D96602AA4DBD0004B386E /* TSD3060 */,
 			);
 		};
 /* End PBXProject section */
@@ -159,14 +159,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4F9DD42B2AB9E79C00228689 /* main.c in Sources */,
-				4F9DD42D2AB9E79C00228689 /* Http.c in Sources */,
-				4F9DD4272AB9E79C00228689 /* HttpStatus.c in Sources */,
-				4F9DD4282AB9E79C00228689 /* ArgumentParser.c in Sources */,
-				4F9DD4292AB9E79C00228689 /* Server.c in Sources */,
-				4F9DD42A2AB9E79C00228689 /* Mime.c in Sources */,
-				4F9DD42C2AB9E79C00228689 /* Config.c in Sources */,
-				4F9DD42E2AB9E79C00228689 /* File.c in Sources */,
+				4FAEEB542ABA009F00FCFB13 /* HttpStatus.c in Sources */,
+				4FAEEB552ABA009F00FCFB13 /* ArgumentParser.c in Sources */,
+				4FAEEB562ABA009F00FCFB13 /* Server.c in Sources */,
+				4FAEEB572ABA009F00FCFB13 /* Mime.c in Sources */,
+				4FAEEB582ABA009F00FCFB13 /* main.c in Sources */,
+				4FAEEB592ABA009F00FCFB13 /* Config.c in Sources */,
+				4FAEEB5A2ABA009F00FCFB13 /* Http.c in Sources */,
+				4FAEEB5B2ABA009F00FCFB13 /* File.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,18 +287,24 @@
 		4F5D96692AA4DBD0004B386E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = $SRCROOT;
+				DEVELOPMENT_TEAM = "";
+				HEADER_SEARCH_PATHS = $SRCROOT/Source;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
 		4F5D966A2AA4DBD0004B386E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				HEADER_SEARCH_PATHS = $SRCROOT;
+				DEVELOPMENT_TEAM = "";
+				HEADER_SEARCH_PATHS = $SRCROOT/Source;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
@@ -314,7 +320,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4F5D96682AA4DBD0004B386E /* Build configuration list for PBXNativeTarget "TSD3060-1" */ = {
+		4F5D96682AA4DBD0004B386E /* Build configuration list for PBXNativeTarget "TSD3060" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4F5D96692AA4DBD0004B386E /* Debug */,

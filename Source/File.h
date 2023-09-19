@@ -14,6 +14,7 @@ bool File_is_directory(const char *path);
 const char *File_mimeType(const char *path);
 const char *File_extension(const char *path);
 const char *File_basename(const char *path);
+const char *File_dirname(char *path);
 off_t File_size(const char *path);
 void File_writePidFile(void);
 void File_removePidFile(void);

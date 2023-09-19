@@ -17,7 +17,7 @@ const char *Program_Name;
 int main (int argc, char **argv) {
     setlocale(LC_ALL, ""); // Set the locale to ALL, see https://man7.org/linux/man-pages/man3/setlocale.3.html
     Program_Name = File_basename(*argv);
-
+    
     Server_init(); // Setup global Server object
     switch(ArgumentParser_handleArguments(argc, argv)) {
         case action_start:

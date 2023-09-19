@@ -54,6 +54,19 @@ const char *File_basename(const char *path) {
         return path;
 }
 
+const char *File_dirname(char *path) {
+    if (STRING_DEFINED(path)) {
+        char *d = strrchr(path, '/');
+        if (d)
+            *(d+1) = '\0'; /* Keep last separator */
+        else {
+            path[0] = '.';
+            path[1] = 0;
+        }
+    }
+    return NULL;
+}
+
 off_t File_size(const char *path) {
     if (path) {
         struct stat buf;

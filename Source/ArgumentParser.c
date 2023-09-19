@@ -14,7 +14,7 @@
 void ArgumentParser_help(void) {
     printf("Usage: %s [options] {arguments}\n", Program_Name);
     printf("Options are as follows:\n");
-    printf("  -d dir     Specify document root for server\n");
+    printf("  -d dir     Specify distribution root for server\n");
     printf("  -r dir     Specify directory for pid file\n");
     printf("  -p port    Port number for server\n");
     printf("  -l path    Specify path to logfile\n");
@@ -31,15 +31,28 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
     
     int opt;
     opterr = 0;
+    char buf[PATH_MAX] = {};
+    char dist_root[PATH_MAX] = {};
     while ((opt = getopt(argc, argv, "d:r:p:l:ih")) != -1) { // Required options seperated by colon
         switch (opt) {
             case 'd':
                 if (optarg != NULL) {
-                    if (!File_is_directory(optarg)) {
-                        fprintf(stderr, "Error: document root '%s' does not exist or is not a directory\n", optarg);
+                    realpath(optarg, dist_root); // Writes real path for optarg to distribution_root
+                    if (!File_is_directory(dist_root)) {
+                        fprintf(stderr, "Error: distribution root '%s' does not exist or is not a directory\n", optarg);
                         exit(1);
                     }
-                    Server.document_root = optarg;
+                    // Create real document root
+                    snprintf(buf, PATH_MAX, "%s/var/www", dist_root);
+                    if (!File_is_directory(buf)) {
+                        fprintf(stderr, "Error: document root '%s' does not exist or is not a directory\n", buf);
+                        exit(1);
+                    }
+                    Server.document_root = strdup(buf);
+                    // TODO: Create real pid directory
+                    //Server.pid_dir = TODO
+                    // TODO: Create log path and open log
+                    //Server.log = TODO
                 } else {
                     fprintf(stderr, "Error: no document root specified\n");
                     exit(1);
@@ -57,6 +70,18 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
                     exit(1);
                 }
                 break;
+            case 'l':
+                if (optarg != NULL) {
+                    Server.log = fopen(optarg, "a");
+                    if (Server.log == NULL) {
+                        fprintf(stderr, "Error: cannot open log file '%s'\n", optarg);
+                        exit(1);
+                    }
+                } else {
+                    fprintf(stderr, "Error: no log file specified\n");
+                    exit(1);
+                }
+                break;
             case 'p':
                 if (optarg != NULL) { // Test if port argument is given
                     int port_number = atoi(optarg); // convert string to int
@@ -67,18 +92,6 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
                     Server.bind_port = port_number;
                 } else {
                     fprintf(stderr, "Error: no port specified\n");
-                    exit(1);
-                }
-                break;
-            case 'l':
-                if (optarg != NULL) {
-                    Server.log = fopen(optarg, "a");
-                    if (Server.log == NULL) {
-                        fprintf(stderr, "Error: cannot open log file '%s'\n", optarg);
-                        exit(1);
-                    }
-                } else {
-                    fprintf(stderr, "Error: no log file specified\n");
                     exit(1);
                 }
                 break;
@@ -116,8 +129,11 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
             // Check that Required options are set
             if (!Server.document_root)
                 Config_error(stderr, "Error: Required option -d document root not set\n");
-            if (!Server.pid_dir)
-                Config_error(stderr, "Error: Required option -r pid-file not set\n");
+            // Compute Server.pid_dir by concatinating Server.dist_root <- rename Server.document_root
+            if (!Server.pid_dir) {
+                snprintf(buf, PATH_MAX, "%s/var/run/", Server.document_root);
+                Server.pid_dir = strdup(buf);
+            }
             if (!Server.bind_port)
                 Config_error(stderr, "Error: Required option -p Port number not set\n");
             if (!Server.log)
