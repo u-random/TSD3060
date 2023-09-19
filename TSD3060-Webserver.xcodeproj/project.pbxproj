@@ -136,7 +136,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4F5D965C2AA4DBD0004B386E /* Build configuration list for PBXProject "TSD3060-Webserver-1" */;
+			buildConfigurationList = 4F5D965C2AA4DBD0004B386E /* Build configuration list for PBXProject "TSD3060-Webserver" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -305,7 +305,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4F5D965C2AA4DBD0004B386E /* Build configuration list for PBXProject "TSD3060-Webserver-1" */ = {
+		4F5D965C2AA4DBD0004B386E /* Build configuration list for PBXProject "TSD3060-Webserver" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4F5D96662AA4DBD0004B386E /* Debug */,
