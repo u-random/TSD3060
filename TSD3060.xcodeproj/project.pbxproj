@@ -30,7 +30,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4F5D96612AA4DBD0004B386E /* TSD3060-Webserver-1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "TSD3060-Webserver-1"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F5D96612AA4DBD0004B386E /* TSD3060-1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "TSD3060-1"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F9DD40B2AB9E4BC00228689 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		4F9DD40D2AB9E4BC00228689 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		4F9DD4182AB9E79C00228689 /* Mime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mime.h; sourceTree = "<group>"; };
@@ -76,7 +76,7 @@
 		4F5D96622AA4DBD0004B386E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4F5D96612AA4DBD0004B386E /* TSD3060-Webserver-1 */,
+				4F5D96612AA4DBD0004B386E /* TSD3060-1 */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -106,9 +106,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4F5D96602AA4DBD0004B386E /* TSD3060-Webserver-1 */ = {
+		4F5D96602AA4DBD0004B386E /* TSD3060-1 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4F5D96682AA4DBD0004B386E /* Build configuration list for PBXNativeTarget "TSD3060-Webserver-1" */;
+			buildConfigurationList = 4F5D96682AA4DBD0004B386E /* Build configuration list for PBXNativeTarget "TSD3060-1" */;
 			buildPhases = (
 				4F5D965D2AA4DBD0004B386E /* Sources */,
 				4F5D965E2AA4DBD0004B386E /* Frameworks */,
@@ -118,9 +118,9 @@
 			);
 			dependencies = (
 			);
-			name = "TSD3060-Webserver-1";
+			name = "TSD3060-1";
 			productName = "TSD3060-Webserver-1";
-			productReference = 4F5D96612AA4DBD0004B386E /* TSD3060-Webserver-1 */;
+			productReference = 4F5D96612AA4DBD0004B386E /* TSD3060-1 */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -136,7 +136,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4F5D965C2AA4DBD0004B386E /* Build configuration list for PBXProject "TSD3060-Webserver" */;
+			buildConfigurationList = 4F5D965C2AA4DBD0004B386E /* Build configuration list for PBXProject "TSD3060" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -149,7 +149,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4F5D96602AA4DBD0004B386E /* TSD3060-Webserver-1 */,
+				4F5D96602AA4DBD0004B386E /* TSD3060-1 */,
 			);
 		};
 /* End PBXProject section */
@@ -305,7 +305,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4F5D965C2AA4DBD0004B386E /* Build configuration list for PBXProject "TSD3060-Webserver" */ = {
+		4F5D965C2AA4DBD0004B386E /* Build configuration list for PBXProject "TSD3060" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4F5D96662AA4DBD0004B386E /* Debug */,
@@ -314,7 +314,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4F5D96682AA4DBD0004B386E /* Build configuration list for PBXNativeTarget "TSD3060-Webserver-1" */ = {
+		4F5D96682AA4DBD0004B386E /* Build configuration list for PBXNativeTarget "TSD3060-1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4F5D96692AA4DBD0004B386E /* Debug */,
