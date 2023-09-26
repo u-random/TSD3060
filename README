@@ -21,21 +21,21 @@ Distribution/
             etc/mime.types
 
 The program takes the following arguments and options:
--d dir     Specify distribution root for the server
+-r dir     Specify distribution root for the server
 -p port    Port number for server
 -i         Server runs non-daemonized
--h         This help text
+-v         Version information
+-d         Write extra debug info
+-h         Prints help text
 
 
 START the server from directory: (You need to use the path to your TSD3060 directory where relevant)
 ./TSD3060 \
--d Distribution \
+-r Distribution \
 -p 55556 \
 -i \
 start
 
 
 STOP server from directory: (You only need pid file directory as a parameter here)
-./TSD3060 -d Distribution stop
-
-// TODO: Server does no longer accept cmd^C as quit parameter, need to fix
+./TSD3060 -r Distribution stop
