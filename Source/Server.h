@@ -11,11 +11,12 @@
 typedef struct Server_T {
     int bind_port;
     int back_log;
-    char *document_root;
-    char *pid_dir;
+    char *web_root;
+    char *pid_directory;
     FILE *log;
     int socket_descriptor;
     bool is_daemon;
+    bool debug;
     bool stop;
     
 } Server_T;

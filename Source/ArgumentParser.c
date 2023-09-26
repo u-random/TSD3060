@@ -14,11 +14,11 @@
 void ArgumentParser_help(void) {
     printf("Usage: %s [options] {arguments}\n", Program_Name);
     printf("Options are as follows:\n");
-    printf("  -d dir     Specify distribution root for server\n");
-    printf("  -r dir     Specify directory for pid file\n");
+    printf("  -r dir     Specify distribution root for server\n");
     printf("  -p port    Port number for server\n");
-    printf("  -l path    Specify path to logfile\n");
+    printf("  -d         Print debug info\n");
     printf("  -i         Server runs non-daemonized\n");
+    printf("  -v         Print Version information\n");
     printf("  -h         This help text\n");
     printf("Arguments are:\n");
     printf("  start      Start server (default)\n");
@@ -31,55 +31,54 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
     
     int opt;
     opterr = 0;
-    char buf[PATH_MAX] = {};
-    char dist_root[PATH_MAX] = {};
-    while ((opt = getopt(argc, argv, "d:r:p:l:ih")) != -1) { // Required options seperated by colon
+    char buffer[PATH_MAX] = {};
+    char distribution_root[PATH_MAX] = {}; // Transient
+    
+    while ((opt = getopt(argc, argv, "r:p:divh")) != -1) { // Required options seperated by colon
         switch (opt) {
-            case 'd':
-                if (optarg != NULL) {
-                    realpath(optarg, dist_root); // Writes real path for optarg to distribution_root
-                    if (!File_is_directory(dist_root)) {
-                        fprintf(stderr, "Error: distribution root '%s' does not exist or is not a directory\n", optarg);
-                        exit(1);
-                    }
-                    // Create real document root
-                    snprintf(buf, PATH_MAX, "%s/var/www", dist_root);
-                    if (!File_is_directory(buf)) {
-                        fprintf(stderr, "Error: document root '%s' does not exist or is not a directory\n", buf);
-                        exit(1);
-                    }
-                    Server.document_root = strdup(buf);
-                    // TODO: Create real pid directory
-                    //Server.pid_dir = TODO
-                    // TODO: Create log path and open log
-                    //Server.log = TODO
-                } else {
-                    fprintf(stderr, "Error: no document root specified\n");
-                    exit(1);
-                }
-                break;
             case 'r':
                 if (optarg != NULL) {
-                    if (!File_is_directory(optarg)) {
-                        fprintf(stderr, "Error: pid-file directory '%s' does not exist or is not a directory\n", optarg);
+                    // MARK: - Write real path for optarg to distribution_root
+                    realpath(optarg, distribution_root);
+                    if (!File_is_directory(distribution_root)) {
+                        fprintf(stderr, "Error: Distribution root '%s' does not exist or is not a directory\n", optarg);
                         exit(1);
                     }
-                    Server.pid_dir = optarg;
-                } else {
-                    fprintf(stderr, "Error: no pid-file directory specified\n");
-                    exit(1);
-                }
-                break;
-            case 'l':
-                if (optarg != NULL) {
-                    Server.log = fopen(optarg, "a");
+                    
+                    // MARK: - Test web root
+                    // Sets buffer to web root
+                    snprintf(buffer, PATH_MAX, "%s/var/www", distribution_root);
+                    if (!File_is_directory(buffer)) {
+                        fprintf(stderr, "Error: Web root '%s' does not exist or is not a directory\n", buffer);
+                        exit(1);
+                    }
+                    // Sets distribution root to buffer
+                    Server.web_root = strdup(buffer);
+                    
+                    // MARK: - Test and Setup pid_directory
+                    // Sets buffer to run path
+                    snprintf(buffer, PATH_MAX, "%s/var/run", distribution_root);
+                    if (!File_is_directory(buffer)) {
+                        fprintf(stderr, "Error: Given PID directory: '%s' does not exist or is not a directory\n", buffer);
+                        exit(1);
+                    }
+                    // Sets run directory to buffer
+                    Server.pid_directory = strdup(buffer);
+                                        
+                    // MARK: - Test and open log file
+                    // Sets buffer to log path
+                    snprintf(buffer, PATH_MAX, "%s/var/log", distribution_root);
+                    if (!File_is_directory(buffer)) {
+                        fprintf(stderr, "Error: Log directory '%s' does not exist or is not a directory\n", buffer);
+                        exit(1);
+                    }
+                    // Sets buffer to log file
+                    snprintf(buffer, PATH_MAX, "%s/var/log/debug.log", distribution_root);
+                    Server.log = fopen(strdup(buffer), "a");
                     if (Server.log == NULL) {
-                        fprintf(stderr, "Error: cannot open log file '%s'\n", optarg);
+                        fprintf(stderr, "Error: Cannot open log file '%s'\n", optarg);
                         exit(1);
                     }
-                } else {
-                    fprintf(stderr, "Error: no log file specified\n");
-                    exit(1);
                 }
                 break;
             case 'p':
@@ -98,12 +97,16 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
             case 'i':
                 Server.is_daemon = false;
                 break;
+            case 'd':
+                Server.debug = true;
+                break;
+            case 'v':
+                printf("%s version 1.0\n", Program_Name);
+                break;
             case '?':
                 switch(optopt) {
-                    case 'd':
-                    case 'p':
-                    case 'l':
                     case 'r':
+                    case 'p':
                     {
                         fprintf(stderr, "%s: option %c -- requires an argument\n", Program_Name, optopt);
                         break;
@@ -123,32 +126,22 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
         }
     }
     
+    // MARK: - Check that Required options are set
+    if (STRING_UNDEFINED(distribution_root))
+        Config_error(stderr, "Error: Required option -r distribution root not set\n");
     
-    if (optind < argc) { // the optind variable (another global variable set by getopt()) will contain the index of the next argument to be processed. This is used to parse the "start" or "stop" argument.
+    // MARK: - What that is done at start parameter
+    if (optind < argc) {
         if (strcasecmp(argv[optind], "start") == 0) {
-            // Check that Required options are set
-            if (!Server.document_root)
-                Config_error(stderr, "Error: Required option -d document root not set\n");
-            // Compute Server.pid_dir by concatinating Server.dist_root <- rename Server.document_root
-            if (!Server.pid_dir) {
-                snprintf(buf, PATH_MAX, "%s/var/run/", Server.document_root);
-                Server.pid_dir = strdup(buf);
-            }
-            if (!Server.bind_port)
-                Config_error(stderr, "Error: Required option -p Port number not set\n");
-            if (!Server.log)
-                Config_error(stderr, "Error: Required option -l log file not set\n");
-            return action_start;
+            // Empty
         } else if (strcasecmp(argv[optind], "stop") == 0) {
-            // Check that Required options are set
-            if (!Server.pid_dir)
-                Config_error(stderr, "Error: Please specify argument -r for pid-file to use for quitting\n");
             return action_stop;
-        } else { // Here it exits and provides the help if no action command is given
-            ArgumentParser_help();
-            exit(1);
+        } else {
+            Config_error(stderr, "Error: Unknown argument '%s'\n", argv[optind]);
         }
     }
-    
-    return action_start; // default action
+    // Default action is start
+    if (Server.bind_port <= 0)
+        Config_error(stderr, "Error: Required option -p Port number not set\n");
+    return action_start;
 }

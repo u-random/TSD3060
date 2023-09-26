@@ -44,4 +44,7 @@ extern Server_T Server;                         // Global variable for Server ty
 // Write an error message and exit
 void Config_error(FILE *stream, const char *error, ...);
 
+// Write a debug message to stream
+void Config_debug(FILE *stream, const char *message, ...);
+
 #endif /* Config_h */

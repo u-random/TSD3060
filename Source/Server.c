@@ -139,6 +139,7 @@ void Server_start(void) {
         if (client_socket < 0) {
             if (Server.stop)
                 break;
+            continue;
         }
         
         pid_t pid = fork();
@@ -166,6 +167,7 @@ void Server_start(void) {
     }
     // Shutdown server
     fprintf(Server.log, "Received shutdown signal - closing down..\n");
+    fprintf(stdout, "\nReceived shutdown signal - closing down..\n");
     shutdown(Server.socket_descriptor, SHUT_RDWR);
     if(Server.log) {
         fclose(Server.log);

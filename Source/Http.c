@@ -114,7 +114,7 @@ Request_T Http_handleRequest(Request_T request) {
         Http_sendError(request, SC_NOT_FOUND, "Requested file is not an \"asis\" file\n");
     }
     char buffer[PATH_MAX] = {};
-    snprintf(buffer, sizeof(buffer), "%s/%s", Server.document_root, request->path);
+    snprintf(buffer, sizeof(buffer), "%s/%s", Server.web_root, request->path);
     // Does file exist?
     if (!File_exist(buffer)) {
         Http_sendError(request, SC_NOT_FOUND, "Requested file not found\n");

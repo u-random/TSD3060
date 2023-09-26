@@ -11,3 +11,30 @@ Received shutdown signal - closing down..
 Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060-Webserver-1/TSD3060-Webserver-1/dist/var/run/TSD3060-Webserver-1.pid'
 Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060-Webserver-1/TSD3060-Webserver-1/dist/var/run/TSD3060-Webserver-1.pid'
 Could not open pid file 'Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Starting server with pid: 6861
+Error: 404 Not Found - Requested file is not an "asis" file
+
+Starting server with pid: 6934
+Error: 404 Not Found - Requested file is not an "asis" file
+
+Starting server with pid: 6934
+Error: 404 Not Found - Requested file is not an "asis" file
+
+Starting server with pid: 6934
+Received shutdown signal - closing down..
+Starting server with pid: 6953
+Received shutdown signal - closing down..
+Starting server with pid: 7003
+Received shutdown signal - closing down..
+Starting server with pid: 7062
+Received shutdown signal - closing down..

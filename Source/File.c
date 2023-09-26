@@ -80,7 +80,7 @@ off_t File_size(const char *path) {
 void File_writePidFile(void) {
     char path[PATH_MAX];
     // Write path to pid-file by concatinating pid.dir and Program_Name
-    snprintf(path, PATH_MAX, "%s/%s.pid", Server.pid_dir, Program_Name);
+    snprintf(path, PATH_MAX, "%s/%s.pid", Server.pid_directory, Program_Name);
     FILE *pidFile = fopen(path, "w");
     if (!pidFile) {
         Config_error(Server.log, "Could not write pid file '%s'\n", path);
@@ -92,17 +92,19 @@ void File_writePidFile(void) {
 void File_removePidFile(void) {
     char path[PATH_MAX];
     // Write path to pid-file by concatinating pid.dir and Program_Name
-    snprintf(path, PATH_MAX, "%s/%s.pid", Server.pid_dir, Program_Name);
+    snprintf(path, PATH_MAX, "%s/%s.pid", Server.pid_directory, Program_Name);
     unlink(path); // Delete pid file
 }
 
 pid_t File_readPidFile(void) {
-    char path[PATH_MAX];
+    char path[PATH_MAX] = {};
     // Write path to pid-file by concatinating pid.dir and Program_Name
-    snprintf(path, PATH_MAX, "%s/%s.pid", Server.pid_dir, Program_Name);
+    snprintf(path, PATH_MAX, "%s/%s.pid", Server.pid_directory, Program_Name);
     FILE *pidFile = fopen(path, "r");
-    if (!pidFile)
-        Config_error(Server.log, "Could not open pid file '%s'\n", path);
+    if (!pidFile) {
+        Config_debug(Server.log, "Could not open pid file '%s'\n", path);
+        return -1;
+    }
     pid_t pid = -1;
     if (fscanf(pidFile, "%d", &pid) != 1)
         Config_error(Server.log, "Could not read pid from '%s'\n", path);

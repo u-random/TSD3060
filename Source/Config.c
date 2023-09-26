@@ -16,3 +16,15 @@ void Config_error(FILE *stream, const char *error, ...) {
     va_end(ap);
     _exit(1);
 }
+
+
+void Config_debug(FILE *stream, const char *message, ...) {
+    if (Server.debug) {
+        va_list ap;
+        va_start(ap, message);
+        vfprintf(stream, message, ap);
+        fflush(stream);
+        va_end(ap);
+    }
+}
+
