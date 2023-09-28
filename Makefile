@@ -22,4 +22,4 @@ $(PROG): $(OBJS)
 
 .PHONY: clean
 clean:
-	rm -f *.o $(PROG)
+	rm -f $(OBJS) $(PROG)
