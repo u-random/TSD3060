@@ -52,6 +52,10 @@ void Mime_initiate(void) {
         if (sscanf(line, "%255s %255[^\n]", mime_type, file_extensions) != 2) {
             continue;
         }
+        // TODO: if more than one file extension make an entry per extension
+        // i.e. do sscanf on file_extensions
+        // e.g. extension = "xhtml xhtm xml" make an entry for each extension
+        // entry must have one mime_type and one and only one file extension.
         if (mime_table.size >= MAX_MIME_TYPES) {
             Config_error(stderr, "Too many mime types, increase MAX_MIME_TYPES\n");
         }
@@ -72,8 +76,7 @@ const char *Mime_get(const char* extension) {
 
     for (size_t i = 0; i < mime_table.size; i++) {
         MimeEntry entry = mime_table.entries[i];
-        // TODO: Don't use substr parsing or improve it as extension "html" matches "xhtml"
-        if (strstr(entry.file_extensions, extension)) {
+        if (strcasecmp(entry.file_extensions, extension)) {
             return entry.mime_type;
         }
     }
