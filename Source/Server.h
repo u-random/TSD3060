@@ -11,6 +11,7 @@
 typedef struct Server_T {
     int bind_port;
     int back_log;
+    char *distribution_root; 
     char *web_root;
     char *pid_directory;
     FILE *log;

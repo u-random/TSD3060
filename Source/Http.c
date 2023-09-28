@@ -45,7 +45,7 @@ char *Http_date(char *result, int size) {
 
 
 
-// Creates new header and adds it to the end of the headers list in Request_T (Fra Phind)
+// Creates new header and adds it to the end of the headers list in Request_T
 void Http_addHeader(Header_T headers, char *name, char *value) {
     Header_T new_header = malloc(sizeof(*new_header));      // Create a new header node with malloc
     new_header->name = strdup(name);                        // Copies "name" from input with strdup
@@ -108,35 +108,41 @@ Request_T Http_getRequest(Request_T request, Response_T response) {
 
 // Handle Request: find file, check if it exists and set real path
 Request_T Http_handleRequest(Request_T request) {
-    // TODO: Make compatible with meme.types extentions
-    // Check that file extension is .asis
-    if (!File_is_asis(request->path)) {
-        Http_sendError(request, SC_NOT_FOUND, "Requested file is not an \"asis\" file\n");
-    }
     char buffer[PATH_MAX] = {};
+    Response_T response = request->response;
+    // 1. Does file exist in the file system?
+    // TODO: Handle request->path to directory (add index.html):
+    // 1: If request->path == '/' then add index.html as file
+    // 2: If request->path is directory but do not end with slash
     snprintf(buffer, sizeof(buffer), "%s/%s", Server.web_root, request->path);
-    // Does file exist?
     if (!File_exist(buffer)) {
         Http_sendError(request, SC_NOT_FOUND, "Requested file not found\n");
     }
     request->file_path = strdup(buffer);
+    // 2. Does it have a known mime type? Otherwise set mime type to text/plain
+    response->mime_type = File_mimeType(request->file_path);
+    if (!response->mime_type) {
+        response->mime_type = "text/plain";
+    }
     return request;
 }
-
 
 
 // Write response (write headers, write file)
 size_t Http_writeResponse(Request_T request) {
     char buffer[1500]; // One TCP frame
+    const char now[STRLEN] = "Thu, 28 Sep 2023 18:06:49 GMT"; // TODO: Calculate date now on this format
     Response_T response = request->response;
     FILE *file = fopen(request->file_path, "r");
     if (!file) {
         Http_sendError(request, SC_INTERNAL_SERVER_ERROR, "Could not open requested file for reading\n");
     }
     // Write the response headers
-    fprintf(response->output_stream, "HTTP/1.1 %d %s\r\n", response->http_status, HttpStatus_description(response->http_status));
-    fprintf(response->output_stream, "Content-Type: text/plain\r\n");
-    fprintf(response->output_stream, "Content-Length: %lld\r\n", (long long)File_size(request->file_path));
+    fprintf(response->output_stream, "%s %d %s\r\n", request->http_version, response->http_status, HttpStatus_description(response->http_status));
+    fprintf(response->output_stream, "Date: %s\r\n", now);
+    fprintf(response->output_stream, "Server: %s\r\n", Program_Name);
+    fprintf(response->output_stream, "Content-Type: %s\r\n", response->mime_type);
+    fprintf(response->output_stream, "Content-Length: %lld\r\n", File_size(request->file_path));
     fprintf(response->output_stream, "Connection: close\r\n");
     fprintf(response->output_stream, "\r\n");
     // Read and send file to our output_stream

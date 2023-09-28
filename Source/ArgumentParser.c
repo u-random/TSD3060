@@ -32,32 +32,33 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
     int opt;
     opterr = 0;
     char buffer[PATH_MAX] = {};
-    char distribution_root[PATH_MAX] = {}; // Transient
     
     while ((opt = getopt(argc, argv, "r:p:divh")) != -1) { // Required options seperated by colon
         switch (opt) {
             case 'r':
                 if (optarg != NULL) {
                     // MARK: - Write real path for optarg to distribution_root
-                    realpath(optarg, distribution_root);
-                    if (!File_is_directory(distribution_root)) {
+                    realpath(optarg, buffer);
+                    if (!File_is_directory(buffer)) {
                         fprintf(stderr, "Error: Distribution root '%s' does not exist or is not a directory\n", optarg);
                         exit(1);
                     }
+                    // Sets distribution root to buffer
+                    Server.distribution_root = strdup(buffer);
                     
                     // MARK: - Test web root
                     // Sets buffer to web root
-                    snprintf(buffer, PATH_MAX, "%s/var/www", distribution_root);
+                    snprintf(buffer, PATH_MAX, "%s/var/www", Server.distribution_root);
                     if (!File_is_directory(buffer)) {
                         fprintf(stderr, "Error: Web root '%s' does not exist or is not a directory\n", buffer);
                         exit(1);
                     }
-                    // Sets distribution root to buffer
+                    // Sets web root to buffer
                     Server.web_root = strdup(buffer);
                     
                     // MARK: - Test and Setup pid_directory
                     // Sets buffer to run path
-                    snprintf(buffer, PATH_MAX, "%s/var/run", distribution_root);
+                    snprintf(buffer, PATH_MAX, "%s/var/run", Server.distribution_root);
                     if (!File_is_directory(buffer)) {
                         fprintf(stderr, "Error: Given PID directory: '%s' does not exist or is not a directory\n", buffer);
                         exit(1);
@@ -67,13 +68,13 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
                                         
                     // MARK: - Test and open log file
                     // Sets buffer to log path
-                    snprintf(buffer, PATH_MAX, "%s/var/log", distribution_root);
+                    snprintf(buffer, PATH_MAX, "%s/var/log", Server.distribution_root);
                     if (!File_is_directory(buffer)) {
                         fprintf(stderr, "Error: Log directory '%s' does not exist or is not a directory\n", buffer);
                         exit(1);
                     }
                     // Sets buffer to log file
-                    snprintf(buffer, PATH_MAX, "%s/var/log/debug.log", distribution_root);
+                    snprintf(buffer, PATH_MAX, "%s/var/log/debug.log", Server.distribution_root);
                     Server.log = fopen(strdup(buffer), "a");
                     if (Server.log == NULL) {
                         fprintf(stderr, "Error: Cannot open log file '%s'\n", optarg);
@@ -127,7 +128,7 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
     }
     
     // MARK: - Check that Required options are set
-    if (STRING_UNDEFINED(distribution_root))
+    if (STRING_UNDEFINED(Server.distribution_root))
         Config_error(stderr, "Error: Required option -r distribution root not set\n");
     
     // MARK: - What that is done at start parameter

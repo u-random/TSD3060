@@ -29,6 +29,7 @@ typedef struct Header_T {
 typedef struct Response_T {
     Http_Status http_status;    // Response Status, example "SC_OK" or "200"
     Header_T headers;           // Request headers
+    const char *mime_type;      // File Mime type
     FILE *output_stream;        // Socket output stream. See https://www.gnu.org/software/libc/manual/html_node/Descriptors-and-Streams.html#Descriptors-and-Streams
 } *Response_T;
 

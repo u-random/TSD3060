@@ -7,8 +7,10 @@
 
 #ifndef File_h
 #define File_h
+#include "Mime.h"
 
 bool File_is_asis(const char *path);
+const char *File_supported(const char *path);
 bool File_exist(const char *path);
 bool File_is_directory(const char *path);
 const char *File_mimeType(const char *path);

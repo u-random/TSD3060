@@ -7,6 +7,7 @@
 #include "Config.h"
 #include "File.h"
 
+
 // TODO: Remove trailing slashs
 
 bool File_is_asis(const char *path) {
@@ -15,6 +16,20 @@ bool File_is_asis(const char *path) {
         return strcasecmp(extention, "asis") == 0;
     return false;
 }
+
+const char *File_mimeType(const char *path) {
+    const char *extension = File_extension(path);
+
+    if (extension) {
+        // Use the MIME table to look up the MIME type based on the extension
+        const char *mimeType = Mime_get(extension);
+        return mimeType;
+    }
+
+    // If the extension is not found, return NULL or a default MIME type
+    return NULL;
+}
+
 
 bool File_exist(const char *path) {
     if (path) {
@@ -32,11 +47,6 @@ bool File_is_directory(const char *path) {
     return false;
 }
 
-const char *File_mimeType(const char *path) {
-    // TODO: Lookup mimetype based on path extension
-    // TODO: If found, set Content-Type header to mime type, otherwise return NULL
-    return NULL;
-}
 
 const char *File_extension(const char *path) {
     if (STRING_DEFINED(path)) {

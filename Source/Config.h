@@ -22,6 +22,7 @@
 #include <locale.h>
 #include <getopt.h>
 #include <stdarg.h>
+#include <sys/mman.h>
 
 #include "Server.h"
 
@@ -33,6 +34,7 @@ extern Server_T Server;                         // Global variable for Server ty
 #define LOCAL_PORT 55556                        // Port to use. This is no longer in use, as port is passed as startup argument.
 #define BACK_LOG 10                             // Que size for waiting requests
 #define RFC1123  "%a, %d %b %Y %H:%M:%S GMT"    // RFC1123 date format. See: https://datatracker.ietf.org/doc/html/rfc1123#page-55
+#define STRLEN 256                              // Default String length
 
 // MARK: - Functional macros
 // Test if string is empty, returns boolean

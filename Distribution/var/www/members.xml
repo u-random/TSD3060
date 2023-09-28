@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<members>
+    <member>
+        <navn>Løve</navn>
+        <rolle>Prosjektleder</rolle>
+    </member>
+    <member>
+        <navn>Zebra</navn>
+        <rolle>Designer</rolle>
+    </member>
+    <!-- TODO: Add members -->
+</members>

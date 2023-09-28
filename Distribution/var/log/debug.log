@@ -38,3 +38,43 @@ Starting server with pid: 7003
 Received shutdown signal - closing down..
 Starting server with pid: 7062
 Received shutdown signal - closing down..
+Starting server with pid: 10763
+Error: 404 Not Found - Requested file is not an "asis" file
+
+Starting server with pid: 10763
+Error: 404 Not Found - Requested file is not an "asis" file
+
+Starting server with pid: 10763
+Error: 404 Not Found - Requested file is not an "asis" file
+
+Starting server with pid: 10763
+Error: 404 Not Found - Requested file is not an "asis" file
+
+Starting server with pid: 10763
+Received shutdown signal - closing down..
+Starting server with pid: 10909
+Error: 404 Not Found - Requested file is not in a supported format
+
+Starting server with pid: 10909
+Error: 404 Not Found - Requested file is not in a supported format
+
+Starting server with pid: 10909
+Error: 404 Not Found - Requested file is not in a supported format
+
+Starting server with pid: 10909
+Received shutdown signal - closing down..
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Starting server with pid: 13138
+Error: 404 Not Found - Requested file not found
+
+Starting server with pid: 13138
+Received shutdown signal - closing down..

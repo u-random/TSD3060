@@ -116,7 +116,9 @@ void Server_init(void) {
 }
 
 void Server_start(void) {
-        
+    // Read and setup mime types
+    Mime_initiate();
+    
     if (Server.is_daemon)
         daemonize();
 
@@ -150,7 +152,7 @@ void Server_start(void) {
                 .output_stream = fdopen(client_socket, "w")
             };
             struct Request_T request = {
-                .response = &response,
+                .response = &response,  // Associate response with request
                 .socket_descriptor = client_socket,
                 .input_stream = fdopen(client_socket, "r")
             };
