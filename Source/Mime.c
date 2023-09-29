@@ -46,23 +46,39 @@ void Mime_initiate(void) {
     char line[512];
     char mime_type[STRLEN];
     char file_extensions[STRLEN];
+    //
     while (fgets(line, sizeof(line), mime_file)) {
         if (line[0] == '#' || isspace(line[0]))
             continue;
-        if (sscanf(line, "%255s %255[^\n]", mime_type, file_extensions) != 2) {
+        if (sscanf(line, "%s %[^\n]", mime_type, file_extensions) != 2) {
             continue;
         }
-        // TODO: if more than one file extension make an entry per extension
-        // i.e. do sscanf on file_extensions
-        // e.g. extension = "xhtml xhtm xml" make an entry for each extension
-        // entry must have one mime_type and one and only one file extension.
-        if (mime_table.size >= MAX_MIME_TYPES) {
-            Config_error(stderr, "Too many mime types, increase MAX_MIME_TYPES\n");
+        // Check if there are spaces in the file_extensions string
+        char *has_space = strchr(file_extensions, ' ');
+        if (has_space == NULL) {
+            // No space found, treat the whole string as a single extension
+            if (mime_table.size >= MAX_MIME_TYPES) {
+                Config_error(stderr, "Too many mime types, increase MAX_MIME_TYPES\n");
+            }
+            MimeEntry *entry = &mime_table.entries[mime_table.size];
+            entry->file_extensions = strdup(file_extensions);
+            entry->mime_type = strdup(mime_type);
+            mime_table.size++;
+        } else {
+            // Split and process space-separated extensions
+            char *token = strtok(file_extensions, " ");
+            while (token != NULL) {
+                if (mime_table.size >= MAX_MIME_TYPES) {
+                    Config_error(stderr, "Too many mime types, increase MAX_MIME_TYPES\n");
+                }
+                MimeEntry *entry = &mime_table.entries[mime_table.size];
+                entry->file_extensions = strdup(token);
+                entry->mime_type = strdup(mime_type);
+                mime_table.size++;
+                // Get the next extension
+                token = strtok(NULL, " ");
+            }
         }
-        MimeEntry *entry = &mime_table.entries[mime_table.size];
-        entry->file_extensions = strdup(file_extensions);
-        entry->mime_type = strdup(mime_type);
-        mime_table.size++;
     }
     fclose(mime_file);
 }
@@ -75,14 +91,13 @@ const char *Mime_get(const char* extension) {
     }
 
     // Working through the mime table to find matching extention
-    // NB: Not critical as to exclusive string. only have to be a component. BUG
     for (size_t i = 0; i < mime_table.size; i++) {
         MimeEntry entry = mime_table.entries[i];
-        if (!strcasecmp(entry.file_extensions, extension)) { // NB: Her var det en stor BUG, hadde ikke ! foran
+        if (strcasecmp(entry.file_extensions, extension) == 0) {
             return entry.mime_type;
         }
     }
 
-    // Return a default mime-type or NULL if not found
-    return NULL;
+    // Return a default mime-type if not found
+    return "text/plain";
 }

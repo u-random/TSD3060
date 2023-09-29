@@ -21,4 +21,5 @@ off_t File_size(const char *path);
 void File_writePidFile(void);
 void File_removePidFile(void);
 pid_t File_readPidFile(void);
+char *File_removeTrailingSlash(char *path);
 #endif /* File_h */

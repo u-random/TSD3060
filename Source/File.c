@@ -124,3 +124,14 @@ pid_t File_readPidFile(void) {
     }
     return -1;
 }
+
+char *File_removeTrailingSlash(char *path) {
+    if (STRING_DEFINED(path)){
+        size_t path_length = strlen(path);
+        if (path[path_length - 1] == '/') {
+            // Remove the trailing slash
+            path[path_length - 1] = '\0';
+        }
+    }
+    return path;
+}

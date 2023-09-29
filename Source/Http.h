@@ -40,7 +40,7 @@ typedef struct Request_T {
     char *http_version;         // HTTP Version, example "HTTP/1.1"
     char *path;                 // Request path, example "/index.asis"
     Header_T headers;           // Request headers, see struct above
-    const char *file_path;      // The path to the file to write
+    const char *file_path;      // The path to the file to send
     FILE *input_stream;         // Socket input stream
 } *Request_T;
 

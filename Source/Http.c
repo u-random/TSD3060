@@ -84,7 +84,7 @@ Request_T Http_getRequest(Request_T request, Response_T response) {
     }
     // Fill out the request struct
     request->http_method = _parseMethod(method);  // Running the parseMethod to check against any existing
-    request->path = strdup(path);
+    request->path = strdup(File_removeTrailingSlash(path));
     request->http_version = strdup(version);
     
     // Parse the headers
@@ -111,19 +111,17 @@ Request_T Http_handleRequest(Request_T request) {
     char buffer[PATH_MAX] = {};
     Response_T response = request->response;
     // 1. Does file exist in the file system?
-    // TODO: Handle request->path to directory (add index.html):
-    // 1: If request->path == '/' then add index.html as file
-    // 2: If request->path is directory but do not end with slash
     snprintf(buffer, sizeof(buffer), "%s/%s", Server.web_root, request->path);
+    // If file is directory, add a welcome file, index.html
+    if (File_is_directory(buffer)) {
+        snprintf(buffer, sizeof(buffer), "%s/index.html", File_removeTrailingSlash(buffer));
+    }
     if (!File_exist(buffer)) {
         Http_sendError(request, SC_NOT_FOUND, "Requested file not found\n");
     }
     request->file_path = strdup(buffer);
     // 2. Does it have a known mime type? Otherwise set mime type to text/plain
     response->mime_type = File_mimeType(request->file_path);
-    if (!response->mime_type) {
-        response->mime_type = "text/plain";
-    }
     return request;
 }
 
