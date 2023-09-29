@@ -40,7 +40,7 @@
 		4F9DD41C2AB9E79C00228689 /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
 		4F9DD41D2AB9E79C00228689 /* ArgumentParser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ArgumentParser.c; sourceTree = "<group>"; };
 		4F9DD41E2AB9E79C00228689 /* Server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Server.c; sourceTree = "<group>"; };
-		4F9DD41F2AB9E79C00228689 /* Mime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Mime.c; sourceTree = "<group>"; };
+		4F9DD41F2AB9E79C00228689 /* Mime.c */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.c; path = Mime.c; sourceTree = "<group>"; };
 		4F9DD4202AB9E79C00228689 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		4F9DD4212AB9E79C00228689 /* Config.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Config.c; sourceTree = "<group>"; };
 		4F9DD4222AB9E79C00228689 /* HttpStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpStatus.h; sourceTree = "<group>"; };

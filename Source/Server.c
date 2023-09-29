@@ -156,6 +156,7 @@ void Server_start(void) {
                 .socket_descriptor = client_socket,
                 .input_stream = fdopen(client_socket, "r")
             };
+          
             // Main process pipeline; Read request and write Response
             off_t bytes_written = Http_writeResponse(Http_handleRequest(Http_getRequest(&request, &response)));
             // TODO: Write access Logfile

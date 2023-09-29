@@ -74,9 +74,11 @@ const char *Mime_get(const char* extension) {
         return NULL;
     }
 
+    // Working through the mime table to find matching extention
+    // NB: Not critical as to exclusive string. only have to be a component. BUG
     for (size_t i = 0; i < mime_table.size; i++) {
         MimeEntry entry = mime_table.entries[i];
-        if (strcasecmp(entry.file_extensions, extension)) {
+        if (!strcasecmp(entry.file_extensions, extension)) { // NB: Her var det en stor BUG, hadde ikke ! foran
             return entry.mime_type;
         }
     }
