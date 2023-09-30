@@ -29,13 +29,11 @@ The program takes the following arguments and options:
 -h         Prints help text
 
 
-START the server from directory: (You need to use the path to your TSD3060 directory where relevant)
-./TSD3060 \
--r Distribution \
--p 55556 \
--i \
-start
+START the server from directory:
+./TSD3060 -r Distribution -p 55556 -i start
 
 
-STOP server from directory: (You only need pid file directory as a parameter here)
+STOP server from directory: (You only need Distribution directory as an agrument here, because that is used as reference to the pid file, which is needed to stop the server in its daemonized state, as it has no shell connected.)
 ./TSD3060 -r Distribution stop
+
+STOP server can also be done with ctrl+c in the shell if server is not daemonized.
