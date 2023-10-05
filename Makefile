@@ -1,3 +1,4 @@
+
 PROG=TSD3060
 CC = clang
 OS = $(shell uname|tr a-z A-Z) # Makes uppercase
@@ -16,6 +17,15 @@ SRCS = 	Source/main.c \
 OBJS = $(SRCS:.c=.o)
 
 # Targets
+all: build-container build-host
+
+build-container: $(PROG)
+# kommandoer for konteineren
+	./Scripts/Container/build-container.sh
+	
+build-host: $(PROG)
+# kommandoer for verts-systemet
+	@echo "Building host"
 
 $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
@@ -26,3 +36,5 @@ $(PROG): $(OBJS)
 .PHONY: clean
 clean:
 	rm -f $(OBJS) $(PROG)
+
+
