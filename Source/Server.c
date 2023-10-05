@@ -8,6 +8,7 @@
 #include "Config.h"
 #include <sys/fcntl.h>
 #include <signal.h>
+#include <pwd.h>
 
 #include "File.h"
 #include "Http.h"
@@ -19,6 +20,30 @@ Server_T Server = {};
 
 // MARK: - Private methods
 
+// Change user to the systems www user. If failed, exit
+static void change_user(void){
+#ifdef DARWIN
+    char *user = "www";
+#else // Assume Linux
+    char *user = "www-data";
+#endif
+    
+    struct passwd *password_entry = getpwnam(user);
+    if (password_entry == NULL) {
+        Config_error(Server.log, "getpwnam failed for '%s'", user);
+    }
+    
+    uid_t uid = password_entry->pw_uid;
+    gid_t gid = password_entry->pw_gid;
+    
+    if (setgid(gid) != 0) {
+        Config_error(Server.log, "setgid failed for '%s'", user);
+    }
+    if (setuid(uid) != 0) {
+        Config_error(Server.log, "setuid failed for '%s'", user);
+    }
+}
+
 // Daemonize server process - loose controlling terminal and fork twice to avoid creating zombies
 static void daemonize(void) {
     pid_t pid;
@@ -26,29 +51,25 @@ static void daemonize(void) {
     int i;
     int descriptors = getdtablesize(); // Get process file descriptor size
     if ((pid = fork ()) < 0) {
-        perror("Cannot fork a new Server process\n");
-        exit(1);
+        Config_error(Server.log, "Cannot fork a new Server process\n");
     } else if (pid != 0)
         // Using _exit in case we have atexit handlers, we don't want them called here
         _exit(0);
     setsid(); // loose controlling terminal by becoming a session leader
     signal(SIGHUP, SIG_IGN); // Ensure future opens won't allocate controlling TTYs
     if ((pid = fork ()) < 0) {
-        perror("Cannot fork a new Server process\n");
-        exit(1);
+        Config_error(Server.log, "Cannot fork a new Server process\n");
     } else if (pid != 0)
         _exit(0);
     if (chdir("/") < 0) { // cd / so we don't prevent any unmount
-        perror("Cannot chdir to '/'\n");
-        exit(1);
+        Config_error(Server.log, "Cannot chdir to '/'\n");
     }
     // Close all open descriptors and reopen stdio to /dev/null
     for (i = 0; i < descriptors; i++)
         close(i);
     for (i = 0; i < 3; i++) { // Open stdio fds (stdin, stdout, stderr)
         if (open("/dev/null", O_RDWR) != i) {
-            perror("Cannot open /dev/null\n");
-            exit(1);
+            Config_error(Server.log, "Cannot open /dev/null\n");
         }
     }
 }
@@ -60,8 +81,7 @@ static void setupSignalHandler(int signo, void (*func)(int signal)) {
     sigemptyset(&action.sa_mask);
     action.sa_flags = 0;
     if (sigaction(signo, &action, NULL) < 0) {
-        perror("sigaction");
-        exit(1);
+        Config_error(Server.log, "sigaction");
     }
 }
 
@@ -76,8 +96,7 @@ static void setuptServerSocket(void) {
     
     // Socket test
     if (Server.socket_descriptor == -1) {
-        perror("webserver (socket) failed");
-        exit(1);
+        Config_error(Server.log, "webserver (socket) failed");
     }
     
     printf("Socket created successfully\n");
@@ -97,8 +116,7 @@ static void setuptServerSocket(void) {
         fprintf(stderr, "Process %d is connected to port %d.\n", getpid(), Server.bind_port);
     else {
         // Errormessage for bind
-        perror("Could not bind socket");
-        exit(1);
+        Config_error(Server.log, "Could not bind socket");
     }
 }
 
@@ -118,7 +136,7 @@ void Server_init(void) {
 void Server_start(void) {
     // Read and setup mime types
     Mime_initiate();
-    
+        
     if (Server.is_daemon)
         daemonize();
 
@@ -131,9 +149,17 @@ void Server_start(void) {
     // Waiting for connection request
     listen(Server.socket_descriptor, Server.back_log);
     
-    // TODO: Use chroot(2) and change root directory to Server.document_root
+    // Use chroot(2) and change root directory to Server.web_root
+    if (getuid() == 0) {
+        if (chroot(Server.web_root) < 0) {
+            Config_error(Server.log, "Cannot chroot to '%s'\n", Server.web_root);
+        }
+        change_user();
+    } else {
+        Config_debug(Server.log, "Cannot use chroot as regular user \n");
+    }
     
-    
+        
     // Loop and accept until we are signaled to stop
     while(!Server.stop) {
         // Accepting recieved request

@@ -1,6 +1,9 @@
 PROG=TSD3060
 CC = clang
-CFLAGS = -g -Wall
+OS = $(shell uname|tr a-z A-Z) # Makes uppercase
+
+# Compiling setup
+CFLAGS = -g -Wall -D$(OS)
 LDFLAGS = -I./Source
 SRCS = 	Source/main.c \
 		Source/Config.c \

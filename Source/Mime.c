@@ -33,7 +33,7 @@ static MimeTable mime_table = {};
 // -------------------------------------------------------------------------------------
 
 
-// MARK: - Read mime.types file into shared memory hash table
+// MARK: - Read mime.types file into shared memory array
 void Mime_initiate(void) {
     char t[PATH_MAX] = {};
     snprintf(t, PATH_MAX, "%s/etc/mime.types", Server.distribution_root);

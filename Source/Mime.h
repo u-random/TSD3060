@@ -8,9 +8,9 @@
 #ifndef Mime_h
 #define Mime_h
 
-// TODO: Read /var/blablabla/mimetypes.txt into a (hash) struct mimetabel_t {char *content_type; char *extention}: mimetable_t mime[2000]
+// Read /etc/mime.types into a array
 void Mime_initiate(void);
-// TODO: Given a file extension, example '.html' the table returns the correct mime-type string
+// Returns the correct mime-type string for the given file extension
 const char *Mime_get(const char* extension);
 
 

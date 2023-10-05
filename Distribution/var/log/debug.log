@@ -132,3 +132,38 @@ Error: 404 Not Found - Requested file not found
 Starting server with pid: 42721
 Error: 404 Not Found - Requested file not found
 
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Starting server with pid: 15899
+Error: 404 Not Found - Requested file not found
+
+Starting server with pid: 15899
+Error: 404 Not Found - Requested file not found
+
+Starting server with pid: 15995
+Received shutdown signal - closing down..
+Could not open pid file '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/run/TSD3060.pid'
+Starting server with pid: 37334
+Cannot chroot to '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/www'
+Starting server with pid: 37338
+Cannot chroot to '/Users/isak/Library/Mobile Documents/com~apple~CloudDocs/Xcode/TSD3060/Distribution/var/www'
+Starting server with pid: 37902
+Cannot use chroot as regular user 
+getpwnam failed for 'www-data'setgid failed for 'www'Starting server with pid: 38086
+Error: 404 Not Found - Requested file not found
+
+Starting server with pid: 38086
+Received shutdown signal - closing down..
+Starting server with pid: 38153
+Error: 404 Not Found - Requested file not found
+
+Starting server with pid: 38153
+Error: 400 Bad Request - 
+Starting server with pid: 38153
+Error: 500 Internal Server error - Cannot read from socket
+
+Starting server with pid: 38153
+Received shutdown signal - closing down..
+Starting server with pid: 38395
+Received shutdown signal - closing down..
+Starting server with pid: 38400
+Received shutdown signal - closing down..
