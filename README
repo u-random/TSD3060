@@ -1,15 +1,13 @@
-Introduction to my TSD3060 Web Server
+Welcome to my TSD3060 Web Server
 
-The project is on GitHub: https://github.com/u-random/TSD3060
-
-Clone this project from GitHub:
+Clone this project from GitHub with:
     git clone https://github.com/u-random/TSD3060.git
 
-The project provides a Makefile to build the binary.
+This project provides a Makefile to build the binary.
 
 COMPILE the server in the TSD3060 directory with:
     make
-CLEAN object files and program with:
+CLEAN object files and executable with:
     make clean
 
 The server assume and use a Distribution directory with the following required structure:
@@ -22,19 +20,22 @@ Distribution/
             etc/mime.types
 
 The program takes the following arguments and options:
--r dir     Specify distribution root for the server
--p port    Port number for server
--i         Server runs non-daemonized
--v         Version information
--d         Write extra debug info
--h         Prints help text
+-r dir      Specify distribution root for the server
+-p port     Port number for server
+-i          Server runs non-daemonized
+-v          Version information
+-d          Write extra debug info
+-h          Prints help text
+
+start       default action
+stop        To stop the server
 
 
-START the server from directory:
+START the server from TSD3060 directory:
 ./TSD3060 -r Distribution -p 55556 -i start
 
 
-STOP server from directory: (You only need Distribution directory as an agrument here, because that is used as reference to the pid file, which is needed to stop the server in its daemonized state, as it has no shell connected.)
+STOP the server from TSD3060 directory: (You only need Distribution directory as an agrument here, because that is used as reference to the pid file, which is needed to stop the server in its daemonized state, as it has no shell connected.)
 ./TSD3060 -r Distribution stop
 
 STOP server can also be done with ctrl+c in the shell if server is not daemonized.
