@@ -11,6 +11,10 @@
 
 // MARK: - Declarations
 
+//RFC 7231 IMF-fixdate (HTTP date) format
+// @see https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.1.1
+#define DATEFORMAT             "%a, %d %b %Y %H:%M:%S GMT"
+
 typedef enum {
     HTTP_GET,
     HTTP_POST,

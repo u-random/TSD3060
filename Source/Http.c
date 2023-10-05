@@ -12,6 +12,17 @@
 
 // MARK: - Private methods
 
+// Calculate date now on this format: Sun, 06 Nov 1994 08:49:37 GMT
+static char *Date_now(char *result, int size) {
+        time_t now;
+        struct tm tm;
+        time(&now);
+        if (strftime(result, size, DATEFORMAT, gmtime_r(&now, &tm)) <= 0)
+                *result = 0;
+        return result;
+}
+
+
 // Returns method type
 static Http_Method _parseMethod(char *method) {
     if (strcasecmp(method, "GET") == 0) {
@@ -129,7 +140,6 @@ Request_T Http_handleRequest(Request_T request) {
 // Write response (write headers, write file)
 size_t Http_writeResponse(Request_T request) {
     char buffer[1500]; // One TCP frame
-    const char now[STRLEN] = "Thu, 28 Sep 2023 18:06:49 GMT"; // TODO: Calculate date now on this format
     Response_T response = request->response;
     FILE *file = fopen(request->file_path, "r");
     if (!file) {
@@ -137,7 +147,7 @@ size_t Http_writeResponse(Request_T request) {
     }
     // Write the response headers
     fprintf(response->output_stream, "%s %d %s\r\n", request->http_version, response->http_status, HttpStatus_description(response->http_status));
-    fprintf(response->output_stream, "Date: %s\r\n", now);
+    fprintf(response->output_stream, "Date: %s\r\n", Date_now((char[32]){}, 32));
     fprintf(response->output_stream, "Server: %s\r\n", Program_Name);
     fprintf(response->output_stream, "Content-Type: %s\r\n", response->mime_type);
     fprintf(response->output_stream, "Content-Length: %lld\r\n", File_size(request->file_path));
