@@ -53,7 +53,7 @@
 		4F9DD4252AB9E79C00228689 /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Server.h; sourceTree = "<group>"; };
 		4F9DD4262AB9E79C00228689 /* ArgumentParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArgumentParser.h; sourceTree = "<group>"; };
 		4F9DD4302AB9E7AF00228689 /* Distribution */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Distribution; sourceTree = "<group>"; };
-		B94AA58A2AD42D9100C66BA2 /* example-container.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "example-container.sh"; sourceTree = "<group>"; };
+		B94AA58A2AD42D9100C66BA2 /* milestone-2-container.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "milestone-2-container.sh"; sourceTree = "<group>"; };
 		B9F410A72AD4316300A1283A /* DiktDatabase.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = DiktDatabase.sql; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -103,7 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				4F6A75CC2ACF3EF300668276 /* init.sh */,
-				B94AA58A2AD42D9100C66BA2 /* example-container.sh */,
+				B94AA58A2AD42D9100C66BA2 /* milestone-2-container.sh */,
 				4F6A75C92ACF283800668276 /* build-container.sh */,
 			);
 			path = Container;

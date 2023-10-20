@@ -2,6 +2,7 @@
 PROG=TSD3060
 CC = clang
 OS = $(shell uname|tr a-z A-Z) # Makes uppercase
+DIST = Distribution
 
 # Compiling setup
 CFLAGS = -g -Wall -D$(OS)
@@ -17,16 +18,12 @@ SRCS = 	Source/main.c \
 OBJS = $(SRCS:.c=.o)
 
 # Targets
-all: build-container build-host
+all: $(PROG)
 
-build-container: $(PROG)
-# kommandoer for konteineren
-	cp $(PROG) Distribution/bin
-#./Scripts/Container/build-container.sh
-	
-build-host: $(PROG)
-# kommandoer for verts-systemet
-	@echo "Building host"
+# kommandoer for å starte container
+container: $(PROG)
+	-cp $(PROG) $(DIST)/bin
+#./Scripts/Container/milestone-2-container.sh
 
 $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
@@ -36,6 +33,6 @@ $(PROG): $(OBJS)
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) $(PROG)
+	rm -f $(OBJS) $(PROG) $(DIST)/bin/*
 
 
