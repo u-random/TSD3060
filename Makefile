@@ -21,7 +21,8 @@ all: build-container build-host
 
 build-container: $(PROG)
 # kommandoer for konteineren
-	./Scripts/Container/build-container.sh
+	cp $(PROG) Distribution/bin
+#./Scripts/Container/build-container.sh
 	
 build-host: $(PROG)
 # kommandoer for verts-systemet
