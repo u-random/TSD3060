@@ -29,7 +29,7 @@ if [ ! -d $ROOT_FILE_SYSTEM ]; then
     cp /bin/busybox . || error "Could not copy busybox"
     
     # Create symbolic links for each utility provided by busybox
-    for P in $(./busybox --list); do
+    for P in $(./busybox --list | egrep -v busybox); do
         ln -s busybox $P || error "Linking failed"
     done
 
