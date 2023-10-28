@@ -52,7 +52,7 @@ PATH=/bin \
     --ipc \
     --uts \
     --net \
-    /usr/sbin/chroot $ROOT_FILE_SYSTEM /bin/init.sh || error "Could not start container"
+    /usr/sbin/chroot $ROOT_FILE_SYSTEM /bin/TSD3060 -r / -p 80 -i || error "Could not start container"
 
 
 # Manuell inspeksjon i konteineren:
