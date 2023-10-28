@@ -34,6 +34,6 @@ $(PROG): $(OBJS)
 .PHONY: clean
 clean:
 	rm -f $(OBJS) $(PROG) $(DIST)/bin/*
-	rm -r tmp/
+	rm -rf tmp/
 
 
