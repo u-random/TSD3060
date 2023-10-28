@@ -19,7 +19,7 @@ TEMPLATE_FILE_SYSTEM=$PWD/Distribution
 if [ ! -d $ROOT_FILE_SYSTEM ]; then
     
     # Makes root file system from distribution template
-    cp -a $TEMPLATE_FILE_SYSTEM $ROOT_FILE_SYSTEM || error "Makes root file system failed"
+    cp -a $TEMPLATE_FILE_SYSTEM $ROOT_FILE_SYSTEM || error "Make root file system failed"
     
     # Navigate to the bin directory inside the root file system
     cd $ROOT_FILE_SYSTEM/bin/ || error "Could not cd to bin"
@@ -35,6 +35,7 @@ if [ ! -d $ROOT_FILE_SYSTEM ]; then
 
 fi
 
+exit 1
 # Use unshare to set up the container with various isolated namespaces
 # Then execute init.sh located in the Scripts/Container directory relative to
 # the root file system directory
