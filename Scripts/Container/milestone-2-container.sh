@@ -55,7 +55,7 @@ sudo unshare \
 --net \
 || error "Could not run unshare"
 
-sudo /usr/sbin/chroot $ROOT_FILE_SYSTEM /home/isak/TSD3060/Scripts/Container/init.sh || error "Could not chroot and start container"
+sudo /usr/sbin/chroot $ROOT_FILE_SYSTEM Scripts/Container/init.sh || error "Could not chroot and start container"
 
 
 # Manuell inspeksjon i konteineren:
