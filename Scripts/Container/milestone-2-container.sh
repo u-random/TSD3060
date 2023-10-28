@@ -35,22 +35,25 @@ if [ ! -d $ROOT_FILE_SYSTEM ]; then
 
 fi
 
-exit 1
 # Use unshare to set up the container with various isolated namespaces
 # Then execute init.sh located in the Scripts/Container directory relative to
 # the root file system directory
-PATH=/bin \
-    unshare \
-    --user \
-    --map-root-user \
-    --fork \
-    --pid \
-    --mount \
-    --cgroup \
-    --ipc \
-    --uts \
-    --net \
-    /usr/sbin/chroot $ROOT_FILE_SYSTEM Scripts/Container/init.sh || error "Could not start container"
+PATH=/bin
+
+# Set new namespaces
+unshare \
+--user \
+--map-root-user \
+--fork \
+--pid \
+--mount \
+--cgroup \
+--ipc \
+--uts \
+--net \
+|| error "Could not run unshare"
+
+/usr/sbin/chroot $ROOT_FILE_SYSTEM Scripts/Container/init.sh || error "Could not chroot and start container"
 
 
 # Manuell inspeksjon i konteineren:
