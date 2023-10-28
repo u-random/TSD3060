@@ -40,18 +40,19 @@ fi
 # Use unshare to set up the container with various isolated namespaces
 # Then execute init.sh located in the Scripts/Container directory relative to
 # the root file system directory
-sudo PATH=/bin \
-unshare \ # Set new namespaces
---user \
---map-root-user \
---fork \
---pid \
---mount \
---cgroup \
---ipc \
---uts \
---net \
-/usr/sbin/chroot $ROOT_FILE_SYSTEM Scripts/Container/init.sh || error "Could not chroot and start container"
+
+PATH=/bin \
+    unshare \ # Set new namespaces
+    --user \
+    --map-root-user \
+    --fork \
+    --pid \
+    --mount \
+    --cgroup \
+    --ipc \
+    --uts \
+    --net \
+    /usr/sbin/chroot $ROOT_FILE_SYSTEM Scripts/Container/init.sh || error "Could not start container"
 
 
 # Manuell inspeksjon i konteineren:
