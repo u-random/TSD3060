@@ -21,7 +21,7 @@ if [ ! -d $ROOT_FILE_SYSTEM ]; then
     # Makes root file system from distribution template
     cp -a $TEMPLATE_FILE_SYSTEM $ROOT_FILE_SYSTEM || error "Make root file system failed"
     
-    cp -a $TEMPLATE_FILE_SYSTEM $ROOT_FILE_SYSTEM || error "Make root file system failed"
+    cp Scripts/Container/init.sh $ROOT_FILE_SYSTEM/bin || error "cp init failed"
 
     # Navigate to the bin directory inside the root file system
     cd $ROOT_FILE_SYSTEM/bin/ || error "Could not cd to bin"
@@ -42,7 +42,7 @@ fi
 # the root file system directory
 
 PATH=/bin \
-    unshare \ # Set new namespaces
+    unshare \
     --user \
     --map-root-user \
     --fork \
@@ -52,7 +52,7 @@ PATH=/bin \
     --ipc \
     --uts \
     --net \
-    /usr/sbin/chroot $ROOT_FILE_SYSTEM Scripts/Container/init.sh || error "Could not start container"
+    /usr/sbin/chroot $ROOT_FILE_SYSTEM /bin/init.sh || error "Could not start container"
 
 
 # Manuell inspeksjon i konteineren:
