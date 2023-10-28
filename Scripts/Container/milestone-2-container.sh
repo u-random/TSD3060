@@ -18,7 +18,6 @@ TEMPLATE_FILE_SYSTEM=$PWD/Distribution
 # Check if the root file system directory exists; if not, create it
 if [ ! -d $ROOT_FILE_SYSTEM ]; then
     
-    mkdir $ROOT_FILE_SYSTEM/proc
     # Makes root file system from distribution template
     cp -a $TEMPLATE_FILE_SYSTEM $ROOT_FILE_SYSTEM || error "Make root file system failed"
     
