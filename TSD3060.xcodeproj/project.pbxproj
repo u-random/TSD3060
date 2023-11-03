@@ -71,8 +71,6 @@
 		4F5D96582AA4DBD0004B386E = {
 			isa = PBXGroup;
 			children = (
-				B9F410A72AD4316300A1283A /* DiktDatabase.sql */,
-				4F6A75BD2ACEB51E00668276 /* DiktDatabase.db */,
 				4F9DD40D2AB9E4BC00228689 /* Makefile */,
 				4F9DD40B2AB9E4BC00228689 /* README */,
 				4F6A75C82ACF279900668276 /* Scripts */,
@@ -112,6 +110,8 @@
 		4F6A75CB2ACF29FF00668276 /* CGI */ = {
 			isa = PBXGroup;
 			children = (
+				B9F410A72AD4316300A1283A /* DiktDatabase.sql */,
+				4F6A75BD2ACEB51E00668276 /* DiktDatabase.db */,
 				4F6A75BC2ACEB44400668276 /* restapi.sh */,
 			);
 			path = CGI;
