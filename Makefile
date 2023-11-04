@@ -6,17 +6,26 @@ DIST = Distribution
 
 # Compiling setup
 CFLAGS = -g -Wall -D$(OS)
+
+# Default to dynamic linking
 LDFLAGS = -I./Source
-SRCS = 	Source/main.c \
-		Source/Config.c \
-		Source/ArgumentParser.c \
-		Source/HttpStatus.c \
-		Source/Mime.c \
-		Source/Server.c \
-		Source/Http.c \
-		Source/File.c
+# On Linux, we also allow static linking
+STATIC_LDFLAGS = -static
+
+SRCS =  Source/main.c \
+        Source/Config.c \
+        Source/ArgumentParser.c \
+        Source/HttpStatus.c \
+        Source/Mime.c \
+        Source/Server.c \
+        Source/Http.c \
+        Source/File.c
 OBJS = $(SRCS:.c=.o)
 
+# Conditional logic for Linux and macOS
+ifeq ($(OS),LINUX)
+    LDFLAGS += $(STATIC_LDFLAGS)
+endif
 # Targets
 all: $(PROG)
 
