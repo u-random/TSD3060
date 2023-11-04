@@ -25,7 +25,7 @@ void ArgumentParser_help(void) {
     printf("  stop       Stop server\n");
 }
 
-// MARK: - Handle arguments
+// MARK: - Handle arguments and setup our global Server structure
 
 Action_T ArgumentParser_handleArguments(int argc, char **argv) {
     
@@ -73,13 +73,8 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
                         fprintf(stderr, "Error: Log directory '%s' does not exist or is not a directory\n", buffer);
                         exit(1);
                     }
-                    // Sets buffer to log file
-                    snprintf(buffer, PATH_MAX, "%s/var/log/debug.log", Server.distribution_root);
-                    Server.log = fopen(strdup(buffer), "a");
-                    if (Server.log == NULL) {
-                        fprintf(stderr, "Error: Cannot open log file '%s'\n", optarg);
-                        exit(1);
-                    }
+                    // Open the Server log file
+                    Config_openlog();
                 }
                 break;
             case 'p':

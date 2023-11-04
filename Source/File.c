@@ -117,7 +117,7 @@ pid_t File_readPidFile(void) {
     snprintf(path, PATH_MAX, "%s/%s.pid", Server.pid_directory, Program_Name);
     FILE *pidFile = fopen(path, "r");
     if (!pidFile) {
-        Config_debug(Server.log, "Could not open pid file '%s'\n", path);
+        Config_log(Server.log, "Could not open pid file '%s'\n", path);
         return -1;
     }
     pid_t pid = -1;

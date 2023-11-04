@@ -13,7 +13,7 @@
 // MARK: - Private methods
 
 // Calculate date now on this format: Sun, 06 Nov 1994 08:49:37 GMT
-static char *Date_now(char *result, int size) {
+static char *_date(char *result, int size) {
         time_t now;
         struct tm tm;
         time(&now);
@@ -150,13 +150,13 @@ size_t Http_writeResponse(Request_T request) {
     if (!requested_file) {
         Http_sendError(request, SC_INTERNAL_SERVER_ERROR, "Could not open requested file for reading\n");
     }
-    // MARK: - Spesial case for asis files. These files are sent as-is
-    // and expected to contain a full HTTP response with headers.
+    // MARK: - Spesial exception for asis files.
+    // These files are sent as-is and expected to contain a full HTTP response with headers.
     // Otherwise send the file as a proper HTTP response with headers
     if (!File_is_asis(request->file_path)) {
         // Write the response headers to the output stream/browser
         fprintf(response->output_stream, "%s %d %s\r\n", request->http_version, response->http_status, HttpStatus_description(response->http_status));
-        fprintf(response->output_stream, "Date: %s\r\n", Date_now((char[32]){}, 32));
+        fprintf(response->output_stream, "Date: %s\r\n", _date((char[32]){}, 32));
         fprintf(response->output_stream, "Server: %s\r\n", Program_Name);
         // Tell the browser what type of file it recieves
         fprintf(response->output_stream, "Content-Type: %s\r\n", response->mime_type);
@@ -207,12 +207,8 @@ void Http_sendError(Request_T request, Http_Status status_code, const char *erro
             error ? error : "");
     
     // Writing message to standard error and logfile
-    fprintf(stderr, "Error: %d %s - %s\n", status_code, HttpStatus_description(status_code), error ? error : "");
+    Config_log(Server.log, "Server Error: %d %s - %s\n", status_code, HttpStatus_description(status_code), error ? error : "");
     fflush(response->output_stream);
-    if (Server.log) {
-        fprintf(Server.log, "Error: %d %s - %s\n", status_code, HttpStatus_description(status_code), error ? error : "");
-        fflush(Server.log);
-    }
     shutdown(request->socket_descriptor, SHUT_RDWR);
     close(request->socket_descriptor);
     _exit(0);

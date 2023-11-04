@@ -24,7 +24,8 @@ int main (int argc, char **argv) {
         {
             pid_t pid = File_readPidFile();
             if (pid > 0) {
-                Config_error(stderr, "Server is already running with pid:%d\n", pid);
+                fprintf(stderr, "Server is already running with PID: %d\n", pid);
+                exit(1);
             }
             Server_start();
         }
