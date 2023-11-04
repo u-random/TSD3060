@@ -8,28 +8,7 @@
 #include "File.h"
 
 
-// TODO: Remove trailing slashs
-
-bool File_is_asis(const char *path) {
-    const char *extention = File_extension(path);
-    if (extention)
-        return strcasecmp(extention, "asis") == 0;
-    return false;
-}
-
-const char *File_mimeType(const char *path) {
-    const char *extension = File_extension(path);
-
-    if (extension) {
-        // Use the MIME table to look up the MIME type based on the extension
-        const char *mimeType = Mime_get(extension);
-        return mimeType;
-    }
-
-    // If the extension is not found, return NULL or a default MIME type
-    return NULL;
-}
-
+// TODO: Make comments
 
 bool File_exist(const char *path) {
     if (path) {
@@ -39,6 +18,7 @@ bool File_exist(const char *path) {
     return false;
 }
 
+// TODO: more documentation here
 bool File_is_directory(const char *path) {
     if (path) {
         struct stat buffer;
@@ -46,6 +26,31 @@ bool File_is_directory(const char *path) {
     }
     return false;
 }
+
+
+bool File_is_asis(const char *path) {
+    const char *extention = File_extension(path);
+    if (extention)
+        return strcasecmp(extention, "asis") == 0;
+    return false;
+}
+
+// Returns mimetype if file is in mimetype list, else null.
+const char *File_mimeType(const char *path) {
+    const char *extension = File_extension(path);
+
+    if (extension) {
+        // Use the MIME table to look up the MIME type based on the extension
+        const char *mimeType = Mime_get(extension);
+        return mimeType;
+    }
+
+    // If the extension is not found, return NULL
+    return NULL;
+}
+
+
+
 
 
 const char *File_extension(const char *path) {
