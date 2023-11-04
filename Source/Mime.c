@@ -98,6 +98,8 @@ const char *Mime_get(const char* extension) {
         }
     }
 
-    // Return a default mime-type if not found
-    return "text/plain";
+    // Return NULL if not found. I.e. no default mime-type.
+    // It is recommended to return text/plain here so the browser can view
+    // the file anyway instead of just getting an error
+    return NULL;
 }
