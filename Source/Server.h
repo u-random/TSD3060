@@ -19,7 +19,6 @@ typedef struct Server_T {
     bool is_daemon;
     bool debug;
     bool stop;
-    
 } Server_T;
 
 

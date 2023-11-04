@@ -21,7 +21,7 @@ Server_T Server = {};
 // MARK: - Private methods
 
 // Change user to the systems www user. If failed, exit
-static void change_user(void){
+static void _change_user(void){
 #ifdef DARWIN
     char *user = "www";
 #else // Assume Linux
@@ -44,8 +44,9 @@ static void change_user(void){
     }
 }
 
+
 // Daemonize server process - loose controlling terminal and fork twice to avoid creating zombies
-static void daemonize(void) {
+static void _daemonize(void) {
     pid_t pid;
     umask(0);
     int i;
@@ -64,33 +65,52 @@ static void daemonize(void) {
     if (chdir("/") < 0) { // cd / so we don't prevent any unmount
         Config_error(Server.log, "Cannot chdir to '/'\n");
     }
+    // Close Server.log here after deamonize, as we close all descriptors below
+    fclose(Server.log);
     // Close all open descriptors and reopen stdio to /dev/null
-    for (i = 0; i < descriptors; i++)
+    for (i = 0; i < descriptors; i++) {
         close(i);
-    for (i = 0; i < 3; i++) { // Open stdio fds (stdin, stdout, stderr)
+    }
+    // Open stdio fds (stdin, stdout, stderr)
+    bool redirect_error = false;
+    for (i = 0; i < 3; i++) {
         if (open("/dev/null", O_RDWR) != i) {
-            Config_error(Server.log, "Cannot open /dev/null\n");
+            redirect_error = true;
         }
     }
+    // MARK: - FIXED. Open Server.log again here after deamonize, as daemonize closes all descriptors
+    Config_openlog();
+    // Failure to redirect stdio file descriptors is an error
+    if (redirect_error) {
+        Config_error(Server.log, "Error: Could not open standard descriptors to /dev/null\n");
+    }
+    // MARK: - Set standard err to logfile.
+    stderr = Server.log;
+    // Note: If it is required to map stderr fileno to Server.log fileno, use fileno(Server.log) and dup etc
 }
 
-// Register a signal handler that is more reliable than signal(3)
-static void setupSignalHandler(int signo, void (*func)(int signal)) {
+
+// Register a signal handler that is more reliable than signal(3),
+// which did not work in this server stop use case after daemonize.
+static void _setSignalHandler(int signal_number, void (*signalHandler)(int signal)) {
+    // Using sigaction instead of signal.
     struct sigaction action;
-    action.sa_handler = func;
+    action.sa_handler = signalHandler;
     sigemptyset(&action.sa_mask);
     action.sa_flags = 0;
-    if (sigaction(signo, &action, NULL) < 0) {
+    if (sigaction(signal_number, &action, NULL) < 0) {
         Config_error(Server.log, "sigaction");
     }
 }
 
+
 // Signalhandler for Server.stop
-static void do_stop(__attribute__ ((unused)) int sig) {
+static void _stopServer(__attribute__ ((unused)) int sig) {
     Server.stop = true;
 }
 
-static void setuptServerSocket(void) {
+
+static void _setupServerSocket(void) {
     // Setting up the socket structure
     Server.socket_descriptor = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     
@@ -113,10 +133,10 @@ static void setuptServerSocket(void) {
     
     // Connecting socket and local address
     if ( 0 == bind(Server.socket_descriptor, (struct sockaddr *) &local_address, sizeof(local_address)) )
-        fprintf(stderr, "Process %d is connected to port %d.\n", getpid(), Server.bind_port);
+        Config_log(Server.log, "Process %d is connected to port %d.\n", getpid(), Server.bind_port);
     else {
         // Errormessage for bind
-        Config_error(Server.log, "Could not bind socket");
+        Config_error(Server.log, "Could not bind socket\n");
     }
 }
 
@@ -129,8 +149,8 @@ void Server_init(void) {
         .is_daemon = true
     };
     // Setup a signal handler for handling server stop
-    setupSignalHandler(SIGTERM, do_stop);
-    setupSignalHandler(SIGINT, do_stop);
+    _setSignalHandler(SIGTERM, _stopServer);
+    _setSignalHandler(SIGINT, _stopServer);
 }
 
 void Server_start(void) {
@@ -138,13 +158,14 @@ void Server_start(void) {
     Mime_initiate();
         
     if (Server.is_daemon)
-        daemonize();
-
-    fprintf(Server.log, "Starting server with pid: %d\n", getpid());
+        _daemonize();
+    
+    fprintf(Server.log, "\n");
+    Config_log(Server.log, "Starting server with pid: %d\n", getpid());
 
     File_writePidFile();
     atexit(File_removePidFile); // Remove our pidfile at exit
-    setuptServerSocket();
+    _setupServerSocket();
     
     // Waiting for connection request
     listen(Server.socket_descriptor, Server.back_log);
@@ -154,15 +175,15 @@ void Server_start(void) {
         if (chroot(Server.web_root) < 0) {
             Config_error(Server.log, "Cannot chroot to '%s'\n", Server.web_root);
         }
-        change_user();
+        _change_user();
     } else {
-        Config_debug(Server.log, "Cannot use chroot as regular user \n");
+        Config_log(Server.log, "Warning: Cannot use chroot as regular user \n");
     }
     
         
     // Loop and accept until we are signaled to stop
     while(!Server.stop) {
-        // Accepting recieved request
+        // Accepting recieved request. Hangs here waiting for client connection.
         int client_socket = accept(Server.socket_descriptor, NULL, NULL);
         if (client_socket < 0) {
             if (Server.stop)
@@ -186,17 +207,17 @@ void Server_start(void) {
             // Main process pipeline; Read request and write Response
             off_t bytes_written = Http_writeResponse(Http_handleRequest(Http_getRequest(&request, &response)));
             // TODO: Write access Logfile
-            fprintf(Server.log, "Bytes written: %lld\n", (long long)bytes_written);
+            Config_log(Server.log, "%s - %i - %lld\n", request.file_path, response.http_status, (long long)bytes_written);
             // Closing socket for read and write
             shutdown(client_socket, SHUT_RDWR);
             // Close socket for reuse by OS
             close(client_socket);
             _exit(0);
         }
-    }
+    } // end while
     // Shutdown server
-    fprintf(Server.log, "Received shutdown signal - closing down..\n");
-    fprintf(stdout, "\nReceived shutdown signal - closing down..\n");
+    Config_log(Server.log, "Received shutdown signal - closing down..\n");
+    Config_log(stdout, "\nReceived shutdown signal - closing down..\n");
     shutdown(Server.socket_descriptor, SHUT_RDWR);
     if(Server.log) {
         fclose(Server.log);
