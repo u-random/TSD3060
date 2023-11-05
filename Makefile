@@ -22,16 +22,18 @@ OBJS = $(SRCS:.c=.o)
 
 # Conditional logic for Linux
 ifeq ($(OS),LINUX)
+	CFLAGS += -DUNSHARE
     LDFLAGS += -static
 endif
 
 # Targets
 all: $(PROG)
 
-# kommandoer for å starte container
+# kommandoer for å starte milestones
+
 m2: $(PROG)
 	-cp $(PROG) $(DIST)/bin
-	./Scripts/Container/milestone-2-container.sh
+	./Milestone/2/unshare.sh
 
 $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
