@@ -31,7 +31,7 @@ all: $(PROG)
 # kommandoer for å starte container
 m2: $(PROG)
 	-cp $(PROG) $(DIST)/bin
-#	./Scripts/Container/milestone-2-container.sh
+	./Scripts/Container/milestone-2-container.sh
 
 $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^

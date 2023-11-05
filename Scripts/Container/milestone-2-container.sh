@@ -44,7 +44,6 @@ if [ ! -d $ROOT_FILE_SYSTEM ]; then
 
 fi
 
-exit 1
 # Use unshare to set up the container with various isolated namespaces
 # Then execute init.sh located in the Scripts/Container directory relative to
 # the root file system directory
@@ -64,6 +63,7 @@ PATH=/bin \
     --root $ROOT_FILE_SYSTEM \
     /bin/TSD3060 -r / -p 80 -i || error "Could not start container"
 
+#PATH=/bin unshare -frpmiuUC --mount-proc --root $ROOT_FILE_SYSTEM sh
 
 # Manuell inspeksjon i konteineren:
 # ----------------------------------
