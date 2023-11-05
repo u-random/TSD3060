@@ -177,6 +177,8 @@ void Server_start(void) {
             Config_error(Server.log, "Cannot chroot to '%s'\n", Server.web_root);
         } else {
             Config_debug(Server.log, "Successfully chroot to %s\n", Server.web_root);
+            // Need to modify web_root to '/'
+            strncpy(Server.web_root, "/", sizeof("/"));
         }
 #ifndef UNSHARE
         // If we run in a chroot/unshare environment (on Linux)
