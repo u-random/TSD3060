@@ -20,6 +20,15 @@ Server_T Server = {};
 
 // MARK: - Private methods
 
+
+// A simple non-blocking reaper to ensure that we wait-for and reap all/any
+// stray child processes we may have created and not waited on, so we do not
+// create any zombie processes at exit
+static void _waitforchildren(void) {
+        while (waitpid(-1, NULL, WNOHANG) > 0) ;
+}
+
+
 // Change user to the systems www user. If failed, exit
 static void _change_user(void){
 #ifdef DARWIN
@@ -192,7 +201,10 @@ void Server_start(void) {
         Config_log(Server.log, "Warning: Cannot use chroot as regular user \n");
     }
     
-        
+#ifndef UNSHARE
+    _waitforchildren();
+#endif
+
     // Loop and accept until we are signaled to stop
     while(!Server.stop) {
         // Accepting recieved request. Hangs here waiting for client connection.
