@@ -52,4 +52,7 @@ void Config_log(FILE *stream, const char *message, ...);
 // Write an error message and exit
 void Config_error(FILE *stream, const char *error, ...);
 
+// Debug function. Only write if -d switch is set at program start
+void Config_debug(FILE *stream, const char *message, ...);
+
 #endif /* Config_h */

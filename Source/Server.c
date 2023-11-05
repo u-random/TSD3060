@@ -169,11 +169,14 @@ void Server_start(void) {
     
     // Waiting for connection request
     listen(Server.socket_descriptor, Server.back_log);
-    
+    Config_debug(Server.log, "Successfully listen on port %d\n", Server.socket_descriptor);
+
     // Use chroot(2) and change root directory to Server.web_root
     if (getuid() == 0) {
         if (chroot(Server.web_root) < 0) {
             Config_error(Server.log, "Cannot chroot to '%s'\n", Server.web_root);
+        } else {
+            Config_debug(Server.log, "Successfully chroot to %s\n", Server.web_root);
         }
 #ifndef UNSHARE
         // If we run in a chroot/unshare environment (on Linux)
@@ -191,11 +194,14 @@ void Server_start(void) {
     // Loop and accept until we are signaled to stop
     while(!Server.stop) {
         // Accepting recieved request. Hangs here waiting for client connection.
+        Config_debug(Server.log, "About to accept connection\n");
         int client_socket = accept(Server.socket_descriptor, NULL, NULL);
         if (client_socket < 0) {
             if (Server.stop)
                 break;
             continue;
+        } else {
+            Config_debug(Server.log, "Accepted client connection (%d)\n", client_socket);
         }
         
         pid_t pid = fork();
@@ -210,7 +216,7 @@ void Server_start(void) {
                 .socket_descriptor = client_socket,
                 .input_stream = fdopen(client_socket, "r")
             };
-          
+            Config_debug(Server.log, "Start Handling request in child\n");
             // Main process pipeline; Read request and write Response
             off_t bytes_written = Http_writeResponse(Http_handleRequest(Http_getRequest(&request, &response)));
             // TODO: Write access Logfile
