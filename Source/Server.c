@@ -27,7 +27,6 @@ static void _change_user(void){
 #else // Assume Linux
     char *user = "www-data";
 #endif
-    
     struct passwd *password_entry = getpwnam(user);
     if (password_entry == NULL) {
         Config_error(Server.log, "getpwnam failed for '%s'", user);
@@ -35,10 +34,11 @@ static void _change_user(void){
     
     uid_t uid = password_entry->pw_uid;
     gid_t gid = password_entry->pw_gid;
-    
+    // Set users groupid
     if (setgid(gid) != 0) {
         Config_error(Server.log, "setgid failed for '%s'", user);
     }
+    // Call setuid _after_ setgid before we relinquish any root privileges
     if (setuid(uid) != 0) {
         Config_error(Server.log, "setuid failed for '%s'", user);
     }
@@ -175,7 +175,14 @@ void Server_start(void) {
         if (chroot(Server.web_root) < 0) {
             Config_error(Server.log, "Cannot chroot to '%s'\n", Server.web_root);
         }
+#ifndef UNSHARE
+        // If we run in a chroot/unshare environment (on Linux)
+        // we link the whole server static. The function getpwnam
+        // is part of the NSS dynamic module in libc and cannot be
+        // easily static linked in this environment. So the change
+        // uid/guid functionality is maintained outside from a script
         _change_user();
+#endif
     } else {
         Config_log(Server.log, "Warning: Cannot use chroot as regular user \n");
     }

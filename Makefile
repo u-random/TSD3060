@@ -1,16 +1,14 @@
 
 PROG=TSD3060
 CC = clang
-OS = $(shell uname|tr a-z A-Z) # Makes uppercase
+OS = $(shell uname|tr a-z A-Z)
 DIST = Distribution
 
 # Compiling setup
 CFLAGS = -g -Wall -D$(OS)
 
 # Default to dynamic linking
-LDFLAGS = -I./Source
-# On Linux, we also allow static linking
-STATIC_LDFLAGS = -static
+LDFLAGS := -I./Source
 
 SRCS =  Source/main.c \
         Source/Config.c \
@@ -22,18 +20,18 @@ SRCS =  Source/main.c \
         Source/File.c
 OBJS = $(SRCS:.c=.o)
 
-# Conditional logic for Linux and macOS
+# Conditional logic for Linux
 ifeq ($(OS),LINUX)
-    LDFLAGS += $(STATIC_LDFLAGS)
+    LDFLAGS += -static
 endif
 
 # Targets
 all: $(PROG)
 
 # kommandoer for å starte container
-container: $(PROG)
+m2: $(PROG)
 	-cp $(PROG) $(DIST)/bin
-	./Scripts/Container/milestone-2-container.sh
+#	./Scripts/Container/milestone-2-container.sh
 
 $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
