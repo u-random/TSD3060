@@ -54,10 +54,9 @@ PATH=/bin \
     --cgroup \
     --ipc \
     --uts \
-    --net \
     --mount-proc \
     --root $ROOT_FILE_SYSTEM \
-    /bin/TSD3060 -r / -p 80 -i || error "Could not start container"
+    /bin/TSD3060 -r / -p 8080 -i -d || error "Could not start container"
 
 #PATH=/bin unshare -frpmiuUC --mount-proc --root $ROOT_FILE_SYSTEM sh
 
