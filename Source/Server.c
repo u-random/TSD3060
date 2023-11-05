@@ -24,14 +24,6 @@ Server_T Server = {};
 // MARK: - Private methods
 
 
-// A simple non-blocking reaper to ensure that we wait-for and reap all/any
-// stray child processes we may have created and not waited on, so we do not
-// create any zombie processes at exit
-static void _waitforchildren(void) {
-        while (waitpid(-1, NULL, WNOHANG) > 0) ;
-}
-
-
 // Change user to the systems www user. If failed, exit
 static void _change_user(void){
 #ifdef DARWIN
@@ -122,6 +114,14 @@ static void _stopServer(__attribute__ ((unused)) int sig) {
 }
 
 
+// A simple non-blocking reaper to ensure that we wait-for and reap all/any
+// stray child processes we may have created and not waited on, so we do not
+// create any zombie processes at exit
+static void _waitforchildren(__attribute__ ((unused)) int sig) {
+        while (waitpid(-1, NULL, WNOHANG) > 0) ;
+}
+
+
 static void _setupServerSocket(void) {
     // Setting up the socket structure
     Server.socket_descriptor = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -163,6 +163,9 @@ void Server_init(void) {
     // Setup a signal handler for handling server stop
     _setSignalHandler(SIGTERM, _stopServer);
     _setSignalHandler(SIGINT, _stopServer);
+    // Setup a signal handler for CHILD process exit
+    // which reaps them
+    _setSignalHandler(SIGCHLD, _waitforchildren);
 }
 
 void Server_start(void) {
@@ -240,11 +243,7 @@ void Server_start(void) {
             close(client_socket);
             _exit(0);
         }
-        
-#ifdef UNSHARE
-        // Make parent wait for any children
-        _waitforchildren();
-#endif
+
     } // end while
     // Shutdown server
     Config_log(Server.log, "Received shutdown signal - closing down..\n");
