@@ -128,6 +128,7 @@ Request_T Http_handleRequest(Request_T request) {
         snprintf(buffer, sizeof(buffer), "%s/index.html", File_removeTrailingSlash(buffer));
     }
     if (!File_exist(buffer)) {
+        Config_debug(Server.log, "Requested file '%s' not found\n", buffer);
         Http_sendError(request, SC_NOT_FOUND, "Requested file not found\n");
     }
     request->file_path = strdup(buffer);
