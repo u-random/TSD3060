@@ -201,7 +201,7 @@ void Server_start(void) {
         Config_log(Server.log, "Warning: Cannot use chroot as regular user \n");
     }
     
-#ifndef UNSHARE
+#ifdef UNSHARE
     _waitforchildren();
 #endif
 
