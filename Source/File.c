@@ -117,7 +117,7 @@ pid_t File_readPidFile(void) {
     snprintf(path, PATH_MAX, "%s/%s.pid", Server.pid_directory, Program_Name);
     FILE *pidFile = fopen(path, "r");
     if (!pidFile) {
-        Config_log(Server.log, "Could not open pid file '%s'\n", path);
+        // pid file does not exist. That's means that the server is not running
         return -1;
     }
     pid_t pid = -1;
