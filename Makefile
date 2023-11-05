@@ -26,6 +26,7 @@ OBJS = $(SRCS:.c=.o)
 ifeq ($(OS),LINUX)
     LDFLAGS += $(STATIC_LDFLAGS)
 endif
+
 # Targets
 all: $(PROG)
 
