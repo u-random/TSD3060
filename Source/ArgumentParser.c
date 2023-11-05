@@ -43,26 +43,22 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
                         fprintf(stderr, "Error: Distribution root '%s' does not exist or is not a directory\n", optarg);
                         exit(1);
                     }
-                    // If distribution_root is '/' only set it to "" so we do not preprend '/' to paths
-                    if (strcmp(buffer, "/") == 0) {
-                        buffer[0] = '\0';
-                    }
                     // Sets distribution root to buffer
                     Server.distribution_root = strdup(buffer);
                     
                     // MARK: - Test web root
                     // Sets buffer to web root
-                    snprintf(buffer, PATH_MAX, "%s/var/www", Server.distribution_root);
+                    snprintf(buffer, PATH_MAX, "%s/var/www", File_removeTrailingSlash(Server.distribution_root));
                     if (!File_is_directory(buffer)) {
                         fprintf(stderr, "Error: Web root '%s' does not exist or is not a directory\n", buffer);
                         exit(1);
                     }
                     // Sets web root to buffer
-                    Server.web_root = strdup(File_removeTrailingSlash(buffer));
+                    Server.web_root = strdup(buffer);
                     
                     // MARK: - Test and Setup pid_directory
                     // Sets buffer to run path
-                    snprintf(buffer, PATH_MAX, "%s/var/run", Server.distribution_root);
+                    snprintf(buffer, PATH_MAX, "%s/var/run", File_removeTrailingSlash(Server.distribution_root));
                     if (!File_is_directory(buffer)) {
                         fprintf(stderr, "Error: Given PID directory: '%s' does not exist or is not a directory\n", buffer);
                         exit(1);
@@ -72,7 +68,7 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
                                         
                     // MARK: - Test and open log file
                     // Sets buffer to log path
-                    snprintf(buffer, PATH_MAX, "%s/var/log", Server.distribution_root);
+                    snprintf(buffer, PATH_MAX, "%s/var/log", File_removeTrailingSlash(Server.distribution_root));
                     if (!File_is_directory(buffer)) {
                         fprintf(stderr, "Error: Log directory '%s' does not exist or is not a directory\n", buffer);
                         exit(1);
