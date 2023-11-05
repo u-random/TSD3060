@@ -40,7 +40,7 @@ if [ ! -d $ROOT_FILE_SYSTEM ]; then
 
 fi
 
-# Use unshare to set up the container with various isolated namespaces
+# Use unshare to set up the contaier with various isolated namespaces
 # Then execute init.sh located in the Scripts/Container directory relative to
 # the root file system directory
 

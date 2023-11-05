@@ -204,10 +204,6 @@ void Server_start(void) {
         Config_log(Server.log, "Warning: Cannot use chroot as regular user \n");
     }
     
-#ifdef UNSHARE
-    _waitforchildren();
-#endif
-
     // Loop and accept until we are signaled to stop
     while(!Server.stop) {
         // Accepting recieved request. Hangs here waiting for client connection.
@@ -244,6 +240,11 @@ void Server_start(void) {
             close(client_socket);
             _exit(0);
         }
+        
+#ifdef UNSHARE
+        // Make parent wait for any children
+        _waitforchildren();
+#endif
     } // end while
     // Shutdown server
     Config_log(Server.log, "Received shutdown signal - closing down..\n");
