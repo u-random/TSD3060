@@ -116,7 +116,7 @@ static void _stopServer(__attribute__ ((unused)) int sig) {
 
 // A simple non-blocking reaper to ensure that we wait-for and reap all/any
 // stray child processes we may have created and not waited on, so we do not
-// create any zombie processes at exit
+// create any zombie processes
 static void _waitforchildren(__attribute__ ((unused)) int sig) {
         while (waitpid(-1, NULL, WNOHANG) > 0) ;
 }
