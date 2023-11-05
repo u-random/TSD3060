@@ -9,6 +9,9 @@
 #include <sys/fcntl.h>
 #include <signal.h>
 #include <pwd.h>
+#ifdef LINUX
+#include <sys/wait.h>
+#endif
 
 #include "File.h"
 #include "Http.h"
