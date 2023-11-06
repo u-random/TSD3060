@@ -13,7 +13,7 @@ echo ""
 
 METHOD=$(echo "$REQUEST_METHOD") # Http method, ex: GET, POST
 URI=$(echo "$REQUEST_URI") # Uniform Resource Identifier, used for location or name of a resource
-DATA_DIR="./../../" # Adjust to the correct data directory path
+DATA_DIR="./" # Adjust to the correct data directory path
 DATABASE_PATH="$DATA_DIR/DiktDatabase.db"
 
 
@@ -94,7 +94,7 @@ case "$METHOD" in
                 fi
                 ;;
     
-            # Adding a new poem functionality
+            # Adding a new dikt functionality
             /dikt)
                 # Extract the session ID from the request
                 session_id=$(echo "$data" | grep -oP '<sesjon>\K[^<]+')

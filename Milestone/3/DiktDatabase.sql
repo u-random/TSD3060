@@ -18,4 +18,21 @@ CREATE TABLE Dikt (
     FOREIGN KEY(epostadresse) REFERENCES Bruker(epostadresse)
 );
 DELETE FROM sqlite_sequence;
+
+-- Adding an entry to the Bruker table
+INSERT INTO Bruker (epostadresse, passordhash, fornavn, etternavn)
+VALUES ('demo@demomail.com', 'passwordhash1', 'D', 'Emo');
+
+-- Adding an entry to the Sesjon table
+INSERT INTO Sesjon (sesjonsID, epostadresse)
+VALUES ('0', 'demo@demomail.com');
+
+-- Adding entries to the Dikt table
+INSERT INTO Dikt (dikt, epostadresse)
+VALUES ('Skrønebok', 'demo@demomail.com');
+INSERT INTO Dikt (dikt, epostadresse)
+VALUES ('Skrønebok 2. Vittighetenes tilbakekomst!', 'demo@demomail.com');
+INSERT INTO Dikt (dikt, epostadresse)
+VALUES ('Skrønebok 3. Atter en vits!', 'demo@demomail.com');
+
 COMMIT;
