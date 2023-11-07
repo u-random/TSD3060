@@ -26,6 +26,9 @@ if [ ! -d $ROOT_FILE_SYSTEM ]; then
     # Makes root file system from distribution template
     cp -a $TEMPLATE_FILE_SYSTEM $ROOT_FILE_SYSTEM || error "Make root file system failed"
     
+    # Copy webserver
+    cp TSD3060 $ROOT_FILE_SYSTEM/bin
+        
     # Navigate to the bin directory inside the root file system
     cd $ROOT_FILE_SYSTEM/bin/ || error "Could not cd to bin"
     

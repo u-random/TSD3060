@@ -20,8 +20,15 @@ SRCS =  Source/main.c \
         Source/File.c
 OBJS = $(SRCS:.c=.o)
 
+M3_OBJS	 = ./Milestone/3/rest.cgi \
+		   ./Milestone/3/DiktDatabase.sql
+
+# For macOS
+CGIBINDIR = /Library/WebServer/CGI-Executables
+
 # Conditional logic for Linux
 ifeq ($(OS),LINUX)
+	CGIBINDIR = /usr/lib/cgi-bin
 	CFLAGS += -DUNSHARE
     LDFLAGS += -static
 endif
@@ -31,9 +38,15 @@ all: $(PROG)
 
 # kommandoer for å starte milestones
 
+m1: $(PROG)
+	./TSD3060 -r Distribution -p 55556 -i
+
 m2: $(PROG)
-	-cp $(PROG) $(DIST)/bin
 	./Milestone/2/unshare.sh
+	
+m3: $(M3_OBJS)
+	@cp $(M3_OBJS) $(CGIBINDIR)
+	@echo "Use your browser and connect to localhost:80"
 
 $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
