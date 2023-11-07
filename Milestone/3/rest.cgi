@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # Funksjonalitet:
@@ -13,7 +14,7 @@ echo ""
 
 METHOD=$(echo "$REQUEST_METHOD") # Http method, ex: GET, POST
 URI=$(echo "$REQUEST_URI") # Uniform Resource Identifier, used for location or name of a resource
-DATA_DIR="/usr/local/cgi-bin/" # Data directory path
+DATA_DIR="/var/www/cgi-bin" # Adjust to the correct data directory path
 DATABASE_PATH="$DATA_DIR/DiktDatabase.db"
 
 
@@ -52,12 +53,12 @@ case "$METHOD" in
                 fi
                 ;;
             /dikt)
-                dikts=$(sqlite3 DiktDatabase.db "SELECT diktID, dikt FROM Dikt;")
-                echo "<diktene>"
-                echo "$dikts" | while read -r diktID dikt; do
+                dikter=$(sqlite3 DiktDatabase.db "SELECT diktID, dikt FROM Dikt;")
+                echo "<dikter>"
+                echo "$dikter" | while read -r diktID dikt; do
                     echo "<dikt id=\"$diktID\">$dikt</dikt>"
                 done
-                echo "</diktene>"
+                echo "</dikter>"
                 ;;
             *)
                 echo "<error>Invalid request</error>"
@@ -82,26 +83,16 @@ case "$METHOD" in
     
                 # Compare the provided hash with the stored hash
                 if [ "$hashed_passord" == "$stored_hash" ]; then
-                    # Generate a new session ID: UNSECURE
-                    # TODO: generate unique sessionID, work with apache
-                    sesjonsID=1
+                    # Generate a new session ID
+                    sesjonsID=$(generate_session_id)
                     # Store the new session in the database
-                    sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$sesjonsID' WHERE epostadresse='$epost';"
+                    sqlite3 $DATABASE_PATH "INSERT INTO Sesjon (sesjonsID, epostadresse) VALUES     ('$sesjonsID', '$epost');"
                     # Respond with the new session ID
                     echo "<sesjon>$sesjonsID</sesjon>"
                 else
                     # Respond with an error if the credentials are invalid
                     echo "<error>Invalid credentials</error>"
                 fi
-                ;;
-            /logout)
-                epost=$(echo "$data" | grep -oP '<epost>\K[^<]+')
-
-                # Update the session to set the sesjonsID to 0 for the user, effectively logging them       out
-                sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='0' WHERE epostadresse='$epost';"
-        
-                # Respond to confirm the user has been logged out
-                echo "<response>User logged out</response>"
                 ;;
     
             # Adding a new dikt functionality

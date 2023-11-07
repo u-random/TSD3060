@@ -52,6 +52,7 @@
 		4F9DD4262AB9E79C00228689 /* ArgumentParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArgumentParser.h; sourceTree = "<group>"; };
 		4F9DD4302AB9E7AF00228689 /* Distribution */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Distribution; sourceTree = "<group>"; };
 		4FF86E582AF8014D00690D53 /* web-application.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "web-application.scpt"; sourceTree = "<group>"; };
+		4FF86E5C2AF9967300690D53 /* rest.cgi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rest.cgi; sourceTree = "<group>"; };
 		B94AA58A2AD42D9100C66BA2 /* unshare.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = unshare.sh; sourceTree = "<group>"; };
 		B9F410A72AD4316300A1283A /* DiktDatabase.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = DiktDatabase.sql; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -109,6 +110,7 @@
 		4F6A75CB2ACF29FF00668276 /* 3 */ = {
 			isa = PBXGroup;
 			children = (
+				4FF86E5C2AF9967300690D53 /* rest.cgi */,
 				B9F410A72AD4316300A1283A /* DiktDatabase.sql */,
 				4F6A75BD2ACEB51E00668276 /* DiktDatabase.db */,
 				4F6A75BC2ACEB44400668276 /* restapi.sh */,
