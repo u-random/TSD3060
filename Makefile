@@ -21,7 +21,7 @@ SRCS =  Source/main.c \
 OBJS = $(SRCS:.c=.o)
 
 M3_OBJS	 = ./Milestone/3/rest.cgi \
-		   ./Milestone/3/DiktDatabase.sql
+		   ./Milestone/3/DiktDatabase.db
 
 # For macOS
 CGIBINDIR = /Library/WebServer/CGI-Executables
@@ -39,19 +39,23 @@ all: $(PROG)
 # kommandoer for å starte milestones
 
 m1: $(PROG)
-	./TSD3060 -r Distribution -p 55556 -i
+	./TSD3060 -r Distribution -p 55566 -i
 
 m2: $(PROG)
 	./Milestone/2/unshare.sh
 	
 m3: $(M3_OBJS)
-	@sqlite3 ./Milestone/3/DiktDatabase.db < ./Milestone/3/DiktDatabase.sql
 	@cp $(M3_OBJS) $(CGIBINDIR)
 	@echo "Use your browser and connect to localhost:80"
 
 $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
+# Only builds/rebuilds the database if sql is changed
+./Milestone/3/DiktDatabase.db: ./Milestone/3/DiktDatabase.sql
+	@rm -f $@
+	sqlite3 $@ < $^
+	
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -59,6 +63,6 @@ $(PROG): $(OBJS)
 clean:
 	rm -f $(OBJS) $(PROG) $(DIST)/bin/*
 	rm -rf tmp/
-	rm Milestone/3/DiktDatabase.db
+	rm -f Milestone/3/DiktDatabase.db
 
 
