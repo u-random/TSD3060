@@ -40,3 +40,6 @@ STOP the server from TSD3060 directory: (You only need Distribution directory as
 ./TSD3060 -r Distribution stop
 
 STOP server can also be done with ctrl+c in the shell if server is not daemonized.
+
+
+Let it be known that OpenAIs ChatGPT 4 has been used in parts of this solution.
