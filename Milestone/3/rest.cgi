@@ -40,6 +40,18 @@ hash_password() {
     echo -n $1 | sha256sum | awk '{print $1}'
 }
 
+# Output the XML declaration and internal DTD
+cat <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dikts [
+<!ELEMENT dikts (dikt*)>
+<!ELEMENT dikt (#PCDATA)>
+<!ATTLIST dikt
+diktID ID #REQUIRED
+epostadresse CDATA #IMPLIED>
+]>
+EOF
+
 
 
 # REST API logic

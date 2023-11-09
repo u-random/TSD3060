@@ -30,6 +30,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4F312C5C2AFD224B006DDD64 /* xml.dtd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = xml.dtd; sourceTree = "<group>"; };
+		4F312C5E2AFD272F006DDD64 /* rest-2.cgi */ = {isa = PBXFileReference; lastKnownFileType = text; path = "rest-2.cgi"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.sh; };
 		4F5D96612AA4DBD0004B386E /* TSD3060 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TSD3060; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F6A75BD2ACEB51E00668276 /* DiktDatabase.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = DiktDatabase.db; sourceTree = "<group>"; };
 		4F9DD40B2AB9E4BC00228689 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
@@ -110,8 +112,10 @@
 			isa = PBXGroup;
 			children = (
 				4FF86E5C2AF9967300690D53 /* rest.cgi */,
+				4F312C5E2AFD272F006DDD64 /* rest-2.cgi */,
 				B9F410A72AD4316300A1283A /* DiktDatabase.sql */,
 				4F6A75BD2ACEB51E00668276 /* DiktDatabase.db */,
+				4F312C5C2AFD224B006DDD64 /* xml.dtd */,
 			);
 			path = 3;
 			sourceTree = "<group>";
@@ -119,21 +123,21 @@
 		4F9DD4172AB9E79C00228689 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				4F9DD4182AB9E79C00228689 /* Mime.h */,
-				4F9DD41F2AB9E79C00228689 /* Mime.c */,
-				4F9DD4222AB9E79C00228689 /* HttpStatus.h */,
-				4F9DD4192AB9E79C00228689 /* HttpStatus.c */,
-				4F9DD41A2AB9E79C00228689 /* Http.h */,
-				4F9DD4232AB9E79C00228689 /* Http.c */,
-				4F9DD41B2AB9E79C00228689 /* Config.h */,
-				4F9DD4212AB9E79C00228689 /* Config.c */,
-				4F9DD4262AB9E79C00228689 /* ArgumentParser.h */,
-				4F9DD41D2AB9E79C00228689 /* ArgumentParser.c */,
-				4F9DD4252AB9E79C00228689 /* Server.h */,
-				4F9DD41E2AB9E79C00228689 /* Server.c */,
 				4F9DD4202AB9E79C00228689 /* main.c */,
-				4F9DD41C2AB9E79C00228689 /* File.h */,
+				4F9DD4212AB9E79C00228689 /* Config.c */,
+				4F9DD41B2AB9E79C00228689 /* Config.h */,
+				4F9DD41D2AB9E79C00228689 /* ArgumentParser.c */,
+				4F9DD4262AB9E79C00228689 /* ArgumentParser.h */,
+				4F9DD41E2AB9E79C00228689 /* Server.c */,
+				4F9DD4252AB9E79C00228689 /* Server.h */,
 				4F9DD4242AB9E79C00228689 /* File.c */,
+				4F9DD41C2AB9E79C00228689 /* File.h */,
+				4F9DD4232AB9E79C00228689 /* Http.c */,
+				4F9DD41A2AB9E79C00228689 /* Http.h */,
+				4F9DD41F2AB9E79C00228689 /* Mime.c */,
+				4F9DD4182AB9E79C00228689 /* Mime.h */,
+				4F9DD4192AB9E79C00228689 /* HttpStatus.c */,
+				4F9DD4222AB9E79C00228689 /* HttpStatus.h */,
 			);
 			path = Source;
 			sourceTree = "<group>";

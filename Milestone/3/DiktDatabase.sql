@@ -21,7 +21,7 @@ DELETE FROM sqlite_sequence;
 
 -- Adding an entry to the Bruker table
 INSERT INTO Bruker (epostadresse, passordhash, fornavn, etternavn)
-VALUES ('demo@demomail.com', 'passwordhash1', 'D', 'Emo');
+VALUES ('demo@demomail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'D', 'Emo');
 
 -- Adding an entry to the Sesjon table
 INSERT INTO Sesjon (sesjonsID, epostadresse)
