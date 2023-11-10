@@ -24,6 +24,7 @@ escape_xml() {
 }
 
 
+# MARK: - OK!
 # Function to check credentials and create a session
 login() {
     local email="$1"
@@ -36,7 +37,7 @@ login() {
         # Generate a session ID token with UUIDGEN
         local session_id=$(uuidgen)
         
-        # Set a cookie with the session_id (with an appropriate expiry)
+        # Set a cookie header with the session_id
         echo "Set-Cookie: session_id=$session_id; Path=/; HttpOnly; Secure"
 
         # Store session ID in the database for the user
@@ -48,15 +49,20 @@ login() {
 }
 
 
+# MARK: - OK!
 # Function to logout a user
 logout() {
     # Get session id from cookie
     local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
+    # Get user belonging to session
+    local user=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID=$session_cookie;")
     if [[ -n $session_cookie ]]; then
         # Invalidate the session in the database
         sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID=NULL WHERE sesjonsID='$session_id';"
         # Send a header to remove the cookie
         echo "Set-Cookie: session_id=; Path=/; HttpOnly; Secure; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+        # Respond to confirm the user has been logged out
+        echo "<response>User '$user' logged out</response>"
     fi
 }
 
@@ -96,10 +102,33 @@ get_dikt_from_id() {
 
 # Function to add a new dikt
 add_dikt() {
-    local dikt="$1"
-    local session_id="$2"
-    # Insert the new poem into the database if the user is logged in
-    sqlite3 mydb.sqlite "INSERT INTO Dikt (dikt, session_id) VALUES ('$poem', '$session_id');"
+    local new_dikt="$1"
+    # Get session id from cookie
+    local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
+    # Get user belonging to session
+    local user=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID=$session_cookie;")
+    # Check credentials against the database
+    local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Sesjon WHERE epostadresse='$email' AND sesjonsID='$session_cookie';")
+    
+    # If the user is logged in
+    if [[ $valid_credentials -eq 1 ]]; then
+        # Insert the new dikt into the database
+        sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES ('$new_dikt', '$user');"
+
+        echo "<session>Logged in with sessionID: '$session_id'. Cookie set.</session>"
+    else
+        echo "<error>You're not logged in. Log in to add a new dikt.</error>"
+    fi
+    
+    
+    
+    # Insert the new dikt into the database
+    sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES ('$new_dikt', '$user');"
+}
+
+edit_dikt() {
+    
+    
 }
 
 
@@ -144,18 +173,24 @@ case $METHOD in
 
             # Logout logic
             /logout)
-                epost=$(echo "$data" | grep -oP '<epost>\K[^<]+')
-
-                # Update the session to set the sesjonsID to 0 for the user, effectively logging them       out
-                sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$uuid' WHERE epostadresse='$epost';"
-        
-                # Respond to confirm the user has been logged out
-                echo "<response>User logged out</response>"
+                # Run logout function
+                logout
                 ;;
     
-    
+
             # Adding a new dikt functionality
             /dikt)
+                TITLE=$(parse_xml "$HTTP_BODY" "//title/text()")
+                # Find session id from cookie
+                # Verify user with SQL and session id
+                # If user logged in, allow addition of new dikt
+                # with user as owner.
+                
+                # Parse out title of dikt to use from curl statement
+                
+                # Add new dikt with SQL. ID is set automatically
+                
+                
                 # Extract the session ID from the request
                 session_id=$(echo "$data" | grep -oP '<sesjon>\K[^<]+')
                 # Check if the user is logged in
