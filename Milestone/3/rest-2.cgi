@@ -100,34 +100,102 @@ get_dikt_from_id() {
 }
 
 
+# MARK: - OK!
 # Function to add a new dikt
 add_dikt() {
     local new_dikt="$1"
+    # Get user belonging to session
+    local email=$(get_user | awk '{print $2}')
+    
+    # If the user is logged in
+    if is_logged_in; then
+        # Insert the new dikt into the database
+        sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES ('$new_dikt', '$email');"
+        
+        echo "<message>SQLite database updated.</message>"
+    else
+        echo "<error>You're not logged in. Log in to add a new dikt.</error>"
+    fi
+}
+
+
+# Function edit existing dikt
+edit_dikt_from_id() {
+    local diktID="$1"
+    local new_title="$1"
+
     # Get session id from cookie
     local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
     # Get user belonging to session
-    local user=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID=$session_cookie;")
-    # Check credentials against the database
-    local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Sesjon WHERE epostadresse='$email' AND sesjonsID='$session_cookie';")
-    
-    # If the user is logged in
-    if [[ $valid_credentials -eq 1 ]]; then
-        # Insert the new dikt into the database
-        sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES ('$new_dikt', '$user');"
+    local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
+    local user_match=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE epostadresse='$email' AND diktID='$diktID';")
 
-        echo "<session>Logged in with sessionID: '$session_id'. Cookie set.</session>"
+    # If the user is logged in
+    if is_logged_in; then
+        if [[ $user_match -eq 1 ]]; then
+            # Update dikt with new information
+            sqlite3 $DATABASE_PATH "UPDATE Dikt (dikt, epostadresse) VALUES ('$new_dikt', '$email');"
+            
+            echo "<message>SQLite database updated.</message>"
+        else
+            echo "<error>You can't change someone elses dikt.</error>"
+        fi
     else
-        echo "<error>You're not logged in. Log in to add a new dikt.</error>"
+        echo "<error>You're not logged in. Log in to edit dikts.</error>"
     fi
     
     
     
-    # Insert the new dikt into the database
-    sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES ('$new_dikt', '$user');"
 }
 
-edit_dikt() {
+
+# TODO: Update with logged in logic to reduce repetition in functions above
+# Test if user is logged in and session is valid
+is_logged_in() {
+    # Get session id from cookie
+    local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
     
+    # Check if session_cookie is set
+    if [ -z "$session_cookie" ]; then
+        return 1 # Not logged in if the session cookie is empty
+    fi
+
+    # Get user belonging to session
+    local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
+
+    # Check credentials against the database
+    local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Sesjon WHERE epostadresse='$email' AND sesjonsID='$session_cookie';")
+
+    # If the user is logged in
+    if [[ $valid_credentials -eq 1 ]]; then
+        return 0 # Logged in
+    else
+        return 1 # Not logged in
+    fi
+}
+
+
+# Get the current User based on session id in HTTP header
+get_user() {
+    # Get session id from cookie
+        local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
+
+        # Check if session_cookie is set
+        if [ -z "$session_cookie" ]; then
+            echo "<error>No session</error>"
+            return 1
+        fi
+
+        # Get user belonging to session
+        local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
+
+        # Check if email is retrieved
+        if [ -z "$email" ]; then
+            echo "<error>No user found</error>"
+            return 1
+        fi
+
+        echo "$session_cookie $email"
     
 }
 
@@ -180,45 +248,49 @@ case $METHOD in
 
             # Adding a new dikt functionality
             /dikt)
-                TITLE=$(parse_xml "$HTTP_BODY" "//title/text()")
-                # Find session id from cookie
-                # Verify user with SQL and session id
-                # If user logged in, allow addition of new dikt
-                # with user as owner.
-                
-                # Parse out title of dikt to use from curl statement
-                
-                # Add new dikt with SQL. ID is set automatically
-                
-                
-                # Extract the session ID from the request
-                session_id=$(echo "$data" | grep -oP '<sesjon>\K[^<]+')
-                # Check if the user is logged in
-                user_email=$(is_logged_in "$session_id")
-    
-                if [ -n "$user_email" ]; then
-                    # Extract the poem content from the request
-                    dikt_content=$(echo "$data" | grep -oP '<dikt>\K[^<]+')
-                    # Insert the new poem into the database
-                    sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES    ('$dikt_content', '$user_email');"
-                    # Respond with a success message
-                    echo "<success>Dikt added</success>"
-                else
-                    # Respond with an error if the user is not logged in
-                    echo "<error>User not logged in or session invalid</error>"
-                fi
-                ;;
-            *)
-                # Respond with an error for any other POST URIs
-                echo "<error>Invalid request</error>"
-                ;;
+                TITLE=$(parse_xml "$HTTP_BODY" "//dikt/text()")
+
+                add_dikt "$TITLE"
+
         esac
     
+
+        # Handle PUT request
+        PUT)
+            read -r data
+
+            # Should match only when {id} is a number
+            if [[ "$URI" =~ ^/dikt(/([0-9]+))$ ]]; then
+                # Extract diktID if provided
+                diktID=${BASH_REMATCH[2]}
+                TITLE=$(parse_xml "$HTTP_BODY" "//dikt/text()")
+
+
+                edit_dikt_from_id "$diktID" "$TITLE"
+            else
+                echo "<error>Unable to update. {id} for dikt/{id} has to be a number.</error>"
+            fi
+            
+
+
+            session_id=$(echo "$data" | grep -oP '<sesjon>\K[^<]+')
+            user_email=$(is_logged_in "$session_id")
+            diktID=$(echo "$URI" | grep -oP 'dikt/\K[0-9]+')
+
+            if [ -n "$user_email" ] && [[ $diktID =~ ^[0-9]+$ ]]; then
+                dikt_content=$(echo "$data" | grep -oP '<dikt>\K[^<]+')
+                # Update poem in the database
+                sqlite3 $DATABASE_PATH "UPDATE Dikt SET dikt='$dikt_content' WHERE diktID=$diktID AND epostadresse='$user_email';"
+                echo "<success>Dikt updated</success>"
+            else
+                echo "<error>User not logged in or invalid diktID</error>"
+            fi
+            ;;
+
     
     
     
-        # Use this command to test login:
-        # curl -X POST -H "Content-Type: text/xml" -d '<login><email>demo@demomail.com</email><password>demopassword</password></login>' http://localhost/login
+        
 
         # For login:
         if [[ $URI == '/login' ]]; then
@@ -249,3 +321,5 @@ esac
 # Make sure to set Content-Type to application/xml for all responses
 # And to use the correct XML structure in responses
 
+# Use this command to test login:
+# curl -X POST -H "Content-Type: text/xml" -d '<login><email>demo@demomail.com</email><password>admin</password></login>' http://localhost/login

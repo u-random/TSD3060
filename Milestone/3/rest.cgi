@@ -11,6 +11,7 @@
 echo "Content-Type: text/xml"
 echo ""
 
+printf()
 METHOD=$(echo "$REQUEST_METHOD") # Http method, ex: GET, POST
 URI=$(echo "$REQUEST_URI") # Uniform Resource Identifier, used for location or name of a resource
 
