@@ -39,7 +39,8 @@ escape_xml() {
 login() {
     # Extract email and password from XML body
     local email=$(parse_xml "$HTTP_BODY" "//email/text()")
-    local hashed_password=$(echo -n $(parse_xml "$HTTP_BODY" "//password/text()") | sha256sum | cut -d ' ' -f 1)
+    local password=$(parse_xml "$HTTP_BODY" "//password/text()")
+    local hashed_password=$(echo -n $password | sha256sum | cut -d ' ' -f 1)
 
     # Check credentials against the database
     local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Bruker WHERE epostadresse='$email' AND passordhash='$hashed_password';")
@@ -55,6 +56,8 @@ login() {
         sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_id' WHERE epostadresse='$email';"
         echo "<session>Logged in with sessionID: '$session_id'. Cookie set.</session>"
     else
+        echo "<test>Dette er email: $email</test>"
+        echo "<test>Dette er pass: $password</test>"
         echo "<test>Dette er hashen: $hashed_password</test>"
         echo "<error>Invalid credentials</error>"
     fi
