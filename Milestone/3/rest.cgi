@@ -14,9 +14,15 @@ echo ""
 parse_xml() {
     # $1 is expected to be the XML input
     # $2 is expected to be the XPath expression
+    # Execute xmllint and check for errors
     
-    # XPath views the XML document as a tree of nodes
-    echo "$1" | xmllint --xpath "$2" -
+    local result=$(echo "$1" | xmllint --xpath "$2" - 2>/dev/null)
+    if [ $? -ne 0 ]; then
+        echo "Error: xmllint failed to parse XML"
+        return 1
+    fi
+
+    echo "$result"
 }
 
 
