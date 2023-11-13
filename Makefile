@@ -45,6 +45,7 @@ m2: $(PROG)
 	./Milestone/2/unshare.sh
 	
 m3: $(M3_OBJS)
+	rm - f $(CGIBINDIR)/DiktDatabase.db
 	cp $(M3_OBJS) $(CGIBINDIR)
 	@echo "Use your browser and connect to localhost:80"
 
