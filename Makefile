@@ -45,7 +45,7 @@ m2: $(PROG)
 	./Milestone/2/unshare.sh
 	
 m3: $(M3_OBJS)
-	@cp $(M3_OBJS) $(CGIBINDIR)
+	cp $(M3_OBJS) $(CGIBINDIR)
 	@echo "Use your browser and connect to localhost:80"
 
 $(PROG): $(OBJS)
