@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# HEADERS
+echo "Content-Type: text/xml"
+echo ""
+
+#printf()
+
+
+
 
 # MARK: - OK!
 # Function to parse XML using xmllint and xpath
@@ -101,6 +109,7 @@ get_dikt_from_id() {
             echo "<dikt id=\"$diktID\">$dikt</dikt>"
         done <<< "$dikts"
         echo "</diktene>"
+    fi
 }
 
 
@@ -166,7 +175,7 @@ delete_dikt_from_id() {
     if is_logged_in; then
         if [[ $user_match -eq 1 ]]; then
             # Delete given dikt
-            sqlite3 $DATABASE_PATH "DELETE FROM Dikt WHERE diktID=$diktID AND epostadresse='$email';""
+            sqlite3 $DATABASE_PATH "DELETE FROM Dikt WHERE diktID=$diktID AND epostadresse='$email';"
             
             echo "<message>SQLite entry deleted.</message>"
         else
@@ -237,12 +246,6 @@ URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
 QUERY_STRING=$(echo "$REQUEST_URI" | awk -F'?' '{print $2}')
 
 
-# HEADERS
-echo "Content-Type: text/xml"
-echo ""
-
-printf()
-
 # REST API logic
 case $METHOD in
     # HTTP GET request. Matches SQL: SELECT
@@ -255,7 +258,7 @@ case $METHOD in
         else
             echo "<error>Invalid request. Use /dikt for all dikts or /dikt/{id} for a specific dikt.</error>"
         fi
-    ;;
+        ;;
     
     
     # HTTP POST request. Matches SQL: INSERT
@@ -288,7 +291,7 @@ case $METHOD in
                 ;;
 
         esac
-    ;;
+        ;;
 
 
     # HTTP PUT request. Matches SQL: UPDATE
@@ -305,7 +308,7 @@ case $METHOD in
         else
             echo "<error>Unable to update. {id} for dikt/{id} has to be a number.</error>"
         fi
-    ;;
+        ;;
 
 
     # HTTP DELETE request. Matches SQL: DELETE
@@ -321,9 +324,6 @@ case $METHOD in
         else
             echo "<error>Cannot delete all dikts at once. {id} for dikt/{id} has to be a number.</error>"
         fi
-    ;;
+        ;;
 esac
 
-
-# Use this command to test login:
-# curl -c cookies.txt -X POST -H "Content-Type: text/xml" -d '<login><email>demo@demomail.com</email><password>admin</password></login>' http://localhost/login
