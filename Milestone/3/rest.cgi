@@ -39,7 +39,7 @@ escape_xml() {
 login() {
     # Extract email and password from XML body
     local email=$(parse_xml "$HTTP_BODY" "//email/text()")
-    local hashed_password=$(echo -n $(parse_xml "$HTTP_BODY" "//password/text()") | sha256sum)
+    local hashed_password=$(echo -n $(parse_xml "$HTTP_BODY" "//password/text()") | sha256sum | cut -d ' ' -f 1)
 
     # Check credentials against the database
     local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Bruker WHERE epostadresse='$email' AND passordhash='$hashed_password';")
