@@ -16,9 +16,20 @@ parse_xml() {
     # $2 is expected to be the XPath expression
     # Execute xmllint and check for errors
     
-    local result=$(echo "$1" | xmllint --xpath "$2" - 2>/dev/null)
+    # Debug: Echo input XML and XPath
+    echo "XML Input: $1" >&2
+    echo "XPath: $2" >&2
+
+    # Check if xmllint is available
+    if ! command -v xmllint &> /dev/null; then
+        echo "Error: xmllint not found" >&2
+        return 1
+    fi
+
+    # Execute xmllint and capture any errors
+    local result=$(echo "$1" | xmllint --xpath "$2" - 2>&1)
     if [ $? -ne 0 ]; then
-        echo "Error: xmllint failed to parse XML"
+        echo "xmllint error: $result" >&2
         return 1
     fi
 
@@ -44,6 +55,7 @@ escape_xml() {
 # Function to check credentials and create a session
 login() {
     # Extract email and password from XML body
+    printf("$HTTP_BODY")
     local email=$(parse_xml "$HTTP_BODY" "//email/text()")
     local password=$(parse_xml "$HTTP_BODY" "//password/text()")
     local hashed_password=$(echo -n $password | sha256sum | cut -d ' ' -f 1)
