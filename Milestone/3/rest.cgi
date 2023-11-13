@@ -55,6 +55,7 @@ login() {
         sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_id' WHERE epostadresse='$email';"
         echo "<session>Logged in with sessionID: '$session_id'. Cookie set.</session>"
     else
+        echo "<test>Dette er hashen: $hashed_password</test>"
         echo "<error>Invalid credentials</error>"
     fi
 }
