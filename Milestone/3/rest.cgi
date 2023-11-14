@@ -50,9 +50,9 @@ escape_xml() {
 }
 
 
-# MARK: - OK!
+# MARK: - LOGIN
 # Function to check credentials and create a session
-login() {
+do_login() {
     # Extract email and password from XML body
     local email=$(parse_xml "$HTTP_BODY" "//email/text()")
     local password=$(parse_xml "$HTTP_BODY" "//password/text()")
@@ -62,7 +62,6 @@ login() {
     local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Bruker WHERE epostadresse='$email' AND passordhash='$hashed_password';")
     
     if [[ $valid_credentials -eq 1 ]]; then
-        # TODO: Check bug
         # Check if user is logged in
         if is_logged_in; then
             # Never sent
@@ -102,7 +101,7 @@ do_logout() {
         # Send a header to remove the cookie
         echo "Set-Cookie: session_id=; Path=/; HttpOnly; Secure; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
         # Respond to confirm the user has been logged out
-        write_body "<message>User '$email' logged out</message>"
+        write_body "<message>User '$email' logged out.</message>"
     else
         # Respond to confirm the user has been logged out
         write_body "<message>No session detected.</message>"
@@ -183,24 +182,25 @@ get_dikt_from_id() {
         fi
     # If no ID specified, send all dikt
     else
-        local dikts=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt FROM Dikt;")
+        local dikts=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt, epostadresse FROM Dikt;")
         write_body "<dikt>"
         # SQLITE is pipe-seperated
-        while IFS='|' read -r diktID dikt; do
+        while IFS='|' read -r diktID dikt email; do
             dikt=$(escape_xml "$dikt")
-            echo "<id>$diktID</id><tittel>$dikt</tittel>"
+            echo "<id>$diktID</id><tittel>$dikt</tittel><epostadresse>$email</epostadresse>"
         done <<< "$dikts"
         echo "</dikt>"
     fi
 }
 
 
-# MARK: - OK!
-# Function to add a new dikt
+# MARK: - ADD A NEW DIKT
 add_dikt() {
-    local new_dikt="$1"
+    # Get session id from cookie environment variable
+    local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
+    local new_title=$(parse_xml "$HTTP_BODY" "//title/text()")
     # Get user belonging to session
-    local email=$(get_user | awk '{print $2}')
+    local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
     
     # If the user is logged in
     if is_logged_in; then
@@ -214,7 +214,7 @@ add_dikt() {
 }
 
 
-# MARK: - OK!
+# MARK: - EDIT EXISTING DIKT
 # Function edit existing dikt
 edit_dikt_from_id() {
     local diktID="$1"
@@ -288,9 +288,10 @@ URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
 QUERY_STRING=$(echo "$REQUEST_URI" | awk -F'?' '{print $2}')
 
 
+# MARK: - CASE statement
 # REST API logic
 case $METHOD in
-    # HTTP GET request. Matches SQL: SELECT
+    # MARK: - HTTP GET request. Matches SQL: SELECT
     GET)
         # Matches both /dikt and /dikt/{id} where {id} is a number
         if [[ "$URI" =~ ^/dikt(/([0-9]+))?$ ]]; then
@@ -303,32 +304,25 @@ case $METHOD in
         ;;
     
     
-    # HTTP POST request. Matches SQL: INSERT
+    # MARK: - HTTP POST request. Matches SQL: INSERT
     POST)
         read -r HTTP_BODY
         # Login functionality
         case "$URI" in
-            # Logoin logic
             /login)
-                # Extract email and password from XML body
-                EMAIL=$(parse_xml "$HTTP_BODY" "//email/text()")
-                PASSWORD=$(parse_xml "$HTTP_BODY" "//password/text()")
-                # Run my log-in function
-                login "$EMAIL" "$PASSWORD"
+                # Run my log in function
+                do_login
                 ;;
 
-
-            # Logout logic
             /logout)
-                # Run my logout function
+                # Run my log out function
                 do_logout
                 ;;
     
-
-            # Adding a new dikt functionality
             /dikt)
+                # Adding a new dikt functionality
                 TITLE=$(parse_xml "$HTTP_BODY" "//title/text()")
-                # Run my add function
+                # Run my add new dikt function
                 add_dikt "$TITLE"
                 ;;
 
@@ -336,7 +330,7 @@ case $METHOD in
         ;;
 
 
-    # HTTP PUT request. Matches SQL: UPDATE
+    # MARK: - HTTP PUT request. Matches SQL: UPDATE
     PUT)
         read -r HTTP_BODY
 
@@ -353,7 +347,7 @@ case $METHOD in
         ;;
 
 
-    # HTTP DELETE request. Matches SQL: DELETE
+    # MARK: - HTTP DELETE request. Matches SQL: DELETE
     DELETE)
         read -r HTTP_BODY
         
