@@ -357,4 +357,3 @@ case $METHOD in
         fi
         ;;
 esac
-
