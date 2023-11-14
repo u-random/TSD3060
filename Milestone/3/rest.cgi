@@ -95,6 +95,7 @@ do_logout() {
     # Get user belonging to session
     local email=$(echo "$user_data" | awk '{print $2}')
     
+    write_body "<message>Cookie '$session_cookie'</message>"
     # If session cookie is non-zero
     if [[ -n $session_cookie ]]; then
         # Invalidate the session in the database
@@ -135,6 +136,7 @@ is_logged_in() {
     fi
 }
 
+
 # MARK: - OK!
 # Get the current User based on session id in HTTP header
 get_user() {
@@ -158,6 +160,7 @@ get_user() {
 
     echo "$session_cookie $email"
 }
+
 
 # MARK: - OK!
 # Function to get a dikt from ID and return proper XML
