@@ -93,7 +93,7 @@ do_logout() {
     # Get session id from cookie
     local session_cookie=$(echo "$user_data" | awk '{print $1}')
     # Get user belonging to session
-    local email=$(echo "$user_data" | awk '{print $1}')
+    local email=$(echo "$user_data" | awk '{print $2}')
     
     if [[ -n $session_cookie ]]; then
         # Invalidate the session in the database
