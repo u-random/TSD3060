@@ -272,6 +272,7 @@ QUERY_STRING=$(echo "$REQUEST_URI" | awk -F'?' '{print $2}')
 case $METHOD in
     # HTTP GET request. Matches SQL: SELECT
     GET)
+        echo "<message>TEST</message>"
         # Matches both /dikt and /dikt/{id} where {id} is a number
         if [[ "$URI" =~ ^/dikt(/([0-9]+))?$ ]]; then
             # Extract diktID if provided, else this will be an empty string
