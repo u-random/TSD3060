@@ -180,13 +180,13 @@ get_dikt_from_id() {
     # If no ID specified, send all dikt
     else
         local dikts=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt FROM Dikt;")
-        write_body "<diktene>"
+        write_body "<dikt>"
         # SQLITE is pipe-seperated
         while IFS='|' read -r diktID dikt; do
             dikt=$(escape_xml "$dikt")
-            echo "<dikt id=\"$diktID\">$dikt</dikt>"
+            echo "<id>$diktID</id><tittel>$dikt</tittel>"
         done <<< "$dikts"
-        echo "</diktene>"
+        echo "</dikt>"
     fi
 }
 
