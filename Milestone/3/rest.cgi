@@ -64,8 +64,6 @@ login() {
     if [[ $valid_credentials -eq 1 ]]; then
         # Check if user is logged in
         if is_logged_in; then
-            write_body "<message>Hello, '$email'! You are already logged in!</message>"
-        else
             # Generate a session ID token with UUIDGEN
             local session_id=$(uuidgen)
             
@@ -75,6 +73,8 @@ login() {
             # Store session ID in the database for the user
             sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_id' WHERE epostadresse='$email';"
             write_body "<session>Logged in with sessionID: '$session_id'. Cookie set.</session>"
+        else
+            write_body "<message>Hello, '$email'! You are already logged in!</message>"
         fi
     else
         write_body "<error>Invalid credentials</error>"
@@ -85,10 +85,12 @@ login() {
 # MARK: - OK!
 # Function to logout a user
 do_logout() {
+    # Get the session cookie and user email from get_user function
+    local user_data=$(get_user)
     # Get session id from cookie
-    local session_cookie=$(get_user | awk '{print $1}')
+    local session_cookie=$(echo "$user_data" | awk '{print $1}')
     # Get user belonging to session
-    local user=$(get_user | awk '{print $2}')
+    local email=$(echo "$user_data" | awk '{print $1}')
     
     if [[ -n $session_cookie ]]; then
         # Invalidate the session in the database
@@ -96,7 +98,7 @@ do_logout() {
         # Send a header to remove the cookie
         echo "Set-Cookie: session_id=; Path=/; HttpOnly; Secure; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
         # Respond to confirm the user has been logged out
-        write_body "<response>User '$user' logged out</response>"
+        write_body "<response>User '$email' logged out</response>"
     fi
 }
 
@@ -237,25 +239,25 @@ is_logged_in() {
 # MARK: - OK!
 # Get the current User based on session id in HTTP header
 get_user() {
-    # Get session id from cookie
-        local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
+    # Get session id from cookie environment variable
+    local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
 
-        # Check if session_cookie is set
-        if [ -z "$session_cookie" ]; then
-            echo "<error>No session</error>"
-            return 1
-        fi
+    # Check if session_cookie is set
+    if [ -z "$session_cookie" ]; then
+        echo "<error>No session</error>"
+        return 1
+    fi
 
-        # Get user belonging to session
-        local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
+    # Get user belonging to session
+    local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
 
-        # Check if email is retrieved
-        if [ -z "$email" ]; then
-            echo "<error>No user found</error>"
-            return 1
-        fi
+    # Check if email is retrieved
+    if [ -z "$email" ]; then
+        echo "<error>No user found</error>"
+        return 1
+    fi
 
-        echo "$session_cookie $email"
+    echo "$session_cookie $email"
 }
 
 write_body() {
