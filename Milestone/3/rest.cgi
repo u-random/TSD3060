@@ -2,7 +2,6 @@
 
 # HEADERS
 echo "Content-Type: text/xml"
-echo ""
 
 #printf()
 
@@ -260,6 +259,13 @@ get_user() {
         echo "$session_cookie $email"
 }
 
+write_body() {
+    # Blank line to separate from header
+    echo ""
+    # First argument to function is message
+    echo "$1"
+}
+
 
 DATA_DIR="./" # Data directory path
 DATABASE_PATH="$DATA_DIR/DiktDatabase.db"
@@ -274,7 +280,7 @@ QUERY_STRING=$(echo "$REQUEST_URI" | awk -F'?' '{print $2}')
 case $METHOD in
     # HTTP GET request. Matches SQL: SELECT
     GET)
-        echo "<message>TEST</message>"
+        write_body "<message>TEST</message>"
         # Matches both /dikt and /dikt/{id} where {id} is a number
         if [[ "$URI" =~ ^/dikt(/([0-9]+))?$ ]]; then
             # Extract diktID if provided, else this will be an empty string
@@ -331,7 +337,7 @@ case $METHOD in
             # Run my edit function
             edit_dikt_from_id "$diktID" "$TITLE"
         else
-            echo "<error>Unable to update. {id} for dikt/{id} has to be a number.</error>"
+            write_body "<error>Unable to update. {id} for dikt/{id} has to be a number.</error>"
         fi
         ;;
 
