@@ -3,10 +3,6 @@
 # HEADERS
 echo "Content-Type: text/xml"
 
-#printf()
-
-
-
 
 # MARK: - OK!
 # Function to parse XML using xmllint and xpath
@@ -56,17 +52,16 @@ do_login() {
     # Extract email and password from XML body
     local email=$(parse_xml "$HTTP_BODY" "//email/text()")
     local password=$(parse_xml "$HTTP_BODY" "//password/text()")
-    local hashed_password=$(echo -n $password | sha256sum | cut -d ' ' -f 1)
+    local password_hash=$(echo -n $password | sha256sum | cut -d ' ' -f 1)
 
     # Check credentials against the database
-    local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Bruker WHERE epostadresse='$email' AND passordhash='$hashed_password';")
+    local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Bruker WHERE epostadresse='$email' AND passordhash='$password_hash';")
     
     if [[ $valid_credentials -eq 1 ]]; then
         # Check if user is logged in
         if is_logged_in; then
             # Never sent
-            write_body "<message>Hello, '$email'! You are already logged in!</message>"
-
+            write_body "<message>Hello, '$email'! You're already logged in!</message>"
         else
             # Generate a session ID token with UUIDGEN
             local session_cookie=$(uuidgen)
@@ -76,6 +71,8 @@ do_login() {
 
             # Store session ID in the database for the user
             sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_cookie' WHERE epostadresse='$email';"
+            
+            # Write welcome message
             write_body "<message>Welcome back, '$email'! You're logged in!</message>"
             echo "<debug>Cookie set with uuid: '$session_cookie'</debug>"
         fi
@@ -162,7 +159,7 @@ get_user() {
 # MARK: - GET DIKT
 # Function to get a dikt from ID and return proper XML
 get_dikt() {
-    # Extract diktID if provided, else this will be an empty string
+    # Extract diktID from array variable Bash_rematch with result of regex match
     local diktID=${BASH_REMATCH[2]}
     # Fetch the dikt with DiktID
     if [[ -n $diktID ]]; then
@@ -221,14 +218,16 @@ add_dikt() {
 
 
 # MARK: - EDIT EXISTING DIKT
-# Function edit existing dikt
 edit_dikt_from_id() {
-    local diktID="$1"
-    local new_title="$1"
-    # Get session id from cookie
-    local session_cookie=$(get_user | awk '{print $1}')
+    # Extract diktID from array variable Bash_rematch with result of regex match
+    local diktID=${BASH_REMATCH[2]}
+    local new_title=$(parse_xml "$HTTP_BODY" "//title/text()")
+    
+    # Get the session cookie and user email from get_user function
+    local user_data=$(get_user)
     # Get user belonging to session
-    local email=$(get_user | awk '{print $2}')
+    local email=$(echo "$user_data" | awk '{print $2}')
+        
     # Check if user is owner of dikt with ID = diktID
     local user_match=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE epostadresse='$email' AND diktID='$diktID';")
 
@@ -238,12 +237,12 @@ edit_dikt_from_id() {
             # Update dikt with new information
             sqlite3 $DATABASE_PATH "UPDATE Dikt (dikt, epostadresse) VALUES ('$new_dikt', '$email');"
             
-            echo "<message>SQLite database updated.</message>"
+            write_body "<message>SQLite database updated.</message>"
         else
-            echo "<error>You can't change someone elses dikt.</error>"
+            write_body "<error>You can't change someone elses dikt.</error>"
         fi
     else
-        echo "<error>You're not logged in. Log in to edit dikts.</error>"
+        write_body "<error>You're not logged in. Log in to edit dikts.</error>"
     fi
 }
 
@@ -334,14 +333,10 @@ case $METHOD in
     # MARK: - HTTP PUT request. Matches SQL: UPDATE
     PUT)
         read -r HTTP_BODY
-
-        # Should match only when {id} is a number
+        # REGEX for URI to match: only when {id} is a number
         if [[ "$URI" =~ ^/dikt(/([0-9]+))$ ]]; then
-            # Extract diktID if provided
-            diktID=${BASH_REMATCH[2]}
-            TITLE=$(parse_xml "$HTTP_BODY" "//dikt/text()")
             # Run my edit function
-            edit_dikt_from_id "$diktID" "$TITLE"
+            edit_dikt_from_id
         else
             write_body "<error>Unable to update. {id} for dikt/{id} has to be a number.</error>"
         fi
