@@ -17,19 +17,19 @@ parse_xml() {
     # Execute xmllint and check for errors
     
     # Debug: Echo input XML and XPath
-    echo "XML Input: $1" >&2
-    echo "XPath: $2" >&2
+    echo "XML Input: $1"
+    echo "XPath: $2"
 
     # Check if xmllint is available
     if ! command -v xmllint &> /dev/null; then
-        echo "Error: xmllint not found" >&2
+        echo "Error: xmllint not found"
         return 1
     fi
 
     # Execute xmllint and capture any errors
-    local result=$(echo "$1" | xmllint --xpath "$2" - 2>&1)
+    local result=$(echo "$1" | xmllint --xpath "$2" -)
     if [ $? -ne 0 ]; then
-        echo "xmllint error: $result" >&2
+        echo "xmllint error: $result"
         return 1
     fi
 
@@ -285,7 +285,7 @@ case $METHOD in
     
     # HTTP POST request. Matches SQL: INSERT
     POST)
-        read -r data
+        read -r HTTP_BODY
         # Login functionality
         case "$URI" in
             # Logoin logic
@@ -318,7 +318,7 @@ case $METHOD in
 
     # HTTP PUT request. Matches SQL: UPDATE
     PUT)
-        read -r data
+        read -r HTTP_BODY
 
         # Should match only when {id} is a number
         if [[ "$URI" =~ ^/dikt(/([0-9]+))$ ]]; then
@@ -335,7 +335,7 @@ case $METHOD in
 
     # HTTP DELETE request. Matches SQL: DELETE
     DELETE)
-        read -r data
+        read -r HTTP_BODY
         
         # Should match only when {id} is a number
         if [[ "$URI" =~ ^/dikt(/([0-9]+))$ ]]; then
