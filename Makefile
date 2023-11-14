@@ -65,5 +65,6 @@ clean:
 	rm -f $(OBJS) $(PROG) $(DIST)/bin/*
 	rm -rf tmp/
 	rm -f Milestone/3/DiktDatabase.db
+	rm -f /usr/lib/cgi-bin/*
 
 
