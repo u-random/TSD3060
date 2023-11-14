@@ -180,7 +180,7 @@ get_dikt() {
         fi
     # If no ID specified, send all dikt
     else
-        local all_output=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt, epostadresse, diktID FROM Dikt;")
+        local all_output=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt, epostadresse FROM Dikt;")
         write_dikt "$all_output"
     fi
 }
@@ -210,7 +210,7 @@ add_dikt() {
     # If the user is logged in
     if is_logged_in; then
         # Insert the new dikt into the database
-        sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES ('$new_dikt', '$email');"
+        sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES ('$new_title', '$email');"
         
         write_body "<message>SQLite database updated.</message>"
     else
