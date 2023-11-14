@@ -95,13 +95,17 @@ do_logout() {
     # Get user belonging to session
     local email=$(echo "$user_data" | awk '{print $2}')
     
+    # If session cookie is non-zero
     if [[ -n $session_cookie ]]; then
         # Invalidate the session in the database
         sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID=NULL WHERE sesjonsID='$session_cookie';"
         # Send a header to remove the cookie
         echo "Set-Cookie: session_id=; Path=/; HttpOnly; Secure; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
         # Respond to confirm the user has been logged out
-        write_body "<response>User '$email' logged out</response>"
+        write_body "<message>User '$email' logged out</message>"
+    else
+        # Respond to confirm the user has been logged out
+        write_body "<message>No session detected.</message>"
     fi
 }
 
@@ -323,7 +327,7 @@ case $METHOD in
 
             # Adding a new dikt functionality
             /dikt)
-                TITLE=$(parse_xml "$HTTP_BODY" "//dikt/text()")
+                TITLE=$(parse_xml "$HTTP_BODY" "//title/text()")
                 # Run my add function
                 add_dikt "$TITLE"
                 ;;
