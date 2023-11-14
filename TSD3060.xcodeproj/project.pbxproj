@@ -31,7 +31,6 @@
 
 /* Begin PBXFileReference section */
 		4F5D96612AA4DBD0004B386E /* TSD3060 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TSD3060; sourceTree = BUILT_PRODUCTS_DIR; };
-		4F6A75BD2ACEB51E00668276 /* DiktDatabase.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = DiktDatabase.db; sourceTree = "<group>"; };
 		4F9DD40B2AB9E4BC00228689 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		4F9DD40D2AB9E4BC00228689 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		4F9DD4182AB9E79C00228689 /* Mime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mime.h; sourceTree = "<group>"; };
@@ -51,10 +50,10 @@
 		4F9DD4262AB9E79C00228689 /* ArgumentParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArgumentParser.h; sourceTree = "<group>"; };
 		4F9DD4302AB9E7AF00228689 /* Distribution */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Distribution; sourceTree = "<group>"; };
 		4FF86E582AF8014D00690D53 /* web-application.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "web-application.scpt"; sourceTree = "<group>"; };
-		4FF86E5C2AF9967300690D53 /* rest.cgi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rest.cgi; sourceTree = "<group>"; };
+		4FF86E5C2AF9967300690D53 /* rest-3.cgi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "rest-3.cgi"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.sh; };
 		B94AA58A2AD42D9100C66BA2 /* unshare.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = unshare.sh; sourceTree = "<group>"; };
 		B95B36912AFE1B040000BE27 /* Dockerfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Dockerfile; sourceTree = "<group>"; };
-		B95B36922AFE1CE50000BE27 /* rest-2.cgi */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = text.script.sh; path = "rest-2.cgi"; sourceTree = "<group>"; };
+		B95B36922AFE1CE50000BE27 /* rest.cgi */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = text.script.sh; path = rest.cgi; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.sh; };
 		B9F410A72AD4316300A1283A /* DiktDatabase.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = DiktDatabase.sql; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -111,10 +110,9 @@
 		4F6A75CB2ACF29FF00668276 /* 3 */ = {
 			isa = PBXGroup;
 			children = (
-				B95B36922AFE1CE50000BE27 /* rest-2.cgi */,
-				4FF86E5C2AF9967300690D53 /* rest.cgi */,
+				B95B36922AFE1CE50000BE27 /* rest.cgi */,
+				4FF86E5C2AF9967300690D53 /* rest-3.cgi */,
 				B9F410A72AD4316300A1283A /* DiktDatabase.sql */,
-				4F6A75BD2ACEB51E00668276 /* DiktDatabase.db */,
 			);
 			path = 3;
 			sourceTree = "<group>";

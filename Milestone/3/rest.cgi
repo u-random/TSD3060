@@ -167,7 +167,9 @@ get_dikt_from_id() {
             # Prints Dikt if exists, error if not
             if [ -n "$dikt" ]; then
                 dikt=$(escape_xml "$dikt")
-                write_body "<dikt id=\"$diktID\">$dikt</dikt>"
+                write_body "<dikt>"
+                echo "<id>$diktID</id><tittel>$dikt</tittel>"
+                echo "</dikt>"
             else
                 write_body "<error>Dikt not found</error>"
             fi
