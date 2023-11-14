@@ -46,7 +46,7 @@ m2: $(PROG)
 	
 m3: $(M3_OBJS)
 	chmod 666 ./Milestone/3/DiktDatabase.db
-	cp $(M3_OBJS) $(CGIBINDIR)
+	cp ./Milestone/3/DiktDatabase.db $(CGIBINDIR)
 	@echo "Use your browser and connect to localhost:80"
 
 $(PROG): $(OBJS)
