@@ -235,8 +235,8 @@ edit_dikt_from_id() {
     if is_logged_in; then
         if [[ $user_match -eq 1 ]]; then
             # Update dikt with new information
-            sqlite3 $DATABASE_PATH "UPDATE Dikt (dikt) VALUES ('$new_title');"
-            
+            sqlite3 $DATABASE_PATH "UPDATE Dikt SET dikt = '$new_title' WHERE diktID = $diktID;"
+
             write_body "<message>SQLite database updated.</message>"
             echo "<debug>Data: '$new_title', user $email</debug>"
         else
