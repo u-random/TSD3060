@@ -55,7 +55,7 @@ escape_xml() {
 # Function to check credentials and create a session
 login() {
     # Extract email and password from XML body
-    printf("$HTTP_BODY")
+    printf("%s\n", $HTTP_BODY)
     local email=$(parse_xml "$HTTP_BODY" "//email/text()")
     local password=$(parse_xml "$HTTP_BODY" "//password/text()")
     local hashed_password=$(echo -n $password | sha256sum | cut -d ' ' -f 1)
