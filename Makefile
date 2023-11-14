@@ -55,6 +55,7 @@ $(PROG): $(OBJS)
 ./Milestone/3/DiktDatabase.db: ./Milestone/3/DiktDatabase.sql
 	@rm -f $@
 	sqlite3 $@ < $^
+	chmod +w $@
 	
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
