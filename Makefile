@@ -45,7 +45,7 @@ m2: $(PROG)
 	./Milestone/2/unshare.sh
 	
 m3: $(M3_OBJS)
-	@cp $(M3_OBJS) $(CGIBINDIR)
+	cp $(M3_OBJS) $(CGIBINDIR)
 	@echo "Use your browser and connect to localhost:80"
 
 $(PROG): $(OBJS)
@@ -53,7 +53,6 @@ $(PROG): $(OBJS)
 
 # Only builds/rebuilds the database if sql is changed
 ./Milestone/3/DiktDatabase.db: ./Milestone/3/DiktDatabase.sql
-	@rm -f $@
 	sqlite3 $@ < $^
 	chmod 666 $@
 	
