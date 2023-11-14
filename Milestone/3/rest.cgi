@@ -95,9 +95,8 @@ do_logout() {
     # Get user belonging to session
     local email=$(echo "$user_data" | awk '{print $2}')
     
-    write_body "<message>Cookie '$session_cookie'</message>"
-    # If session cookie is non-zero
-    if [[ -n $session_cookie ]]; then
+    # If user is logged in
+    if is_logged_in; then
         # Invalidate the session in the database
         sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID=NULL WHERE sesjonsID='$session_cookie';"
         # Send a header to remove the cookie
@@ -125,11 +124,11 @@ is_logged_in() {
     # Get user belonging to session
     local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
 
-    # Check credentials against the database
-    local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Sesjon WHERE epostadresse='$email' AND sesjonsID='$session_cookie';")
+    # Check if session is set in database
+    local valid_session=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Sesjon WHERE epostadresse='$email' AND sesjonsID='$session_cookie';")
 
     # If the user is logged in
-    if [[ $valid_credentials -eq 1 ]]; then
+    if [[ $valid_session -eq 1 ]]; then
         return 0 # Logged in
     else
         return 1 # Not logged in
@@ -137,7 +136,7 @@ is_logged_in() {
 }
 
 
-# MARK: - OK!
+# TODO: - Fix error handling
 # Get the current User based on session id in HTTP header
 get_user() {
     # Get session id from cookie environment variable
@@ -145,7 +144,6 @@ get_user() {
 
     # Check if session_cookie is set
     if [ -z "$session_cookie" ]; then
-        write_body "<error>No session</error>"
         return 1
     fi
 
@@ -154,7 +152,6 @@ get_user() {
 
     # Check if email is retrieved
     if [ -z "$email" ]; then
-        write_body "<error>No user found</error>"
         return 1
     fi
 
