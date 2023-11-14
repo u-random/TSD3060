@@ -158,10 +158,11 @@ get_user() {
 }
 
 
-# MARK: - OK!
+# MARK: - GET DIKT
 # Function to get a dikt from ID and return proper XML
-get_dikt_from_id() {
-    local diktID="$1"
+get_dikt() {
+    # Extract diktID if provided, else this will be an empty string
+    local diktID=${BASH_REMATCH[2]}
     # Fetch the dikt with DiktID
     if [[ -n $diktID ]]; then
         # Validate that the variable is numeric
@@ -297,11 +298,10 @@ URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
 case $METHOD in
     # MARK: - HTTP GET request. Matches SQL: SELECT
     GET)
-        # Matches both /dikt and /dikt/ and /dikt/{id} where {id} is a number. REGEX statement
+        # REGEX for URI to match: /dikt, /dikt/ and /dikt/{id} where {id} is a number.
         if [[ "$URI" =~ ^/dikt(/([0-9]+))?/?$ ]]; then
-            # Extract diktID if provided, else this will be an empty string
-            diktID=${BASH_REMATCH[2]}
-            get_dikt_from_id "$diktID"
+            # Run my function to get dikts
+            get_dikt
         else
             echo "<error>Invalid request. Use /dikt for all dikts or /dikt/{id} for a specific dikt.</error>"
         fi
@@ -329,7 +329,6 @@ case $METHOD in
                 # Run my add new dikt function
                 add_dikt "$TITLE"
                 ;;
-
         esac
         ;;
 
