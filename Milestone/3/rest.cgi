@@ -76,7 +76,8 @@ do_login() {
 
             # Store session ID in the database for the user
             sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_cookie' WHERE epostadresse='$email';"
-            write_body "<session>User: '$email'. Logged in with sessionID: '$session_cookie'. Cookie set.</session>"
+            write_body "<message>Welcome back, '$email'! You're logged in!</message>"
+            echo "<debug>Cookie set with uuid: '$session_cookie'</debug>"
         fi
     else
         write_body "<error>Invalid credentials</error>"
