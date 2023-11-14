@@ -46,6 +46,14 @@ escape_xml() {
 }
 
 
+write_body() {
+    # Blank line to separate from header
+    echo ""
+    # First argument to function is message
+    echo "$1"
+}
+
+
 # MARK: - LOGIN
 # Function to check credentials and create a session
 do_login() {
@@ -238,7 +246,7 @@ edit_dikt_from_id() {
             sqlite3 $DATABASE_PATH "UPDATE Dikt SET dikt = '$new_title' WHERE diktID = $diktID;"
 
             write_body "<message>SQLite database updated.</message>"
-            echo "<debug>Data: '$new_title', user $email</debug>"
+            #echo "<debug>Data: '$new_title', user $email</debug>"
         else
             write_body "<error>You can't change someone elses dikt.</error>"
         fi
@@ -251,11 +259,14 @@ edit_dikt_from_id() {
 # MARK: - OK!
 # This function is made to delete single dikts based on id
 delete_dikt_from_id() {
-    local diktID="$1"
-    # Get session id from cookie
-    local session_cookie=$(get_user | awk '{print $1}')
+    # Extract diktID if provided
+    local diktID=${BASH_REMATCH[2]}
+    
+    # Get the session cookie and user email from get_user function
+    local user_data=$(get_user)
     # Get user belonging to session
-    local email=$(get_user | awk '{print $2}')
+    local email=$(echo "$user_data" | awk '{print $2}')
+    
     # Check if user is owner of dikt with ID = diktID. 1 if vaild
     local user_match=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE epostadresse='$email' AND diktID='$diktID';")
 
@@ -265,23 +276,13 @@ delete_dikt_from_id() {
             # Delete given dikt
             sqlite3 $DATABASE_PATH "DELETE FROM Dikt WHERE diktID=$diktID AND epostadresse='$email';"
             
-            echo "<message>SQLite entry deleted.</message>"
+            write_body "<message>SQLite entry deleted.</message>"
         else
-            echo "<error>You can't delete someone elses dikt.</error>"
+            write_body "<error>You can't delete someone elses dikt.</error>"
         fi
     else
-        echo "<error>You're not logged in. Log in to delete dikts.</error>"
+        write_body "<error>You're not logged in. Log in to delete entries.</error>"
     fi
-}
-
-
-
-
-write_body() {
-    # Blank line to separate from header
-    echo ""
-    # First argument to function is message
-    echo "$1"
 }
 
 
@@ -347,13 +348,10 @@ case $METHOD in
     # MARK: - HTTP DELETE request. Matches SQL: DELETE
     DELETE)
         read -r HTTP_BODY
-        
         # Should match only when {id} is a number
         if [[ "$URI" =~ ^/dikt(/([0-9]+))$ ]]; then
-            # Extract diktID if provided
-            diktID=${BASH_REMATCH[2]}
             # Run my delete function
-            delete_dikt_from_id "$diktID"
+            delete_dikt_from_id
         else
             echo "<error>Cannot delete all dikts at once. {id} for dikt/{id} has to be a number.</error>"
         fi
