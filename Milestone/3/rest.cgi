@@ -192,7 +192,7 @@ write_dikt() {
     # SQLITE is pipe-seperated
     while IFS='|' read -r diktID dikt email; do
         dikt=$(escape_xml "$dikt")
-        echo "<id>$diktID</id><tittel>$dikt</tittel><epostadresse>$email</epostadresse>"
+        echo "<id>$diktID</id><tittel>$dikt</tittel><epost>$email</epost>"
     done <<< "$1"
     echo "</dikt>"
 }
@@ -283,13 +283,13 @@ write_body() {
 }
 
 
-DATA_DIR="./" # Data directory path
+# Data directory paths
+DATA_DIR="./"
 DATABASE_PATH="$DATA_DIR/DiktDatabase.db"
 
 # RESTful routing logic
 METHOD=$(echo "$REQUEST_METHOD")
 URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
-QUERY_STRING=$(echo "$REQUEST_URI" | awk -F'?' '{print $2}')
 
 
 # MARK: - CASE statement
@@ -297,8 +297,8 @@ QUERY_STRING=$(echo "$REQUEST_URI" | awk -F'?' '{print $2}')
 case $METHOD in
     # MARK: - HTTP GET request. Matches SQL: SELECT
     GET)
-        # Matches both /dikt and /dikt/{id} where {id} is a number
-        if [[ "$URI" =~ ^/dikt(/([0-9]+))?$ ]]; then
+        # Matches both /dikt and /dikt/ and /dikt/{id} where {id} is a number. REGEX statement
+        if [[ "$URI" =~ ^/dikt(/([0-9]+))?/?$ ]]; then
             # Extract diktID if provided, else this will be an empty string
             diktID=${BASH_REMATCH[2]}
             get_dikt_from_id "$diktID"
