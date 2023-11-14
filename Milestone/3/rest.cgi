@@ -17,8 +17,8 @@ parse_xml() {
     # Execute xmllint and check for errors
     
     # Debug: Echo input XML and XPath
-    echo "XML Input: $1"
-    echo "XPath: $2"
+    #echo "XML Input: $1"
+    #echo "XPath: $2"
 
     # Check if xmllint is available
     if ! command -v xmllint &> /dev/null; then
