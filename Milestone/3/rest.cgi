@@ -201,9 +201,9 @@ add_dikt() {
         # Insert the new dikt into the database
         sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES ('$new_dikt', '$email');"
         
-        echo "<message>SQLite database updated.</message>"
+        write_body "<message>SQLite database updated.</message>"
     else
-        echo "<error>You're not logged in. Log in to add a new dikt.</error>"
+        write_body "<error>You're not logged in. Log in to add a new dikt.</error>"
     fi
 }
 
