@@ -166,16 +166,10 @@ get_dikt_from_id() {
     if [[ -n $diktID ]]; then
         # Validate that the variable is numeric
         if [[ $diktID =~ ^[0-9]+$ ]]; then
-            local sql_out=$(sqlite3 $DATABASE_PATH "SELECT dikt, epostadresse FROM Dikt WHERE diktID=$diktID;")
+            local single_output=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt, epostadresse FROM Dikt WHERE diktID=$diktID;")
             # Prints Dikt if exists, error if not
-            if [ -n "$sql_out" ]; then
-                dikt=$(escape_xml "$dikt")
-                write_body "<dikt>"
-                while IFS='|' read -r dikt email; do
-                    dikt=$(escape_xml "$dikt")
-                    echo "<id>$diktID</id><tittel>$dikt</tittel><epostadresse>$email</epostadresse>"
-                done <<< "$sql_out"
-                echo "</dikt>"
+            if [ -n "$single_output" ]; then
+                write_dikt "$single_output"
             else
                 write_body "<error>Dikt not found</error>"
             fi
@@ -185,15 +179,22 @@ get_dikt_from_id() {
         fi
     # If no ID specified, send all dikt
     else
-        local sql_out=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt, epostadresse FROM Dikt;")
-        write_body "<dikt>"
-        # SQLITE is pipe-seperated
-        while IFS='|' read -r diktID dikt email; do
-            dikt=$(escape_xml "$dikt")
-            echo "<id>$diktID</id><tittel>$dikt</tittel><epostadresse>$email</epostadresse>"
-        done <<< "$sql_out"
-        echo "</dikt>"
+        local all_output=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt, epostadresse, diktID FROM Dikt;")
+        write_dikt "$all_output"
     fi
+}
+
+
+# Small function for writing XML tables
+write_dikt() {
+    # Write root element with space above, to seperate from header
+    write_body "<dikt>"
+    # SQLITE is pipe-seperated
+    while IFS='|' read -r diktID dikt email; do
+        dikt=$(escape_xml "$dikt")
+        echo "<id>$diktID</id><tittel>$dikt</tittel><epostadresse>$email</epostadresse>"
+    done <<< "$1"
+    echo "</dikt>"
 }
 
 
