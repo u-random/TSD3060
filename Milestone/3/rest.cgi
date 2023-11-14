@@ -70,14 +70,14 @@ login() {
 
         else
             # Generate a session ID token with UUIDGEN
-            local session_id=$(uuidgen)
+            local session_cookie=$(uuidgen)
             
             # Set a cookie HEADER with the session_id
-            echo "Set-Cookie: session_id=$session_id; Path=/; HttpOnly; Secure"
+            echo "Set-Cookie: session_id=$session_cookie; Path=/; HttpOnly; Secure"
 
             # Store session ID in the database for the user
-            sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_id' WHERE epostadresse='$email';"
-            write_body "<session>User: '$email'. Logged in with sessionID: '$session_id'. Cookie set.</session>"
+            sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_cookie' WHERE epostadresse='$email';"
+            write_body "<session>User: '$email'. Logged in with sessionID: '$session_cookie'. Cookie set.</session>"
         fi
     else
         write_body "<error>Invalid credentials</error>"
@@ -97,7 +97,7 @@ do_logout() {
     
     if [[ -n $session_cookie ]]; then
         # Invalidate the session in the database
-        sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID=NULL WHERE sesjonsID='$session_id';"
+        sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID=NULL WHERE sesjonsID='$session_cookie';"
         # Send a header to remove the cookie
         echo "Set-Cookie: session_id=; Path=/; HttpOnly; Secure; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
         # Respond to confirm the user has been logged out
