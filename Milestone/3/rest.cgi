@@ -21,14 +21,14 @@ parse_xml() {
 
     # Check if xmllint is available
     if ! command -v xmllint &> /dev/null; then
-        echo "Error: xmllint not found"
+        write_body "Error: xmllint not found"
         return 1
     fi
 
     # Execute xmllint and capture any errors
     local result=$(echo "$1" | xmllint --xpath "$2" -)
     if [ $? -ne 0 ]; then
-        echo "xmllint error: $result"
+        write_body "xmllint error: $result"
         return 1
     fi
 
@@ -54,7 +54,6 @@ escape_xml() {
 # Function to check credentials and create a session
 login() {
     # Extract email and password from XML body
-    echo "$HTTP_BODY"
     local email=$(parse_xml "$HTTP_BODY" "//email/text()")
     local password=$(parse_xml "$HTTP_BODY" "//password/text()")
     local hashed_password=$(echo -n $password | sha256sum | cut -d ' ' -f 1)
@@ -65,20 +64,20 @@ login() {
     if [[ $valid_credentials -eq 1 ]]; then
         # Check if user is logged in
         if is_logged_in; then
-            echo "<message>Hello, '$email'! You are already logged in!</message>"
+            write_body "<message>Hello, '$email'! You are already logged in!</message>"
         else
             # Generate a session ID token with UUIDGEN
             local session_id=$(uuidgen)
             
-            # Set a cookie header with the session_id
+            # Set a cookie HEADER with the session_id
             echo "Set-Cookie: session_id=$session_id; Path=/; HttpOnly; Secure"
 
             # Store session ID in the database for the user
             sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_id' WHERE epostadresse='$email';"
-            echo "<session>Logged in with sessionID: '$session_id'. Cookie set.</session>"
+            write_body "<session>Logged in with sessionID: '$session_id'. Cookie set.</session>"
         fi
     else
-        echo "<error>Invalid credentials</error>"
+        write_body "<error>Invalid credentials</error>"
     fi
 }
 
@@ -97,7 +96,7 @@ do_logout() {
         # Send a header to remove the cookie
         echo "Set-Cookie: session_id=; Path=/; HttpOnly; Secure; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
         # Respond to confirm the user has been logged out
-        echo "<response>User '$user' logged out</response>"
+        write_body "<response>User '$user' logged out</response>"
     fi
 }
 
