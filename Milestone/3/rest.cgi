@@ -166,12 +166,15 @@ get_dikt_from_id() {
     if [[ -n $diktID ]]; then
         # Validate that the variable is numeric
         if [[ $diktID =~ ^[0-9]+$ ]]; then
-            local dikt=$(sqlite3 $DATABASE_PATH "SELECT dikt FROM Dikt WHERE diktID=$diktID;")
+            local sql_out=$(sqlite3 $DATABASE_PATH "SELECT dikt, epostadresse FROM Dikt WHERE diktID=$diktID;")
             # Prints Dikt if exists, error if not
-            if [ -n "$dikt" ]; then
+            if [ -n "$sql_out" ]; then
                 dikt=$(escape_xml "$dikt")
                 write_body "<dikt>"
-                echo "<id>$diktID</id><tittel>$dikt</tittel>"
+                while IFS='|' read -r dikt email; do
+                    dikt=$(escape_xml "$dikt")
+                    echo "<id>$diktID</id><tittel>$dikt</tittel><epostadresse>$email</epostadresse>"
+                done <<< "$sql_out"
                 echo "</dikt>"
             else
                 write_body "<error>Dikt not found</error>"
@@ -182,13 +185,13 @@ get_dikt_from_id() {
         fi
     # If no ID specified, send all dikt
     else
-        local dikts=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt, epostadresse FROM Dikt;")
+        local sql_out=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt, epostadresse FROM Dikt;")
         write_body "<dikt>"
         # SQLITE is pipe-seperated
         while IFS='|' read -r diktID dikt email; do
             dikt=$(escape_xml "$dikt")
             echo "<id>$diktID</id><tittel>$dikt</tittel><epostadresse>$email</epostadresse>"
-        done <<< "$dikts"
+        done <<< "$sql_out"
         echo "</dikt>"
     fi
 }
