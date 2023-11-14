@@ -238,6 +238,7 @@ edit_dikt_from_id() {
             sqlite3 $DATABASE_PATH "UPDATE Dikt (dikt, epostadresse) VALUES ('$new_dikt', '$email');"
             
             write_body "<message>SQLite database updated.</message>"
+            echo "<debug>Data: '$new_dikt', user $email</debug>"
         else
             write_body "<error>You can't change someone elses dikt.</error>"
         fi
