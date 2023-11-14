@@ -303,7 +303,7 @@ case $METHOD in
             # Run my function to get dikts
             get_dikt
         else
-            echo "<error>Invalid request. Use /dikt for all dikts or /dikt/{id} for a specific dikt.</error>"
+            write_body "<error>Invalid request. Use /dikt for all dikts or /dikt/{id} for a specific dikt.</error>"
         fi
         ;;
     
@@ -311,7 +311,6 @@ case $METHOD in
     # MARK: - HTTP POST request. Matches SQL: INSERT
     POST)
         read -r HTTP_BODY
-        # Login functionality
         case "$URI" in
             /login)
                 # Run my log in function
@@ -324,10 +323,8 @@ case $METHOD in
                 ;;
     
             /dikt)
-                # Adding a new dikt functionality
-                TITLE=$(parse_xml "$HTTP_BODY" "//title/text()")
                 # Run my add new dikt function
-                add_dikt "$TITLE"
+                add_dikt
                 ;;
         esac
         ;;
