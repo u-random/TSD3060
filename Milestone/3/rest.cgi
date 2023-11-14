@@ -139,7 +139,7 @@ get_user() {
 
     # Check if session_cookie is set
     if [ -z "$session_cookie" ]; then
-        echo "<error>No session</error>"
+        write_body "<error>No session</error>"
         return 1
     fi
 
@@ -148,7 +148,7 @@ get_user() {
 
     # Check if email is retrieved
     if [ -z "$email" ]; then
-        echo "<error>No user found</error>"
+        write_body "<error>No user found</error>"
         return 1
     fi
 
@@ -167,18 +167,18 @@ get_dikt_from_id() {
             # Prints Dikt if exists, error if not
             if [ -n "$dikt" ]; then
                 dikt=$(escape_xml "$dikt")
-                echo "<dikt id=\"$diktID\">$dikt</dikt>"
+                write_body "<dikt id=\"$diktID\">$dikt</dikt>"
             else
-                echo "<error>Dikt not found</error>"
+                write_body "<error>Dikt not found</error>"
             fi
         # Prints errormessage if diktID is not a number
         else
-            echo "<error>Invalid Dikt ID. It has to be a number.</error>"
+            write_body "<error>Invalid Dikt ID. It has to be a number.</error>"
         fi
     # If no ID specified, send all dikt
     else
         local dikts=$(sqlite3 $DATABASE_PATH "SELECT diktID, dikt FROM Dikt;")
-        echo "<diktene>"
+        write_body "<diktene>"
         # SQLITE is pipe-seperated
         while IFS='|' read -r diktID dikt; do
             dikt=$(escape_xml "$dikt")
