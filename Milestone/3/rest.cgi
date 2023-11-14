@@ -62,8 +62,13 @@ login() {
     local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Bruker WHERE epostadresse='$email' AND passordhash='$hashed_password';")
     
     if [[ $valid_credentials -eq 1 ]]; then
+        # TODO: Check bug
         # Check if user is logged in
         if is_logged_in; then
+            # Never sent
+            write_body "<message>Hello, '$email'! You are already logged in!</message>"
+
+        else
             # Generate a session ID token with UUIDGEN
             local session_id=$(uuidgen)
             
@@ -72,9 +77,7 @@ login() {
 
             # Store session ID in the database for the user
             sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_id' WHERE epostadresse='$email';"
-            write_body "<session>Logged in with sessionID: '$session_id'. Cookie set.</session>"
-        else
-            write_body "<message>Hello, '$email'! You are already logged in!</message>"
+            write_body "<session>User: '$email'. Logged in with sessionID: '$session_id'. Cookie set.</session>"
         fi
     else
         write_body "<error>Invalid credentials</error>"
