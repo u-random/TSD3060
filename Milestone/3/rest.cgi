@@ -104,6 +104,55 @@ do_logout() {
 
 
 # MARK: - OK!
+# Test if user is logged in and session is valid
+is_logged_in() {
+    # Get session id from cookie
+    local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
+    
+    # Check if session_cookie is set
+    if [ -z "$session_cookie" ]; then
+        return 1 # Not logged in if the session cookie is empty
+    fi
+
+    # Get user belonging to session
+    local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
+
+    # Check credentials against the database
+    local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Sesjon WHERE epostadresse='$email' AND sesjonsID='$session_cookie';")
+
+    # If the user is logged in
+    if [[ $valid_credentials -eq 1 ]]; then
+        return 0 # Logged in
+    else
+        return 1 # Not logged in
+    fi
+}
+
+# MARK: - OK!
+# Get the current User based on session id in HTTP header
+get_user() {
+    # Get session id from cookie environment variable
+    local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
+
+    # Check if session_cookie is set
+    if [ -z "$session_cookie" ]; then
+        echo "<error>No session</error>"
+        return 1
+    fi
+
+    # Get user belonging to session
+    local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
+
+    # Check if email is retrieved
+    if [ -z "$email" ]; then
+        echo "<error>No user found</error>"
+        return 1
+    fi
+
+    echo "$session_cookie $email"
+}
+
+# MARK: - OK!
 # Function to get a dikt from ID and return proper XML
 get_dikt_from_id() {
     local diktID="$1"
@@ -211,54 +260,7 @@ delete_dikt_from_id() {
 }
 
 
-# MARK: - OK!
-# Test if user is logged in and session is valid
-is_logged_in() {
-    # Get session id from cookie
-    local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
-    
-    # Check if session_cookie is set
-    if [ -z "$session_cookie" ]; then
-        return 1 # Not logged in if the session cookie is empty
-    fi
 
-    # Get user belonging to session
-    local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
-
-    # Check credentials against the database
-    local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Sesjon WHERE epostadresse='$email' AND sesjonsID='$session_cookie';")
-
-    # If the user is logged in
-    if [[ $valid_credentials -eq 1 ]]; then
-        return 0 # Logged in
-    else
-        return 1 # Not logged in
-    fi
-}
-
-# MARK: - OK!
-# Get the current User based on session id in HTTP header
-get_user() {
-    # Get session id from cookie environment variable
-    local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
-
-    # Check if session_cookie is set
-    if [ -z "$session_cookie" ]; then
-        echo "<error>No session</error>"
-        return 1
-    fi
-
-    # Get user belonging to session
-    local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
-
-    # Check if email is retrieved
-    if [ -z "$email" ]; then
-        echo "<error>No user found</error>"
-        return 1
-    fi
-
-    echo "$session_cookie $email"
-}
 
 write_body() {
     # Blank line to separate from header
@@ -281,7 +283,6 @@ QUERY_STRING=$(echo "$REQUEST_URI" | awk -F'?' '{print $2}')
 case $METHOD in
     # HTTP GET request. Matches SQL: SELECT
     GET)
-        write_body "<message>TEST</message>"
         # Matches both /dikt and /dikt/{id} where {id} is a number
         if [[ "$URI" =~ ^/dikt(/([0-9]+))?$ ]]; then
             # Extract diktID if provided, else this will be an empty string
