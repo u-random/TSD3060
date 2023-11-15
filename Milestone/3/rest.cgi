@@ -17,14 +17,14 @@ parse_xml() {
 
     # Check if xmllint is available
     if ! command -v xmllint &> /dev/null; then
-        write_body "Error: xmllint not found"
+        write_body "<error>Xmllint not found.</error>"
         return 1
     fi
 
     # Execute xmllint and capture any errors
     local result=$(echo "$1" | xmllint --xpath "$2" -)
     if [ $? -ne 0 ]; then
-        write_body "xmllint error: $result"
+        write_body "<error>Xmllint result: $result</error>"
         return 1
     fi
 
