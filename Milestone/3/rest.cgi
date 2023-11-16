@@ -44,10 +44,10 @@ parse_xml() {
     fi
 
     # Validate XML against the embedded schema
-    if ! echo "$xml_schema" | xmllint --schema - --noout <(echo "$1") &> /dev/null; then
-        write_body "<error>XML not valid.</error>"
-        return 1
-    fi
+    #if ! echo "$xml_schema" | xmllint --schema - --noout <(echo "$1") &> /dev/null; then
+    #    write_body "<error>XML not valid.</error>"
+    #    return 1
+    #fi
 
     # Execute xmllint and capture any errors
     local result=$(echo "$1" | xmllint --xpath "$2" -)
