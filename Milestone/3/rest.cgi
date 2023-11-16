@@ -262,6 +262,9 @@ edit_dikt_from_id() {
     local diktID=${BASH_REMATCH[2]}
     local new_title=$(parse_xml "$HTTP_BODY" "//title/text()")
     
+    # Check if diktID exists
+    local id_match=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE diktID='$diktID';")
+    
     # Get the session cookie and user email from get_user function
     local user_data=$(get_user)
     # Get user belonging to session
@@ -272,14 +275,18 @@ edit_dikt_from_id() {
 
     # If the user is logged in
     if is_logged_in; then
-        if [[ $user_match -eq 1 ]]; then
-            # Update dikt with new information
-            sqlite3 $DATABASE_PATH "UPDATE Dikt SET dikt = '$new_title' WHERE diktID = $diktID;"
+        if [[ $id_match -eq 1 ]]; then
+            if [[ $user_match -eq 1 ]]; then
+                # Update dikt with new information
+                sqlite3 $DATABASE_PATH "UPDATE Dikt SET dikt = '$new_title' WHERE diktID = $diktID;"
 
-            write_body "<message>SQLite database updated.</message>"
-            #echo "<debug>Data: '$new_title', user $email</debug>"
+                write_body "<message>SQLite database updated.</message>"
+                #echo "<debug>Data: '$new_title', user $email</debug>"
+            else
+                write_body "<error>You can't change someone elses dikt.</error>"
+            fi
         else
-            write_body "<error>You can't change someone elses dikt.</error>"
+            write_body "<error>This dikt does not exist. Use an existing id for changes.</error>"
         fi
     else
         write_body "<error>You're not logged in. Log in to edit dikts.</error>"
