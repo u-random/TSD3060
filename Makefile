@@ -93,5 +93,5 @@ clean:
 	rm -rf tmp/
 	rm -f Milestone/3/DiktDatabase.db
 	rm -f /usr/lib/cgi-bin/*
-	docker rm $(CONTAINER_NAME)
-	docker rmi $(IMAGE_NAME)
+#	docker rm $(CONTAINER_NAME)
+#	docker rmi $(IMAGE_NAME)
