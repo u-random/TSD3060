@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Code partly from Thomas Nordli's unshare-container3.sh
+# Code partly from Thomas Nordli's "unshare-container3.sh"
 
 # Initialize an unprivileged container environment
 # ROOT_FILE_SYSTEM serves as the root file system for the container

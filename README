@@ -33,7 +33,7 @@ stop        To stop the server
 
 
 START the server from TSD3060 directory:
-./TSD3060 -r Distribution -p 55556 -i start
+./TSD3060 -r Distribution -p 55556 -i
 
 
 STOP the server from TSD3060 directory: (You only need Distribution directory as an agrument here, because that is used as reference to the pid file, which is needed to stop the server in its daemonized state, as it has no shell connected.)
