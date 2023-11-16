@@ -3,16 +3,31 @@
 # HEADERS
 echo "Content-Type: text/xml"
 
-# XML Schema
+# XML Schema for validating incoming data
 xml_schema=
 '
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <!-- Your XML Schema Definition Here -->
+    <xs:element name="dikt">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="title" type="xs:string"/>
+        <xs:element name="user" type="xs:string" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="login">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="email" type="xs:string"/>
+        <xs:element name="password" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>
 '
 
-# MARK: - OK!
+# MARK: - PARSE AND VALIDATE XML FROM REQUEST BODY
 # Function to parse XML using xmllint and xpath
 parse_xml() {
     # $1 is expected to be the XML input
@@ -29,6 +44,12 @@ parse_xml() {
         return 1
     fi
 
+    # Validate XML against the embedded schema
+    if ! echo "$xml_schema" | xmllint --schema - --noout <(echo "$1") &> /dev/null; then
+        write_body "<error>XML not valid.</error>"
+        return 1
+    fi
+
     # Execute xmllint and capture any errors
     local result=$(echo "$1" | xmllint --xpath "$2" -)
     if [ $? -ne 0 ]; then
@@ -40,7 +61,7 @@ parse_xml() {
 }
 
 
-# MARK: - TODO!
+# MARK: - REFACTORING SPECIAL XML CHARACTERS
 # TODO: This could be used more in the following functions
 # Special XML characters should be replaced
 escape_xml() {
@@ -98,7 +119,7 @@ do_login() {
 }
 
 
-# MARK: - OK!
+# MARK: - LOG USER OUT
 # Function to logout a user
 do_logout() {
     # Get the session cookie and user email from get_user function
@@ -123,7 +144,7 @@ do_logout() {
 }
 
 
-# MARK: - OK!
+# MARK: - CHECK IF USER IS LOGGED IN
 # Test if user is logged in and session is valid
 is_logged_in() {
     # Get session id from cookie
@@ -149,8 +170,8 @@ is_logged_in() {
 }
 
 
-# TODO: - Fix error handling
-# Get the current User based on session id in HTTP header
+# Mark: - GET USER DATA
+# Get the current User based on only on session id in HTTP header.
 get_user() {
     # Get session id from cookie environment variable
     local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
@@ -172,7 +193,7 @@ get_user() {
 }
 
 
-# MARK: - GET DIKT
+# MARK: - GET DIKT, ONE OR ALL
 # Function to get a dikt from ID and return proper XML
 get_dikt() {
     # Extract diktID from array variable Bash_rematch with result of regex match
@@ -233,7 +254,7 @@ add_dikt() {
 }
 
 
-# MARK: - EDIT EXISTING DIKT
+# MARK: - EDIT AN EXISTING DIKT
 edit_dikt_from_id() {
     # Extract diktID from array variable Bash_rematch with result of regex match
     local diktID=${BASH_REMATCH[2]}
@@ -264,7 +285,7 @@ edit_dikt_from_id() {
 }
 
 
-# MARK: - OK!
+# MARK: - DELETE A DIKT
 # This function is made to delete single dikts based on id
 delete_dikt_from_id() {
     # Extract diktID if provided
