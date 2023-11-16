@@ -3,6 +3,14 @@
 # HEADERS
 echo "Content-Type: text/xml"
 
+# XML Schema
+xml_schema=
+'
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <!-- Your XML Schema Definition Here -->
+</xs:schema>
+'
 
 # MARK: - OK!
 # Function to parse XML using xmllint and xpath
