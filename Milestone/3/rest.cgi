@@ -115,6 +115,9 @@ do_login() {
         fi
     else
         write_body "<error>Invalid credentials</error>"
+        echo "<debug>Passhash: '$password_hash'</debug>"
+        echo "<debug>Pass: '$password'</debug>"
+        echo "<debug>Email: '$email'</debug>"
     fi
 }
 
