@@ -4,8 +4,7 @@
 echo "Content-Type: text/xml"
 
 # XML Schema for validating incoming data
-xml_schema=
-'
+xml_schema='
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="dikt">
