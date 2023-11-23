@@ -1,143 +1,150 @@
+
 #!/bin/bash
 
-# Use HTML forms for the CRUD Operation
-
-# Interface with several servers on local host, MP 2, MP 3.
-# Use HTTP GET, POST, PUT, DELETE to MP 3 server for all data
-
-# Use URI as definition:
-# /dikt or /dikt/ for all dikt
-# /dikt/1 for single dikt with HTML form below to edit, if logged in
-
-# On main /dikt page, there should be a login button at the top if not logged in.
-# Logged in status, username and logout button if logged in
-
-# Below should be the full dikt database list
-
-# Below that should be the ADD dikt HTML FORM
-
-# To delete, there are alternatives:
-# 1. Delete button beside the dikt entries on main page
-# 2. Delete button on dikt/id page, not visible from main page
-# 3. Delete text field, where ID can be specified, semicolon seperated.
+# HEADERS
+echo "Content-Type: text/xml"
 
 
-start
-    Har vi session cookie?
-      Nei: vis login knapp ->
-        1. hente alle dikt -> all()
-        2. hente ut ett bestemt dikt (gitt diktID)
-      Ja: vis logout knapp ->
-        1. hente alle dikt,
-        2. hente ut ett bestemt dikt (gitt diktID)
-        3. legge til nytt dikt,
-        4. endre egne dikt,
-        5. slette eget dikt (gitt diktID) og
-        6. slette alle egne dikt
-      
-
-template.html kjør
-
-sed 's/@content@/'"$content"'/'  template.html
-
-
-alle() {
-
-# Content
-if [ loggedin ]
-then
-cat << EOF
-    <button style="float:right;">Login</button>
-EOF
-else
-cat << EOF
-    <button  style="float:right;">Logout</button>
-EOF
-if
-
-sed 's/@content@/$content/' template.html
-
-hent alle dikt from curl -i localhost:8280/dikt xml-format:
-
-<dikt>
-<id>1</id><tittel>Skrønebok</tittel><epost>demo@demomail.com</epost>
-<id>2</id><tittel>Skrønebok 2. Vittighetenes tilbakekomst!</tittel><epost>demo@demomail.com</epost>
-<id>3</id><tittel>Skrønebok 3. Atter en vits!</tittel><epost>demo@demomail.com</epost>
-</dikt>
-
-Bruk awk og spørr chatgpt om transformer til HTML:
-
-<style>
- table {width:100%; text-align:left;}
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
+write_body() {
+    # Blank line to separate from header
+    echo ""
+    # First argument to function is message
+    echo "$1"
 }
-td,th { padding: 5px 2px 5px 5px; }
-</style>
-<table>
-    <tr>
-        <th style="width:5%; text-align:center">#</th>
-        <th>Dikt</th>
-    </tr>
-    <tr>
-        <td style="text-align:center">1</td>
-        <td>
-            <a href="/container2/dikt/1">Skrønebok</a>
-        </td>
-    </tr>
-    <tr>
-        <td style="text-align:center">2</td>
-        <td>
-            <a href="/container2/dikt/2">Skrønebok 2. Vittighetenes tilbakekomst!</a>
-        </td>
-    </tr>
-    <tr>
-        <td style="text-align:center">3</td>
-        <td>
-            <a href="/container2/dikt/3">Skrønebok</a>
-        </td>
-    </tr>
-</table>
+
+write_html_error() {
+    # Blank line to separate from header
+    echo ""
+    
+    # Write contents of argument inside proper HTML
+    cat << EOF
+    <!doctype html>
+    <html>
+        <head>
+            <meta charset='utf-8'>
+            <title>Error message</title>
+        </head>
+        <body>
+            <h1>$1</h1>
+        </body>
+    </html>
+    EOF
+
+}
+
+# Takes a title as an argument
+html_begin() {
+    # Blank line to separate from header
+    echo ""
+    
+    # Write HTML header
+    cat << EOF
+    <!doctype html>
+    <html>
+        <head>
+            <meta charset='utf-8'>
+            <title>$1</title>
+        </head>
+        <body>
+    EOF
+    
+}
+
+html_end() {
+    cat << EOF
+        </body>
+    </html>
+    EOF
+}
+
+# MARK: - Start Page V
+# This function is made to show all or single dikts, and a login box.
+start_page() {
+    get_dikt
+    login_form
+}
 
 
-#
 
+
+
+
+
+
+
+
+
+
+
+# MARK: - LOGIN V
+# Function to check credentials and create a session
 do_login() {
+    # Extract email and password from XML body
+    local email=$(parse_xml "$HTTP_BODY" "//email/text()")
+    local password=$(parse_xml "$HTTP_BODY" "//password/text()")
+    local password_hash=$(echo -n $password | sha256sum | cut -d ' ' -f 1)
 
-curl -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d '<login><email>demo@demomail.com</email><password>admin</password></login>' http://localhost:8280/login
+    # Check credentials against the database
+    local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Bruker WHERE epostadresse='$email' AND passordhash='$password_hash';")
+    
+    if [[ $valid_credentials -eq 1 ]]; then
+        # Check if user is logged in
+        if is_logged_in; then
+            # Never sent
+            write_body "<message>Hello, '$email'! You're already logged in!</message>"
+        else
+            # Generate a session ID token with UUIDGEN
+            local session_cookie=$(uuidgen)
+            
+            # Set a cookie HEADER with the session_id
+            echo "Set-Cookie: session_id=$session_cookie; Path=/; HttpOnly; Secure"
 
-
-read HTTP_BODY
-
-cat << EOF
-<!doctype html>
-<html>
-    <head>
-        <meta charset='utf-8'>
-        <title>LOGIN</title>
-    </head>
-    <body>
-        <form action="http://container3/login" method='post'>
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username"><br>
-            <label for="password">Password:</label><br>
-            <input type="password" id="password" name="password"><br>
-            <input type="submit" value="Login">
-        </form>
-        <pre>
-        Debug info om HTTP-forespørsel:
-        -------------------------
-        Kroppens innhold: $HTTP_BODY
-        Metode:           $REQUEST_METHOD
-        Kroppens lengde:  $CONTENT_LENGTH
-        </pre>
-    </body>
-</html>
-EOF
+            # Store session ID in the database for the user
+            sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_cookie' WHERE epostadresse='$email';"
+            
+            # Write welcome message
+            write_body "<message>Welcome back, '$email'! You're logged in!</message>"
+            echo "<debug>Cookie set with uuid: '$session_cookie'</debug>"
+        fi
+    else
+        write_body "<error>Invalid credentials</error>"
+        echo "<debug>Passhash: '$password_hash'</debug>"
+        echo "<debug>Pass: '$password'</debug>"
+        echo "<debug>Email: '$email'</debug>"
+    fi
 }
 
-# MARK: - GET DIKT, ONE OR ALL
+
+# MARK: - LOG USER OUT V
+# Function to logout a user
+do_logout() {
+    # Get the session cookie and user email from get_user function
+    local user_data=$(get_user)
+    # Get session id from cookie
+    local session_cookie=$(echo "$user_data" | awk '{print $1}')
+    # Get user belonging to session
+    local email=$(echo "$user_data" | awk '{print $2}')
+    
+    # If user is logged in
+    if is_logged_in; then
+        # Invalidate the session in the database
+        sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID=NULL WHERE sesjonsID='$session_cookie';"
+        # Send a header to remove the cookie
+        echo "Set-Cookie: session_id=; Path=/; HttpOnly; Secure; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+        # Respond to confirm the user has been logged out
+        write_body "<message>User '$email' logged out.</message>"
+    else
+        # Respond to confirm the user has been logged out
+        write_body "<message>No session detected.</message>"
+    fi
+}
+
+
+
+
+# TODO: - How to check for logged in status?
+
+# MARK: - GET DIKT, ONE OR ALL OK
 # Function to get a dikt from ID and return proper XML
 get_dikt() {
     # Extract diktID from array variable Bash_rematch with result of regex match
@@ -150,7 +157,7 @@ get_dikt() {
             dikt_from_xml "$xml_response"
         # Prints errormessage if diktID is not a number
         else
-            write_body "<error>Invalid Dikt ID. It has to be a number.</error>"
+            write_html_error "Invalid Dikt ID. It has to be a number."
         fi
     # If no ID specified, send all dikt
     else
@@ -159,14 +166,13 @@ get_dikt() {
     fi
 }
 
-
-# MARK: - To print dikts, used in get_dikt
+# MARK: - To print dikts, used in get_dikt OK
 dikt_from_xml() {
-# Execute curl and store the response
-xml_response=$(curl -i localhost:8280/dikt)
+
+html_begin "Dikts"
 
 # Use the response in an awk script
-echo "$xml_response" | awk '
+echo "$1" | awk '
 BEGIN {
     print "<table>";
     print "    <tr>";
@@ -192,43 +198,109 @@ BEGIN {
 END {
     print "</table>";
 }'
+
+html_end
+
 }
 
 
 
-echo "Content-type: text/html"
-echo ""
 
-# Method detection (rudimentary)
-METHOD=$(echo $REQUEST_METHOD)
-URI=$(echo $REQUEST_URI)
 
-# Basic Routing
-case $URI in
-    "/dikt"|"dikt/")
-        # Handle main page
-        if [ "$METHOD" = "GET" ]; then
-            # Display list of dikts
-            # Use curl to get data from API and parse it to display
+
+# MARK: - ADD A NEW DIKT V
+add_dikt() {
+    # Get session id from cookie environment variable
+    local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
+    local new_title=$(parse_xml "$HTTP_BODY" "//title/text()")
+    # Get user belonging to session
+    local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
+    
+    # If the user is logged in
+    if is_logged_in; then
+        # Insert the new dikt into the database
+        sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES ('$new_title', '$email');"
+        
+        write_body "<message>SQLite database updated.</message>"
+    else
+        write_body "<error>You're not logged in. Log in to add a new dikt.</error>"
+    fi
+}
+
+
+# MARK: - EDIT AN EXISTING DIKT V
+edit_dikt_from_id() {
+    # Extract diktID from array variable Bash_rematch with result of regex match
+    local diktID=${BASH_REMATCH[2]}
+    local new_title=$(parse_xml "$HTTP_BODY" "//title/text()")
+    
+    # Check if diktID exists
+    local id_match=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE diktID='$diktID';")
+    
+    # Get the session cookie and user email from get_user function
+    local user_data=$(get_user)
+    # Get user belonging to session
+    local email=$(echo "$user_data" | awk '{print $2}')
+        
+    # Check if user is owner of dikt with ID = diktID
+    local user_match=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE epostadresse='$email' AND diktID='$diktID';")
+
+    # If the user is logged in
+    if is_logged_in; then
+        if [[ $id_match -eq 1 ]]; then
+            if [[ $user_match -eq 1 ]]; then
+                # Update dikt with new information
+                sqlite3 $DATABASE_PATH "UPDATE Dikt SET dikt = '$new_title' WHERE diktID = $diktID;"
+
+                write_body "<message>SQLite database updated.</message>"
+                #echo "<debug>Data: '$new_title', user $email</debug>"
+            else
+                write_body "<error>You can't change someone elses dikt.</error>"
+            fi
+        else
+            write_body "<error>This dikt does not exist. Use an existing id for changes.</error>"
         fi
-        ;;
-    "/dikt/[0-9]+" )
-        # Handle individual dikt
-        if [ "$METHOD" = "GET" ]; then
-            # Display individual dikt
-            # Use curl to get data from API and parse it
+    else
+        write_body "<error>You're not logged in. Log in to edit dikts.</error>"
+    fi
+}
+
+
+# MARK: - DELETE A DIKT V
+# This function is made to delete single dikts based on id
+delete_dikt_from_id() {
+    # Extract diktID if provided
+    local diktID=${BASH_REMATCH[2]}
+    
+    # Get the session cookie and user email from get_user function
+    local user_data=$(get_user)
+    # Get user belonging to session
+    local email=$(echo "$user_data" | awk '{print $2}')
+    
+    # Check if user is owner of dikt with ID = diktID. 1 if vaild
+    local user_match=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE epostadresse='$email' AND diktID='$diktID';")
+
+    # If the user is logged in
+    if is_logged_in; then
+        if [[ $user_match -eq 1 ]]; then
+            # Delete given dikt
+            sqlite3 $DATABASE_PATH "DELETE FROM Dikt WHERE diktID=$diktID AND epostadresse='$email';"
+            
+            write_body "<message>SQLite entry deleted.</message>"
+        else
+            write_body "<error>You can't delete someone elses dikt.</error>"
         fi
-        ;;
-    *)
-        # Default case
-        echo "<html><body><h1>404 Not Found</h1></body></html>"
-        ;;
-esac
+    else
+        write_body "<error>You're not logged in. Log in to delete entries.</error>"
+    fi
+}
 
-# Further logic for form processing, authentication, etc. goes here.
+# RESTful routing logic
+METHOD=$(echo "$REQUEST_METHOD")
+URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
 
 
-# MARK: - CASE statement
+# MARK: - CASE statement V
 # REST API logic
 case $METHOD in
     # MARK: - HTTP GET request. Matches SQL: SELECT
