@@ -3,7 +3,7 @@
 # This is the Dockerfile for the REST API
 
 FROM httpd:alpine
-WORKDIR ./Milestone/4/tmp/
+#WORKDIR ./Milestone/4/tmp/
 
 # Install SQLite3
 RUN apk add sqlite
