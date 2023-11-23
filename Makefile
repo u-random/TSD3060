@@ -60,7 +60,7 @@ m3: $(M3_OBJS)
 
 m4 start1: $(M4_OBJS)
 # Build the first Docker image
-	docker build -t $(IMAGE_NAME_1) .
+	docker build -t container2 -f $(IMAGE_NAME_1) .
 # Run the first container with port 8280
 	docker run -p 8280:80 -d --name $(CONTAINER_NAME_1) $(IMAGE_NAME_1)
 
