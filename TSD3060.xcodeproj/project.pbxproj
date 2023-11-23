@@ -31,7 +31,8 @@
 
 /* Begin PBXFileReference section */
 		4F5D96612AA4DBD0004B386E /* TSD3060 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TSD3060; sourceTree = BUILT_PRODUCTS_DIR; };
-		4F89E9DA2B06AAD7004757EA /* interface.cgi */ = {isa = PBXFileReference; lastKnownFileType = text; path = interface.cgi; sourceTree = "<group>"; };
+		4F89E9DA2B06AAD7004757EA /* interface.cgi */ = {isa = PBXFileReference; lastKnownFileType = text; path = interface.cgi; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.sh; };
+		4F89E9DC2B0F9811004757EA /* Dockerfile-2 */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Dockerfile-2"; sourceTree = "<group>"; };
 		4F9DD40B2AB9E4BC00228689 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		4F9DD40D2AB9E4BC00228689 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		4F9DD4182AB9E79C00228689 /* Mime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mime.h; sourceTree = "<group>"; };
@@ -149,6 +150,7 @@
 		4FF86E592AF801A400690D53 /* 4 */ = {
 			isa = PBXGroup;
 			children = (
+				4F89E9DC2B0F9811004757EA /* Dockerfile-2 */,
 				B95B36912AFE1B040000BE27 /* Dockerfile */,
 				4F89E9DA2B06AAD7004757EA /* interface.cgi */,
 			);

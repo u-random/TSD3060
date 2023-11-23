@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Popup</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <!-- Main Content -->
+    <div id="main-content">
+        <a href="#login-popup">Login</a>
+    </div>
+
+    <!-- Popup Modal -->
+    <div id="login-popup" class="modal">
+        <div class="modal-content">
+            <a href="#" class="close">Close</a>
+            <form action="/login" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username"><br>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password"><br>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
