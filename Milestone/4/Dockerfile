@@ -17,3 +17,5 @@ RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' con
 
 COPY ./Milestone/3/rest.cgi /usr/lib/cgi-bin/
 COPY ./Milestone/3/DiktDatabase.db /usr/lib/cgi-bin/
+
+EXPOSE 80

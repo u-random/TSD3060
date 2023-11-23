@@ -79,13 +79,7 @@ start_page() {
 # MARK: - LOGIN V
 # Function to check credentials and create a session
 do_login() {
-    # Extract email and password from XML body
-    local email=$(parse_xml "$HTTP_BODY" "//email/text()")
-    local password=$(parse_xml "$HTTP_BODY" "//password/text()")
-    local password_hash=$(echo -n $password | sha256sum | cut -d ' ' -f 1)
-
-    # Check credentials against the database
-    local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Bruker WHERE epostadresse='$email' AND passordhash='$password_hash';")
+    
     
     if [[ $valid_credentials -eq 1 ]]; then
         # Check if user is logged in
@@ -113,6 +107,31 @@ do_login() {
         echo "<debug>Email: '$email'</debug>"
     fi
 }
+
+
+cat << EOF
+<!doctype html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>LOGIN</title>
+    </head>
+    <body>
+        <form action="http://localhost:8280/login" method='post'>
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username"><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password"><br>
+            <input type="submit" value="Login">
+        </form>
+    </body>
+</html>
+EOF
+
+
+
+
+
 
 
 # MARK: - LOG USER OUT V
@@ -169,7 +188,7 @@ get_dikt() {
 # MARK: - To print dikts, used in get_dikt OK
 dikt_from_xml() {
 
-html_begin "Dikts"
+html_begin "Dikts table"
 
 # Use the response in an awk script
 echo "$1" | awk '
@@ -190,7 +209,7 @@ BEGIN {
     print "    <tr>";
     print "        <td style=\"text-align:center\">" id "</td>";
     print "        <td>";
-    print "            <a href=\"/container2/dikt/" id "\">" tittel "</a>";
+    print "            <a href=\"/localhost:8180/dikt/" id "\">" tittel "</a>";
     print "        </td>";
     print "    </tr>";
 }

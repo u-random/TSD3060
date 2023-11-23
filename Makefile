@@ -58,19 +58,18 @@ m3: $(M3_OBJS)
 	cp -a $(M3_OBJS) $(CGIBINDIR)
 	@echo "Use your browser and connect to localhost:80"
 
-m4 start: $(M4_OBJS)
+m4 start1: $(M4_OBJS)
 # Build the first Docker image
 	docker build -t $(IMAGE_NAME_1) .
-# Build the second Docker image
-	docker build -t $(IMAGE_NAME_2) .
-# Run the first container
-	docker run -d --name $(CONTAINER_NAME_1) $(IMAGE_NAME_1)
-# Run the second container
-	docker run -d --name $(CONTAINER_NAME_2) $(IMAGE_NAME_2)
+# Run the first container with port 8280
+	docker run -p 8280:80 -d --name $(CONTAINER_NAME_1) $(IMAGE_NAME_1)
 
-m4 stop: $(M4_OBJS)
+
+m4 stop1: $(M4_OBJS)
 # Stop the containers
 	docker stop $(CONTAINER_NAME_1)
+	
+m4 stop2: $(M4_OBJS)
 	docker stop $(CONTAINER_NAME_2)
 
 
@@ -93,5 +92,5 @@ clean:
 	rm -rf tmp/
 	rm -f Milestone/3/DiktDatabase.db
 	rm -f /usr/lib/cgi-bin/*
-#	docker rm $(CONTAINER_NAME)
+#	docker rm $(CONTAINER_NAME_1)
 #	docker rmi $(IMAGE_NAME)
