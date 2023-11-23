@@ -9,7 +9,8 @@ WORKDIR ./Milestone/4/tmp/
 RUN apk add sqlite
 
 # Enable CGI
-RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> /etc/apache2/httpd.conf; \
+RUN mkdir -p /etc/apache2 && \
+    echo "LoadModule cgi_module modules/mod_cgi.so" >> /etc/apache2/httpd.conf; \
     echo "AddHandler cgi-script .cgi"               >> /etc/apache2/httpd.conf
 
 # Lar alle forespørsler håndteres av index.cgi
