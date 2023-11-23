@@ -13,7 +13,7 @@ RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> /etc/apache2/httpd.conf; 
     echo "AddHandler cgi-script .cgi"               >> /etc/apache2/httpd.conf
 
 # Lar alle forespørsler håndteres av index.cgi
-RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' conf/httpd.conf
+RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' /etc/apache2/httpd.conf
 
 COPY ./Milestone/3/rest.cgi /usr/lib/cgi-bin/
 COPY ./Milestone/3/DiktDatabase.db /usr/lib/cgi-bin/
