@@ -5,6 +5,24 @@
 echo "Content-Type: text/xml"
 
 
+# Fremdriftsmåte for interface
+
+# 1. Show HTML forms for all REST actions
+
+# 2. Do HTML form GET and POST to interface server
+# - Parse out return from forms into XML
+# - Send XML curl request to REST API
+
+# 3. Recieve reply from REST API
+
+# - Forward all replies to new XML page. To send new form, need to return to previous page.
+# - Might have to store session cookie temporarily, or forward from browser and API
+
+
+
+
+
+
 write_body() {
     # Blank line to separate from header
     echo ""
