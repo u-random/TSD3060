@@ -54,7 +54,7 @@ m4: $(M3_OBJS)
 # Setup files to use
 	cp -a $(M3_OBJS) ./Milestone/4/restapi/
 # Build with docker compose
-	docker-compose -f ./Milestone/4/docker-compose.yml up -d
+	docker-compose -f ./Milestone/4/docker-compose.yml up 
 
 
 m4stop: $(M4_OBJS)
