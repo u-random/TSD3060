@@ -12,8 +12,7 @@ RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
 # Lar alle forespørsler håndteres av index.cgi
 RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/interface.cgi|' conf/httpd.conf
 
-
-/usr/local/apache2/cgi-bin
+RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin/|' conf/httpd.conf
 
 
 COPY ./interface.cgi /usr/lib/cgi-bin/

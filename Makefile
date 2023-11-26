@@ -54,12 +54,12 @@ m4: $(M3_OBJS)
 # Setup files to use
 	cp -a $(M3_OBJS) ./Milestone/4/restapi/
 # Build with docker compose
+	docker-compose -f /Milestone/4/docker-compose.yml up -d
 
 
 m4stop: $(M4_OBJS)
 # Stop the containers
-	docker stop $(CONTAINER_NAME_1)
-
+	docker-compose  -f /Milestone/4/docker-compose.yml stop
 
 
 $(PROG): $(OBJS)
@@ -83,4 +83,4 @@ clean:
 	rm -f /usr/lib/cgi-bin/*
 	rm -f Milestone/4/restapi/DiktDatabase.db
 	rm -f Milestone/4/restapi/rest.cgi
-
+	docker-compose -f /Milestone/4/docker-compose.yml down --volumes

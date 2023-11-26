@@ -16,6 +16,8 @@ RUN mkdir -p /etc/apache2 && \
 # Lar alle forespørsler håndteres av index.cgi
 RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' /etc/apache2/httpd.conf
 
+RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin/|' conf/httpd.conf
+
 COPY ./rest.cgi /usr/lib/cgi-bin/
 COPY ./DiktDatabase.db /usr/lib/cgi-bin/
 
