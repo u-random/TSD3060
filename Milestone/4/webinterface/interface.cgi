@@ -1,4 +1,9 @@
-#!/bin/bash
+#!/bin/sh
+
+# HEADERS
+echo "Content-Type: text/html"
+echo "Connection: close"
+echo ""
 
 # Fremdriftsmåte for interface
 
