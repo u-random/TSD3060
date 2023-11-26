@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# HEADERS
-echo "Content-Type: text/html"
-echo "Connection: close"
-echo ""
-
 # Fremdriftsmåte for interface
 
 # 1. Show HTML forms for all REST actions

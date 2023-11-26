@@ -53,10 +53,7 @@ m3: $(M3_OBJS)
 m4: $(M3_OBJS)
 # Setup files to use
 	cp -a $(M3_OBJS) ./Milestone/4/restapi/
-# Build the first Docker image
-	docker build -t container2 -f $(IMAGE_NAME_1) .
-# Run the first container with port 8280
-	docker run -p 8280:80 -d --name $(CONTAINER_NAME_1) $(IMAGE_NAME_1)
+# Build with docker compose
 
 
 m4stop: $(M4_OBJS)
