@@ -29,9 +29,7 @@ OBJS = $(SRCS:.c=.o)
 M3_OBJS	 = ./Milestone/3/rest.cgi \
 		   ./Milestone/3/DiktDatabase.db
 		   
-M4_OBJS	 = ./Milestone/4/Dockerfile \
-		   ./Milestone/4/
-
+		   
 # For macOS
 CGIBINDIR = /Library/WebServer/CGI-Executables
 
@@ -58,19 +56,17 @@ m3: $(M3_OBJS)
 	cp -a $(M3_OBJS) $(CGIBINDIR)
 	@echo "Use your browser and connect to localhost:80"
 
-m4 start1: $(M4_OBJS)
+m4:
 # Build the first Docker image
 	docker build -t container2 -f $(IMAGE_NAME_1) .
 # Run the first container with port 8280
 	docker run -p 8280:80 -d --name $(CONTAINER_NAME_1) $(IMAGE_NAME_1)
 
 
-m4 stop1: $(M4_OBJS)
+m4stop: $(M4_OBJS)
 # Stop the containers
 	docker stop $(CONTAINER_NAME_1)
-	
-m4 stop2: $(M4_OBJS)
-	docker stop $(CONTAINER_NAME_2)
+
 
 
 $(PROG): $(OBJS)

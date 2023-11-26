@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  webinterface:
+    build:
+      context: ./webinterface
+      dockerfile: Dockerfile
+    ports:
+      - "8180:80"
+
+  restapi:
+    build:
+      context: ./restapi
+      dockerfile: Dockerfile
+    ports:
+      - "8280:80"

@@ -3,7 +3,7 @@
 # This is the Dockerfile for the REST API
 
 FROM httpd:alpine
-#WORKDIR ./Milestone/4/tmp/
+WORKDIR ./
 
 # Install SQLite3
 RUN apk add sqlite
@@ -16,7 +16,7 @@ RUN mkdir -p /etc/apache2 && \
 # Lar alle forespørsler håndteres av index.cgi
 RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' /etc/apache2/httpd.conf
 
-COPY ./Milestone/3/rest.cgi /usr/lib/cgi-bin/
-COPY ./Milestone/3/DiktDatabase.db /usr/lib/cgi-bin/
+COPY ./rest.cgi /usr/lib/cgi-bin/
+COPY ./DiktDatabase.db /usr/lib/cgi-bin/
 
 EXPOSE 80

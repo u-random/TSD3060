@@ -3,7 +3,7 @@
 # This is the Dockerfile for the Web Interface
 
 FROM httpd:alpine
-WORKDIR ./Milestone/4/tmp-2/
+WORKDIR ./
 
 # Enable CGI
 RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
@@ -12,4 +12,4 @@ RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
 # Lar alle forespørsler håndteres av index.cgi
 RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/interface.cgi|' conf/httpd.conf
 
-COPY ./Milestone/3/interface.cgi /usr/lib/cgi-bin/
+COPY ./interface.cgi /usr/lib/cgi-bin/
