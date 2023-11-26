@@ -4,12 +4,6 @@ CC = clang
 OS = $(shell uname|tr a-z A-Z)
 DIST = Distribution
 
-# Define variables
-IMAGE_NAME_1=myapp
-IMAGE_NAME_2=a
-CONTAINER_NAME_1=myapp-container
-CONTAINER_NAME_2=
-
 # Compiling setup
 CFLAGS = -g -Wall -D$(OS)
 
@@ -46,7 +40,7 @@ all: $(PROG)
 # kommandoer for å starte milestones
 
 m1: $(PROG)
-	./TSD3060 -r Distribution -p 55566 -i
+	./TSD3060 -r Distribution -p 8080 -i
 
 m2: $(PROG)
 	./Milestone/2/unshare.sh

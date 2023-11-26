@@ -13,3 +13,5 @@ RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
 RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/interface.cgi|' conf/httpd.conf
 
 COPY ./interface.cgi /usr/lib/cgi-bin/
+
+EXPOSE 80
