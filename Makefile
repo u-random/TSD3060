@@ -56,7 +56,9 @@ m3: $(M3_OBJS)
 	cp -a $(M3_OBJS) $(CGIBINDIR)
 	@echo "Use your browser and connect to localhost:80"
 
-m4:
+m4: $(M3_OBJS)
+# Setup files to use
+	cp -a $(M3_OBJS) ./Milestone/4/restapi/
 # Build the first Docker image
 	docker build -t container2 -f $(IMAGE_NAME_1) .
 # Run the first container with port 8280
@@ -88,5 +90,6 @@ clean:
 	rm -rf tmp/
 	rm -f Milestone/3/DiktDatabase.db
 	rm -f /usr/lib/cgi-bin/*
-#	docker rm $(CONTAINER_NAME_1)
-#	docker rmi $(IMAGE_NAME)
+	rm -f Milestone/4/restapi/DiktDatabase.db
+	rm -f Milestone/4/restapi/rest.cgi
+
