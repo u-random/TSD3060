@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # HEADERS
 echo "Content-Type: text/html"

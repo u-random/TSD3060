@@ -18,6 +18,9 @@ RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
 # Install CURL
 RUN apk --no-cache add curl
 
+# Install bash
+RUN apk add --no-cache bash
+
 COPY ./interface.cgi /usr/lib/cgi-bin/
 
 EXPOSE 80
