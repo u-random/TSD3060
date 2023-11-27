@@ -16,7 +16,7 @@ RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/interface.cgi|
 RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
 
 # Install CURL
-RUN apt-get update && apt-get install -y curl
+RUN sudo apt-get update && apt-get install -y curl
 
 COPY ./interface.cgi /usr/lib/cgi-bin/
 
