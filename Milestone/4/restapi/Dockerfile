@@ -19,17 +19,22 @@ RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' con
 RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
 
 # Install CURL
-RUN apk --no-cache add curl
+RUN apk update && apk add curl
+
+# Install CURL
+RUN apk add perl
 
 # Install bash
-RUN apk add --no-cache bash
+RUN apk add bash
 
 # Install XMLLINT needed for my xml request parsing
-RUN apk add --no-cache libxml2-utils
+RUN apk add libxml2-utils
 
 # Install Utilities, including uuidgen
-RUN apk update && apk add util-linux
-RUN apk add perl perl-uri-escape
+RUN apk add util-linux
+
+# Install URI::Escape using CPAN
+RUN curl -L http://cpanmin.us | perl - App::cpanminus && cpanm URI::Escape
 
 COPY ./rest.cgi /usr/lib/cgi-bin/
 COPY ./DiktDatabase.db /usr/lib/cgi-bin/
