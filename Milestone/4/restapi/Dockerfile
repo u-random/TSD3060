@@ -21,8 +21,8 @@ RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
 # Install CURL
 RUN apk update && apk add curl
 
-# Install CURL
-RUN apk add perl
+# Install Perl
+#RUN apk add perl
 
 # Install bash
 RUN apk add bash
@@ -33,8 +33,6 @@ RUN apk add libxml2-utils
 # Install Utilities, including uuidgen
 RUN apk add util-linux
 
-# Install URI::Escape using CPAN
-RUN curl -L http://cpanmin.us | perl - App::cpanminus && cpanm URI::Escape
 
 COPY ./rest.cgi /usr/lib/cgi-bin/
 COPY ./DiktDatabase.db /usr/lib/cgi-bin/
