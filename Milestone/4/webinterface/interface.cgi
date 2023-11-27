@@ -15,8 +15,8 @@ do_login() {
     local password_encoded=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "password") {print $(i+1); break}}')
     
     #TODO URL decode email and password
-    local email=$(printf '%b' "${email_encoded//%/\\x}")
-    local password=$(printf '%b' "${password_encoded//%/\\x}")
+    local email=$(perl -MURI::Escape -e 'print URI::Escape::uri_unescape($ARGV[0])' "$email_encoded")
+    local password=$(perl -MURI::Escape -e 'print URI::Escape::uri_unescape($ARGV[0])' "$password_encoded")
 
     # Login and Write return to browser
     write_headers
@@ -57,7 +57,7 @@ add_dikt() {
     # Parse new title
     local title_encoded=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
     # Decode title
-    local title=$(printf '%b' "${title_encoded//%/\\x}")
+    local title=$(perl -MURI::Escape -e 'print URI::Escape::uri_unescape($ARGV[0])' "$title_encoded")
     # Add dikt and Write return to browser
     write_headers
     curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<title>$title</title>" restapi/dikt
@@ -70,7 +70,7 @@ edit_dikt_from_id() {
     local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
     local title_encoded=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
     # Decode title
-    local title=$(printf '%b' "${title_encoded//%/\\x}")
+    local title=$(perl -MURI::Escape -e 'print URI::Escape::uri_unescape($ARGV[0])' "$title_encoded")
 
     # Edit dikt and Write return to browser
     write_headers
