@@ -1,36 +1,5 @@
 #!/bin/bash
 
-# Tux surprise
-hello_tux() {
-echo "Content-Type: text/plain"
-echo "Connection: close"
-echo ""
-
-cat << "EOF"
-         _nnnn_
-        dGGGGMMb     ,"""""""""""""".
-       @p~qp~~qMb    | Linux Rules! |
-       M|@||@) M|   _;..............'
-       @,----.JM| -'
-      JS^\__/  qKL
-     dZP        qKRb
-    dZP          qKKb
-   fZP            SMMb
-   HZM            MMMM
-   FqM            MMMM
- __| ".        |\dS"qML
- |    `.       | `' \Zq
-_)      \.___.,|     .'
-\____   )MMMMMM|   .'
-     `-'       `--'
-
-
-
-Figure from: https://www.asciiart.eu/computers/linux
-EOF
-}
-
-
 # Small function to write header
 write_headers() {
     echo "Content-type: text/xml"
@@ -150,10 +119,6 @@ case $METHOD in
                 delete_dikt_from_id
                 ;;
                 
-            /surprise)
-                # Run my surprise function
-                hello_tux()
-                ;;
         esac
         ;;
 
