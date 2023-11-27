@@ -82,10 +82,7 @@ delete_dikt_from_id() {
 
 # Tux surprise
 hello_tux() {
-cat << "EOF"
-"Content-Type: text/plain"
-"Connection: close"
-""
+    cat << "EOF"
 
          _nnnn_
         dGGGGMMb     ,"""""""""""""".
@@ -150,6 +147,9 @@ case $METHOD in
                 delete_dikt_from_id
                 ;;
             /surprise)
+                echo "Content-Type: text/plain"
+                echo "Connection: close"
+                echo "" # Blank line to end headers
                 # Run my surprise function
                 hello_tux()
                 ;;
