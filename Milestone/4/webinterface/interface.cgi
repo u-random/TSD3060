@@ -19,14 +19,14 @@ do_login() {
     local password=$(echo "$password_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
 
     # Login response passthrough
-    curl -sS -i -X POST -H "Content-Type: text/xml" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '^HTTP\/.*$'
+    curl -sS -i -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '^HTTP\/.*$'
 }
 
 
 # MARK: - LOGOUT OK
 do_logout() {
     # Logout to browser passthrough
-    curl -sS -i -X POST -H "Content-Type: text/xml" restapi/logout | egrep -v '^HTTP\/.*$'
+    curl -sS -i -X POST -H "Content-Type: text/xml; charset=UTF-8" restapi/logout | egrep -v '^HTTP\/.*$'
 }
 
 
@@ -58,7 +58,7 @@ add_dikt() {
     local title=$(echo "$title_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
     # Add dikt and Write return to browser
     write_headers
-    curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<title>$title</title>" restapi/dikt
+    curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<title>$title</title>" restapi/dikt
 }
 
 
@@ -72,7 +72,7 @@ edit_dikt_from_id() {
 
     # Edit dikt and Write return to browser
     write_headers
-    curl -b ~/cookies.txt -X PUT -H "Content-Type: text/xml" -d "<dikt><title>$title</title></dikt>" "restapi/dikt/$diktID"
+    curl -b ~/cookies.txt -X PUT -H "Content-Type: text/xml; charset=UTF-8" -d "<dikt><title>$title</title></dikt>" "restapi/dikt/$diktID"
 }
 
 
