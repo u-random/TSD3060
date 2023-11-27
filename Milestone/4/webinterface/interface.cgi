@@ -19,6 +19,9 @@ echo ""
 # - Might have to store session cookie temporarily, or forward from browser and API
 
 
+# The HTML forms sends a message with body in this format:
+# application/x-www-form-urlencoded
+
 # MARK: - LOGIN V
 # Function to check credentials and create a session
 do_login() {
