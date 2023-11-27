@@ -109,13 +109,6 @@ URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
 # REST API logic
 read -r HTTP_BODY
 case $METHOD in
-    # MARK: - HTTP GET request.
-    GET)
-        # Run my function to get dikts
-        get_dikt
-        ;;
-    
-    
     # MARK: - HTTP POST request.
     POST)
         case "$URI" in
@@ -129,6 +122,10 @@ case $METHOD in
                 do_logout
                 ;;
     
+            /dikt/get)
+                # Run my function to get dikts
+                get_dikt
+                ;;
             /dikt/add)
                 # Run my add new dikt function
                 add_dikt

@@ -27,8 +27,7 @@
 <hr>
     <h1>Get Dikts</h1>
     <p>Type ID number. Leave empty to get all dikts</p>
-    <form action="http://192.168.10.200:8180/dikt" method='get'>
-        <label>Type ID number. Leave empty to get all dikts</label><br>
+    <form action="http://192.168.10.200:8180/dikt/get" method='post'>
         <label for="diktID">DiktID:</label><br>
         <input type="number" id="diktID" name="diktID"><br>
         <input type="submit" value="Get dikts">
