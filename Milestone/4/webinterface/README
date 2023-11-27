@@ -28,10 +28,7 @@ application/x-www-form-urlencoded
 
 # Tux surprise
 hello_tux() {
-cat << "EOF"
-"Content-Type: text/plain"
-"Connection: close"
-""
+    cat << "EOF"
 
          _nnnn_
         dGGGGMMb     ,"""""""""""""".
@@ -55,8 +52,10 @@ _)      \.___.,|     .'
 Figure from: https://www.asciiart.eu/computers/linux
 EOF
 }
-
             /surprise)
+                echo "Content-Type: text/plain"
+                echo "Connection: close"
+                echo "" # Blank line to end headers
                 # Run my surprise function
                 hello_tux()
                 ;;

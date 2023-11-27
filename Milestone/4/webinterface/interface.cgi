@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# TODO : REMOVE
 # Small function to write header
 write_headers() {
 echo "Content-type: text/xml; charset=UTF-8"
@@ -80,34 +81,6 @@ delete_dikt_from_id() {
 }
 
 
-# Tux surprise
-hello_tux() {
-    cat << "EOF"
-
-         _nnnn_
-        dGGGGMMb     ,"""""""""""""".
-       @p~qp~~qMb    | Linux Rules! |
-       M|@||@) M|   _;..............'
-       @,----.JM| -'
-      JS^\__/  qKL
-     dZP        qKRb
-    dZP          qKKb
-   fZP            SMMb
-   HZM            MMMM
-   FqM            MMMM
- __| ".        |\dS"qML
- |    `.       | `' \Zq
-_)      \.___.,|     .'
-\____   )MMMMMM|   .'
-     `-'       `--'
-
-
-
-Figure from: https://www.asciiart.eu/computers/linux
-EOF
-}
-
-
 # GET info from headers
 METHOD=$(echo "$REQUEST_METHOD")
 URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
@@ -116,6 +89,13 @@ URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
 # MARK: - CASE statement OK
 read -r HTTP_BODY
 case $METHOD in
+    GET)
+        case "$URI" in
+            /logout)
+                # Run my log out function
+                do_logout
+                ;;
+        esac
     POST)
         case "$URI" in
             /login)
@@ -146,13 +126,7 @@ case $METHOD in
                 # Run my delete function
                 delete_dikt_from_id
                 ;;
-            /surprise)
-                echo "Content-Type: text/plain"
-                echo "Connection: close"
-                echo "" # Blank line to end headers
-                # Run my surprise function
-                hello_tux()
-                ;;
+
                 
         esac
         ;;
