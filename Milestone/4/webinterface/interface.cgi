@@ -45,7 +45,7 @@ do_login() {
     local password=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "password") {print $(i+1); break}}')
     
     # Run curl post login
-    echo "$(curl -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<login><email>$email</email><password>$password</password></login>" restapi/login)"
+    echo "$(curl -i -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<login><email>$email</email><password>$password</password></login>" restapi/login)"
     
     #DEBUG
     # Print the parsed values
@@ -63,7 +63,7 @@ do_logout() {
 #echo "Recieved: $HTTP_BODY"
 
     # Run curl post logout
-    echo "$(curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml" http://localhost/logout)"
+    echo "$(curl -i -b ~/cookies.txt -X POST -H "Content-Type: text/xml" restapi/logout)"
 }
 
 
@@ -130,7 +130,7 @@ add_dikt() {
 local title=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
 
 # Run curl post dikt
-echo "$(curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<title>$title</title>" restapi/dikt)"
+echo "$(curl -i -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<title>$title</title>" restapi/dikt)"
 
 }
 
