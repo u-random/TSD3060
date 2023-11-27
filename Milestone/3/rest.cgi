@@ -103,7 +103,7 @@ do_login() {
             local session_cookie=$(uuidgen)
             
             # Set a cookie HEADER with the session_id
-            echo "Set-Cookie: session_id=$session_cookie; Path=/; HttpOnly; Secure"
+            echo "Set-Cookie: session_id=$session_cookie; Path=/; HttpOnly;"
 
             # Store session ID in the database for the user
             sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_cookie' WHERE epostadresse='$email';"

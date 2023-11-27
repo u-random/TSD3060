@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # HEADERS
-echo "Content-Type: text/html"
+echo "Content-Type: text/plain"
 echo "Connection: close"
 echo ""
 
@@ -25,18 +25,32 @@ echo ""
 # MARK: - LOGIN V
 # Function to check credentials and create a session
 do_login() {
-    echo "Login  called"
+    # TODO: Login does not save cookie
+    echo "Login called"
     
-    # Input string from the HTML form post
-    input_string="$HTTP_BODY"
+# ChatGPT AWK command description
+#-F'[=&]'                   :   Sets the field separator to either = or &, effectively
+#                               splitting the string into fields based on these
+#                               delimiters, commonly used in URL query parameters.
+#{for(i=1; i<=NF; i++) ... }:   Iterates over all fields in the input string.
+#if ($i == "title")         :   Checks if the current field equals "title".
+#{print $(i+1); break}      :   If "title" is found, prints the next field (which is the
+#                               value of "title") and then exits the loop (for
+#                               efficiency).
     
     # Use awk to parse the email and password values
-    email=$(echo "$input_string" | awk -F'&' '{split($1, a, "="); print a[2]}')
-    password=$(echo "$input_string" | awk -F'&' '{split($2, a, "="); print a[2]}')
-
+    #local email=$(echo "$HTTP_BODY" | awk -F'&' '{split($1, a, "="); print a[2]}')
+    local email=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "email") {print $(i+1); break}}')
+    #local password=$(echo "$HTTP_BODY" | awk -F'&' '{split($2, a, "="); print a[2]}')
+    local password=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "password") {print $(i+1); break}}')
+    
+    # Run curl post login
+    echo "$(curl -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<login><email>$email</email><password>$password</password></login>" restapi/login)"
+    
+    #DEBUG
     # Print the parsed values
-    echo "Email: $email"
-    echo "Password: $password"
+    #echo "Email: $email"
+    #echo "Password: $password"
 
 }
 
@@ -47,7 +61,21 @@ do_logout() {
     
 echo "Logout  called"
 echo "Recieved: $HTTP_BODY"
+
+    # Run curl post logout
+    echo "$(curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml" http://localhost/logout)"
 }
+
+
+# MARK: - Parse out cookie V
+# Function to logout a user
+parse_cookie() {
+
+
+
+}
+
+
 
 
 # TODO: - How to check for logged in status?
@@ -66,7 +94,23 @@ get_dikt() {
 # END
 echo "Get dikt called"
 echo "Recieved: $HTTP_BODY"
-diktID=
+
+# Parse diktid
+#local diktID=$(echo "$HTTP_BODY" | awk -F'&' '{split($1, a, "="); print a[2]}')
+local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
+
+# Is DiktID defined
+if [[ -n $diktID ]]; then
+    # Validate that the variable is numeric
+    if [[ $diktID =~ ^[0-9]+$ ]]; then
+        local single_dikt = $(curl -i "restapi/dikt/$diktID")
+        echo "$single_dikt"
+    fi
+# If no ID specified, request all dikt
+else
+    local all_dikt = $(curl -i restapi/dikt)
+    echo "$all_dikt"
+fi
 }
 
 
@@ -82,7 +126,12 @@ add_dikt() {
 echo "ADD dikt called"
 echo "Recieved: $HTTP_BODY"
 
-title=
+# Parse new title
+local title=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
+
+# Run curl post dikt
+echo "$(curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<title>$title</title>" restapi/dikt)"
+
 }
 
 
@@ -98,7 +147,12 @@ edit_dikt_from_id() {
 echo "Edit dikt called"
 echo "Recieved: $HTTP_BODY"
 
-diktID=&title=
+# Parse new title
+local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
+local title=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
+
+# Run curl Put dikt
+echo "$(curl -b ~/cookies.txt -X PUT -H "Content-Type: text/xml" -d "<dikt><title>$title</title></dikt>" "restapi/dikt/$diktID")"
 }
 
 
@@ -115,11 +169,15 @@ delete_dikt_from_id() {
 echo "Delete dikt called"
 echo "Recieved: $HTTP_BODY"
 
-Parse diktID=X
+# Parse diktID
+local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
+
+echo "$(curl -b ~/cookies.txt -X DELETE "restapi/dikt/$diktID")"
+
 }
 
 
-# RESTful routing logic
+# GET info from headers
 METHOD=$(echo "$REQUEST_METHOD")
 URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
 
