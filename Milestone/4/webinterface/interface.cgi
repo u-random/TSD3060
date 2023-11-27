@@ -55,8 +55,9 @@ fi
 # MARK: - ADD NEW DIKT V
 add_dikt() {
     # Parse new title
-    local title=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
-
+    local title_encoded=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
+    # Decode title
+    local title=$(printf '%b' "${title_encoded//%/\\x}")
     # Add dikt and Write return to browser
     write_headers
     curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<title>$title</title>" restapi/dikt
@@ -67,7 +68,9 @@ add_dikt() {
 edit_dikt_from_id() {
     # Parse new title
     local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
-    local title=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
+    local title_encoded=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
+    # Decode title
+    local title=$(printf '%b' "${title_encoded//%/\\x}")
 
     # Edit dikt and Write return to browser
     write_headers
