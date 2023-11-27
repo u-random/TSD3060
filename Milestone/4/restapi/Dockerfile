@@ -18,6 +18,10 @@ RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' con
 # Replace default cgi-bin directory to my new one
 RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
 
+# Change owner to www-data in cgi bin
+RUN chown www-data /usr/lib/cgi-bin
+
+
 # Install CURL
 RUN apk --no-cache add curl
 
