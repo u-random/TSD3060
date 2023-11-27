@@ -339,7 +339,8 @@ case $METHOD in
     # MARK: - HTTP GET request. Matches SQL: SELECT
     GET)
         # REGEX for URI to match: /dikt, /dikt/ and /dikt/{id} where {id} is a number.
-        if [[ "$URI" =~ ^/dikt(/([0-9]+))?/?$ ]]; then
+        if echo "$URI" | grep -qE '^/dikt(/([0-9]+))?/?$'; then
+        #if [[ "$URI" =~ ^/dikt(/([0-9]+))?/?$ ]]; then
             # Run my function to get dikts
             get_dikt
         else
@@ -374,7 +375,8 @@ case $METHOD in
     PUT)
         read -r HTTP_BODY
         # REGEX for URI to match: only when {id} is a number
-        if [[ "$URI" =~ ^/dikt(/([0-9]+))$ ]]; then
+        if echo "$URI" | grep -qE '^/dikt(/([0-9]+))$'; then
+        #if [[ "$URI" =~ ^/dikt(/([0-9]+))$ ]]; then
             # Run my edit function
             edit_dikt_from_id
         else
@@ -387,7 +389,8 @@ case $METHOD in
     DELETE)
         read -r HTTP_BODY
         # Should match only when {id} is a number
-        if [[ "$URI" =~ ^/dikt(/([0-9]+))$ ]]; then
+        if echo "$URI" | grep -qE '^/dikt(/([0-9]+))$'; then
+        #if [[ "$URI" =~ ^/dikt(/([0-9]+))$ ]]; then
             # Run my delete function
             delete_dikt_from_id
         else
