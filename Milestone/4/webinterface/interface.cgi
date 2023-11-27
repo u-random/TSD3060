@@ -11,9 +11,13 @@ echo ""
 # MARK: - LOGIN OK
 do_login() {
     # Use awk to parse the email and password values
-    local email=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "email") {print $(i+1); break}}')
-    local password=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "password") {print $(i+1); break}}')
+    local email_encoded=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "email") {print $(i+1); break}}')
+    local password_encoded=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "password") {print $(i+1); break}}')
     
+    #TODO URL decode email and password
+    local email=$(printf '%b' "${email_encoded//%/\\x}")
+    local password=$(printf '%b' "${password_encoded//%/\\x}")
+
     # Login and Write return to browser
     write_headers
     curl -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<login><email>$email</email><password>$password</password></login>" restapi/login
