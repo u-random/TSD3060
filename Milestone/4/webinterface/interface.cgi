@@ -19,14 +19,14 @@ do_login() {
     local password=$(echo "$password_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
 
     # Login response passthrough
-    curl -sS -i -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
+    curl -sS -i -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 
 # MARK: - LOGOUT OK
 do_logout() {
     # Logout to browser passthrough
-    curl -sS -i -X POST -H "Content-Type: text/xml; charset=UTF-8" restapi/logout | egrep -v '^HTTP\/.*$' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
+    curl -sS -i -b ~/cookies.txt -X POST -H "Content-Type: text/xml; charset=UTF-8" restapi/logout | egrep -v '^HTTP\/.*$' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 

@@ -81,6 +81,8 @@ write_body() {
     echo "$1"
 }
 
+B -> cr
+B <- cookie
 
 # MARK: - LOGIN
 # Function to check credentials and create a session
