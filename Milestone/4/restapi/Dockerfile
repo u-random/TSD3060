@@ -27,6 +27,9 @@ RUN apk add --no-cache bash
 # Install XMLLINT needed for my xml request parsing
 RUN apk add --no-cache libxml2-utils
 
+# Install Utilities, including uuidgen
+RUN apk update && apk add util-linux
+
 COPY ./rest.cgi /usr/lib/cgi-bin/
 COPY ./DiktDatabase.db /usr/lib/cgi-bin/
 
