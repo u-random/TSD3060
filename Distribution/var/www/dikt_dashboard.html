@@ -8,6 +8,7 @@
     <center>
 <!--    TODO: ADD 8180 port-->
 <!--    TODO, LOGIN.-->
+    <h1>Login box</h1>
     <form action="http://192.168.10.200:8180/login" method='post'>
         <label for="email">Username:</label><br>
         <input type="text" id="email" name="email"><br>
@@ -17,15 +18,17 @@
     </form>
 <!--    TODO, Log out.-->
 <hr>
+    <h1>Logout box</h1>
     <form action="http://192.168.10.200:8180/logout" method='post'>
         <input type="submit" value="Logout">
     </form>
     
 <!--    TODO: Get dikt, one or all.-->
 <hr>
+    <h1>Get Dikts</h1>
+    <p>Type ID number. Leave empty to get all dikts</p>
     <form action="http://192.168.10.200:8180/dikt" method='get'>
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username"><br>
+        <label>Type ID number. Leave empty to get all dikts</label><br>
         <label for="password">Password:</label><br>
         <input type="password" id="password" name="password"><br>
         <input type="submit" value="Get dikts">
@@ -33,6 +36,7 @@
 
 <!--    #TODO, ADD dikt.-->
 <hr>
+    <h1>Add Dikts here</h1>
     <form action="http://192.168.10.200:8180/dikt/add" method='post'>
         <label for="title">Title:</label><br>
         <input type="text" id="title" name="title"><br>
@@ -40,6 +44,8 @@
     </form>
 <!--    #TODO, Edit dikt.-->
 <hr>
+    <h1>Edit Dikts here</h1>
+    <p>Supply dikt id and new title</p>
     <form action="http://192.168.10.200:8180/dikt/edit" method='post'>
         <label for="diktID">Dikt ID:</label><br>
         <input type="text" id="diktID" name="diktID"><br>
@@ -49,6 +55,8 @@
     </form>
 <!--    #TODO, DELETE dikt, one or all.-->
 <hr>
+    <h1>Delete Dikts here</h1>
+    <p>Only diktID needed. No warning provided.</p>
     <form action="http://192.168.10.200:8180/dikt/delete" method='post'>
         <label for="diktID">Dikt ID:</label><br>
         <input type="text" id="diktID" name="diktID"><br>
