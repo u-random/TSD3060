@@ -6,7 +6,7 @@ echo "Content-Type: text/plain"
 echo "Connection: close"
 echo ""
 
-cat << EOF
+cat << "EOF"
          _nnnn_
         dGGGGMMb     ,"""""""""""""".
        @p~qp~~qMb    | Linux Rules! |
