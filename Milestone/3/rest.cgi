@@ -228,10 +228,10 @@ write_dikt() {
     # Write root element with space above, to seperate from header
     write_body "<dikt>"
     # SQLITE is pipe-seperated
-    while IFS='|' read -r diktID dikt email; do
-        dikt=$(escape_xml "$dikt")
+    echo "$1" | while IFS='|' read -r diktID dikt email; do
+        local dikt=$(escape_xml "$dikt")
         echo "<id>$diktID</id><tittel>$dikt</tittel><epost>$email</epost>"
-    done <<< "$1"
+    done
     echo "</dikt>"
 }
 
