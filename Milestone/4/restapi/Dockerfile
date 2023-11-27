@@ -20,7 +20,7 @@ RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' /et
 RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
 
 # Install CURL
-RUN apt-get update && apt-get install -y curl
+RUN apk --no-cache add curl
 
 COPY ./rest.cgi /usr/lib/cgi-bin/
 COPY ./DiktDatabase.db /usr/lib/cgi-bin/
