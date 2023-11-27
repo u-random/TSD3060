@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# TODO : REMOVE
-# Small function to write header
-write_headers() {
-echo "Content-type: text/xml; charset=UTF-8"
-echo ""
-}
-
-
 # MARK: - LOGIN OK
 do_login() {
     # Use awk to parse the email and password values
@@ -39,13 +31,11 @@ local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i ==
 if [[ -n $diktID ]]; then
     # Validate that the variable is numeric
     if [[ $diktID =~ ^[0-9]+$ ]]; then
-        write_headers
-        curl "restapi/dikt/$diktID"
+        curl -sS -i "restapi/dikt/$diktID" | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
     fi
 # If no ID specified, request all dikt
 else
-    write_headers
-    curl restapi/dikt
+    curl -sS -i restapi/dikt | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 fi
 }
 
@@ -57,8 +47,7 @@ add_dikt() {
     # Decode title
     local title=$(echo "$title_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
     # Add dikt and Write return to browser
-    write_headers
-    curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<title>$title</title>" restapi/dikt
+    curl -sS -i -b ~/cookies.txt -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<title>$title</title>" restapi/dikt | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 
@@ -71,8 +60,7 @@ edit_dikt_from_id() {
     local title=$(echo "$title_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
 
     # Edit dikt and Write return to browser
-    write_headers
-    curl -b ~/cookies.txt -X PUT -H "Content-Type: text/xml; charset=UTF-8" -d "<dikt><title>$title</title></dikt>" "restapi/dikt/$diktID"
+    curl -sS -i -b ~/cookies.txt -X PUT -H "Content-Type: text/xml; charset=UTF-8" -d "<dikt><title>$title</title></dikt>" "restapi/dikt/$diktID" | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 
@@ -81,8 +69,7 @@ delete_dikt_from_id() {
     # Parse diktID
     local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
     # Delete dikt and Write reply to browser
-    write_headers
-    curl -b ~/cookies.txt -X DELETE "restapi/dikt/$diktID"
+    curl -sS -i -b ~/cookies.txt -X DELETE "restapi/dikt/$diktID" | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 
