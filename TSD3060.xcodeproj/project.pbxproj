@@ -31,6 +31,7 @@
 
 /* Begin PBXFileReference section */
 		4F5D96612AA4DBD0004B386E /* TSD3060 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TSD3060; sourceTree = BUILT_PRODUCTS_DIR; };
+		4F6112B72B152EA9007A30C0 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		4F9DD40B2AB9E4BC00228689 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		4F9DD40D2AB9E4BC00228689 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		4F9DD4182AB9E79C00228689 /* Mime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mime.h; sourceTree = "<group>"; };
@@ -169,6 +170,7 @@
 		4FFDE3522B13507A006E10FA /* webinterface */ = {
 			isa = PBXGroup;
 			children = (
+				4F6112B72B152EA9007A30C0 /* README */,
 				4FFDE3532B13507A006E10FA /* interface.cgi */,
 				4FFDE3542B13507A006E10FA /* Dockerfile */,
 			);
