@@ -23,6 +23,7 @@ echo ""
 # Function to check credentials and create a session
 do_login() {
     echo "Login  called"
+    echo "Recieved: $HTTP_BODY"
 
 }
 
@@ -32,6 +33,7 @@ do_login() {
 do_logout() {
     
 echo "Logout  called"
+echo "Recieved: $HTTP_BODY"
 }
 
 
@@ -50,6 +52,7 @@ get_dikt() {
 # - Forward reply from api to browser
 # END
 echo "Get dikt called"
+echo "Recieved: $HTTP_BODY"
 
 }
 
@@ -64,6 +67,7 @@ add_dikt() {
 # - If empty, restapi will provide xml error message
 # END
 echo "ADD dikt called"
+echo "Recieved: $HTTP_BODY"
 }
 
 
@@ -77,6 +81,7 @@ edit_dikt_from_id() {
 # - If empty slots, restapi will provide xml error message
 # END
 echo "Edit dikt called"
+echo "Recieved: $HTTP_BODY"
 }
 
 
@@ -91,6 +96,7 @@ delete_dikt_from_id() {
 # - If empty slots, restapi will delete all belonging to user
 # END
 echo "Delete dikt called"
+echo "Recieved: $HTTP_BODY"
 }
 
 
