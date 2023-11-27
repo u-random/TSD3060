@@ -339,7 +339,8 @@ case $METHOD in
     # MARK: - HTTP GET request. Matches SQL: SELECT
     GET)
         # REGEX for URI to match: /dikt, /dikt/ and /dikt/{id} where {id} is a number.
-        if [[ "$URI" =~ ^/dikt(/([0-9]+))?/?$ ]]; then
+        # I later use Bash Rematch to get the ID, if any
+        if [[ "$URI" =~ ^[ \t]*/dikt(/([0-9]+))?/?$ ]]; then
             # Run my function to get dikts
             get_dikt
         else
