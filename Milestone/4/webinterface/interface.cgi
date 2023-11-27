@@ -1,39 +1,38 @@
 #!/bin/bash
 
 # Tux surprise
-hello_tux(){
-    echo "Content-Type: text/plain"
-    echo "Connection: close"
-    echo ""
+hello_tux() {
+echo "Content-Type: text/plain"
+echo "Connection: close"
+echo ""
 
-    cat << EOF
-             _nnnn_
-            dGGGGMMb     ,"""""""""""""".
-           @p~qp~~qMb    | Linux Rules! |
-           M|@||@) M|   _;..............'
-           @,----.JM| -'
-          JS^\__/  qKL
-         dZP        qKRb
-        dZP          qKKb
-       fZP            SMMb
-       HZM            MMMM
-       FqM            MMMM
-     __| ".        |\dS"qML
-     |    `.       | `' \Zq
-    _)      \.___.,|     .'
-    \____   )MMMMMM|   .'
-         `-'       `--'
-
-
+cat << EOF
+         _nnnn_
+        dGGGGMMb     ,"""""""""""""".
+       @p~qp~~qMb    | Linux Rules! |
+       M|@||@) M|   _;..............'
+       @,----.JM| -'
+      JS^\__/  qKL
+     dZP        qKRb
+    dZP          qKKb
+   fZP            SMMb
+   HZM            MMMM
+   FqM            MMMM
+ __| ".        |\dS"qML
+ |    `.       | `' \Zq
+_)      \.___.,|     .'
+\____   )MMMMMM|   .'
+     `-'       `--'
 
 
-    Figure from: https://www.asciiart.eu/computers/linux
-    EOF
+
+Figure from: https://www.asciiart.eu/computers/linux
+EOF
 }
 
 
 # Small function to write header
-write_headers(){
+write_headers() {
     echo "Content-type: text/xml"
     echo ""
 }
@@ -157,4 +156,5 @@ case $METHOD in
                 ;;
         esac
         ;;
+
 esac
