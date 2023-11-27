@@ -1,5 +1,36 @@
 #!/bin/bash
 
+# Tux surprise
+hello_tux(){
+echo "Content-Type: text/plain"
+echo "Connection: close"
+echo ""
+
+cat << EOF
+         _nnnn_
+        dGGGGMMb     ,"""""""""""""".
+       @p~qp~~qMb    | Linux Rules! |
+       M|@||@) M|   _;..............'
+       @,----.JM| -'
+      JS^\__/  qKL
+     dZP        qKRb
+    dZP          qKKb
+   fZP            SMMb
+   HZM            MMMM
+   FqM            MMMM
+ __| ".        |\dS"qML
+ |    `.       | `' \Zq
+_)      \.___.,|     .'
+\____   )MMMMMM|   .'
+     `-'       `--'
+
+
+
+
+Figure from: https://www.asciiart.eu/computers/linux
+EOF
+}
+
 # HEADERS
 #echo "Content-Type: text/plain"
 #echo "Connection: close"
@@ -25,10 +56,7 @@
 # MARK: - LOGIN V
 # Function to check credentials and create a session
 do_login() {
-    # TODO: Login does not save cookie
-    #echo "Login called"
-    
-# ChatGPT AWK command description
+# --- ChatGPT AWK command description ---
 #-F'[=&]'                   :   Sets the field separator to either = or &, effectively
 #                               splitting the string into fields based on these
 #                               delimiters, commonly used in URL query parameters.
@@ -44,6 +72,9 @@ do_login() {
     #local password=$(echo "$HTTP_BODY" | awk -F'&' '{split($2, a, "="); print a[2]}')
     local password=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "password") {print $(i+1); break}}')
     
+    echo "Content-type: text/html"
+    echo ""
+
     # Run curl post login
     curl -i -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<login><email>$email</email><password>$password</password></login>" restapi/login
     
@@ -112,18 +143,8 @@ fi
 }
 
 
-# MARK: - ADD A NEW DIKT V
+# MARK: - ADD A NEW DIKT OK
 add_dikt() {
-# What to do:
-# BEGIN
-# 1. Find title from HTML form
-# - send curl post with title to restapi
-# - Forward reply from api to browser
-# - If empty, restapi will provide xml error message
-# END
-#echo "ADD dikt called"
-#echo "Recieved: $HTTP_BODY"
-
 # Parse new title
 local title=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
 
@@ -214,6 +235,11 @@ case $METHOD in
             /dikt/delete)
                 # Run my delete function
                 delete_dikt_from_id
+                ;;
+                
+            /surprise)
+                # Run my surprise function
+                hello_tux()
                 ;;
         esac
         ;;
