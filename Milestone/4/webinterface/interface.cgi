@@ -2,8 +2,8 @@
 
 # Small function to write header
 write_headers() {
-    echo "Content-type: text/xml"
-    echo ""
+echo "Content-type: text/xml; charset=UTF-8"
+echo ""
 }
 
 
@@ -80,6 +80,37 @@ delete_dikt_from_id() {
 }
 
 
+# Tux surprise
+hello_tux() {
+cat << "EOF"
+"Content-Type: text/plain"
+"Connection: close"
+""
+
+         _nnnn_
+        dGGGGMMb     ,"""""""""""""".
+       @p~qp~~qMb    | Linux Rules! |
+       M|@||@) M|   _;..............'
+       @,----.JM| -'
+      JS^\__/  qKL
+     dZP        qKRb
+    dZP          qKKb
+   fZP            SMMb
+   HZM            MMMM
+   FqM            MMMM
+ __| ".        |\dS"qML
+ |    `.       | `' \Zq
+_)      \.___.,|     .'
+\____   )MMMMMM|   .'
+     `-'       `--'
+
+
+
+Figure from: https://www.asciiart.eu/computers/linux
+EOF
+}
+
+
 # GET info from headers
 METHOD=$(echo "$REQUEST_METHOD")
 URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
@@ -117,6 +148,10 @@ case $METHOD in
             /dikt/delete)
                 # Run my delete function
                 delete_dikt_from_id
+                ;;
+            /surprise)
+                # Run my surprise function
+                hello_tux()
                 ;;
                 
         esac
