@@ -18,17 +18,15 @@ do_login() {
     local email=$(echo "$email_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
     local password=$(echo "$password_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
 
-    # Login and Write return to browser
-    write_headers
-    curl -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<login><email>$email</email><password>$password</password></login>" restapi/login
+    # Login response passthrough
+    curl -sS -i -X POST -H "Content-Type: text/xml" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '^HTTP\/.*$'
 }
 
 
 # MARK: - LOGOUT OK
 do_logout() {
-    # Logout and Write return to browser
-    write_headers
-    curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml" restapi/logout
+    # Logout to browser passthrough
+    curl -sS -i -X POST -H "Content-Type: text/xml" restapi/logout | egrep -v '^HTTP\/.*$'
 }
 
 
