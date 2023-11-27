@@ -45,7 +45,7 @@ do_login() {
     local password=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "password") {print $(i+1); break}}')
     
     # Run curl post login
-    echo "$(curl -i -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<login><email>$email</email><password>$password</password></login>" restapi/login)"
+    curl -i -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<login><email>$email</email><password>$password</password></login>" restapi/login
     
     #DEBUG
     # Print the parsed values
@@ -63,7 +63,7 @@ do_logout() {
 #echo "Recieved: $HTTP_BODY"
 
     # Run curl post logout
-    echo "$(curl -i -b ~/cookies.txt -X POST -H "Content-Type: text/xml" restapi/logout)"
+    curl -i -b ~/cookies.txt -X POST -H "Content-Type: text/xml" restapi/logout
 }
 
 
@@ -103,13 +103,11 @@ local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i ==
 if [[ -n $diktID ]]; then
     # Validate that the variable is numeric
     if [[ $diktID =~ ^[0-9]+$ ]]; then
-        local single_dikt = $(curl -i "restapi/dikt/$diktID")
-        echo "$single_dikt"
+        curl -i "restapi/dikt/$diktID"
     fi
 # If no ID specified, request all dikt
 else
-    local all_dikt = $(curl -i restapi/dikt)
-    echo "$all_dikt"
+    curl -i restapi/dikt
 fi
 }
 
@@ -130,7 +128,7 @@ add_dikt() {
 local title=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
 
 # Run curl post dikt
-echo "$(curl -i -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<title>$title</title>" restapi/dikt)"
+curl -i -b ~/cookies.txt -X POST -H "Content-Type: text/xml" -d "<title>$title</title>" restapi/dikt
 
 }
 
