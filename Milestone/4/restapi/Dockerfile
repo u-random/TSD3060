@@ -18,10 +18,6 @@ RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' con
 # Replace default cgi-bin directory to my new one
 RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
 
-# Change owner to www-data in cgi bin
-RUN busybox chown www-data /usr/lib/cgi-bin
-
-
 # Install CURL
 RUN apk --no-cache add curl
 
@@ -36,5 +32,8 @@ RUN apk update && apk add util-linux
 
 COPY ./rest.cgi /usr/lib/cgi-bin/
 COPY ./DiktDatabase.db /usr/lib/cgi-bin/
+
+# Change owner to www-data in cgi bin
+RUN busybox chown www-data /usr/lib/cgi-bin
 
 EXPOSE 80
