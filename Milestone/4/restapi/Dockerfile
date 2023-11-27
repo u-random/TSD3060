@@ -29,12 +29,14 @@ RUN apk add --no-cache libxml2-utils
 
 # Install Utilities, including uuidgen
 RUN apk update && apk add util-linux
+RUN apk add perl perl-uri-escape
 
 COPY ./rest.cgi /usr/lib/cgi-bin/
 COPY ./DiktDatabase.db /usr/lib/cgi-bin/
 
 # Change owner to www-data in cgi bin
 RUN busybox chown www-data /usr/lib/cgi-bin
+
 # Change owner to www-data of DiktDatabase
 RUN busybox chown www-data /usr/lib/cgi-bin/DiktDatabase.db
 
