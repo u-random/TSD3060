@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # HEADERS
-echo "Content-Type: text/plain"
-echo "Connection: close"
-echo ""
+#echo "Content-Type: text/plain"
+#echo "Connection: close"
+#echo ""
 
 # Fremdriftsmåte for interface
 
@@ -26,7 +26,7 @@ echo ""
 # Function to check credentials and create a session
 do_login() {
     # TODO: Login does not save cookie
-    echo "Login called"
+    #echo "Login called"
     
 # ChatGPT AWK command description
 #-F'[=&]'                   :   Sets the field separator to either = or &, effectively
