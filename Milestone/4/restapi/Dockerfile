@@ -9,12 +9,11 @@ WORKDIR ./
 RUN apk add sqlite
 
 # Enable CGI
-RUN mkdir -p /etc/apache2 && \
-    echo "LoadModule cgi_module modules/mod_cgi.so" >> /etc/apache2/httpd.conf; \
-    echo "AddHandler cgi-script .cgi"               >> /etc/apache2/httpd.conf
-
-# Let all requests be handled by rest.cgi
-RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' /etc/apache2/httpd.conf
+RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
+    echo "AddHandler cgi-script .cgi"               >> conf/httpd.conf
+    
+# Let all requests be handled by interface.cgi
+RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' conf/httpd.conf
 
 # Replace default cgi-bin directory to my new one
 RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
