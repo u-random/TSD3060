@@ -13,10 +13,14 @@ RUN mkdir -p /etc/apache2 && \
     echo "LoadModule cgi_module modules/mod_cgi.so" >> /etc/apache2/httpd.conf; \
     echo "AddHandler cgi-script .cgi"               >> /etc/apache2/httpd.conf
 
-# Lar alle forespørsler håndteres av index.cgi
+# Let all requests be handled by rest.cgi
 RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' /etc/apache2/httpd.conf
 
+# Replace default cgi-bin directory to my new one
 RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
+
+# Install CURL
+RUN apt-get update && apt-get install -y curl
 
 COPY ./rest.cgi /usr/lib/cgi-bin/
 COPY ./DiktDatabase.db /usr/lib/cgi-bin/

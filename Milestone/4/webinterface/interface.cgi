@@ -23,7 +23,17 @@ echo ""
 # Function to check credentials and create a session
 do_login() {
     echo "Login  called"
-    echo "Recieved: $HTTP_BODY"
+    
+    # Input string from the HTML form post
+    input_string="$HTTP_BODY"
+    
+    # Use awk to parse the email and password values
+    email=$(echo "$input_string" | awk -F'&' '{split($1, a, "="); print a[2]}')
+    password=$(echo "$input_string" | awk -F'&' '{split($2, a, "="); print a[2]}')
+
+    # Print the parsed values
+    echo "Email: $email"
+    echo "Password: $password"
 
 }
 
@@ -53,7 +63,7 @@ get_dikt() {
 # END
 echo "Get dikt called"
 echo "Recieved: $HTTP_BODY"
-
+diktID=
 }
 
 
@@ -68,6 +78,8 @@ add_dikt() {
 # END
 echo "ADD dikt called"
 echo "Recieved: $HTTP_BODY"
+
+title=
 }
 
 
@@ -82,6 +94,8 @@ edit_dikt_from_id() {
 # END
 echo "Edit dikt called"
 echo "Recieved: $HTTP_BODY"
+
+diktID=&title=
 }
 
 
@@ -97,6 +111,8 @@ delete_dikt_from_id() {
 # END
 echo "Delete dikt called"
 echo "Recieved: $HTTP_BODY"
+
+Parse diktID=X
 }
 
 
