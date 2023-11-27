@@ -22,7 +22,7 @@ do_logout() {
 }
 
 
-# MARK: - GET DIKTS V
+# MARK: - GET DIKTS OK
 get_dikt() {
 # Parse diktID from HTML form
 local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
@@ -40,7 +40,7 @@ fi
 }
 
 
-# MARK: - ADD NEW DIKT V
+# MARK: - ADD NEW DIKT OK
 add_dikt() {
     # Parse new title
     local title_encoded=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
@@ -51,7 +51,7 @@ add_dikt() {
 }
 
 
-# MARK: - EDIT DIKT V
+# MARK: - EDIT DIKT OK
 edit_dikt_from_id() {
     # Parse new title
     local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
@@ -64,7 +64,7 @@ edit_dikt_from_id() {
 }
 
 
-# MARK: - DELETE DIKT V
+# MARK: - DELETE DIKT OK
 delete_dikt_from_id() {
     # Parse diktID
     local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
