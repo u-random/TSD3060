@@ -96,6 +96,7 @@ case $METHOD in
                 do_logout
                 ;;
         esac
+        ;;
     POST)
         case "$URI" in
             /login)
