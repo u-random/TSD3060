@@ -35,5 +35,7 @@ COPY ./DiktDatabase.db /usr/lib/cgi-bin/
 
 # Change owner to www-data in cgi bin
 RUN busybox chown www-data /usr/lib/cgi-bin
+# Change owner to www-data of DiktDatabase
+RUN busybox chown www-data /usr/lib/cgi-bin/DiktDatabase.db
 
 EXPOSE 80
