@@ -59,8 +59,8 @@ do_login() {
 # Function to logout a user
 do_logout() {
     
-echo "Logout  called"
-echo "Recieved: $HTTP_BODY"
+#echo "Logout  called"
+#echo "Recieved: $HTTP_BODY"
 
     # Run curl post logout
     echo "$(curl -b ~/cookies.txt -X POST -H "Content-Type: text/xml" http://localhost/logout)"
@@ -69,11 +69,11 @@ echo "Recieved: $HTTP_BODY"
 
 # MARK: - Parse out cookie V
 # Function to logout a user
-parse_cookie() {
-
-
-
-}
+#parse_cookie() {
+#
+#
+#
+#}
 
 
 
@@ -92,8 +92,8 @@ get_dikt() {
 # - Send curl get with all dikts
 # - Forward reply from api to browser
 # END
-echo "Get dikt called"
-echo "Recieved: $HTTP_BODY"
+#echo "Get dikt called"
+#echo "Recieved: $HTTP_BODY"
 
 # Parse diktid
 #local diktID=$(echo "$HTTP_BODY" | awk -F'&' '{split($1, a, "="); print a[2]}')
@@ -123,8 +123,8 @@ add_dikt() {
 # - Forward reply from api to browser
 # - If empty, restapi will provide xml error message
 # END
-echo "ADD dikt called"
-echo "Recieved: $HTTP_BODY"
+#echo "ADD dikt called"
+#echo "Recieved: $HTTP_BODY"
 
 # Parse new title
 local title=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "title") {print $(i+1); break}}')
@@ -144,8 +144,8 @@ edit_dikt_from_id() {
 # - Forward reply from api to browser
 # - If empty slots, restapi will provide xml error message
 # END
-echo "Edit dikt called"
-echo "Recieved: $HTTP_BODY"
+#echo "Edit dikt called"
+#echo "Recieved: $HTTP_BODY"
 
 # Parse new title
 local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
@@ -166,8 +166,8 @@ delete_dikt_from_id() {
 # - Forward reply from api to browser
 # - If empty slots, restapi will delete all belonging to user
 # END
-echo "Delete dikt called"
-echo "Recieved: $HTTP_BODY"
+#echo "Delete dikt called"
+#echo "Recieved: $HTTP_BODY"
 
 # Parse diktID
 local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
