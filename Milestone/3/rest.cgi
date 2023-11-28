@@ -406,11 +406,11 @@ case $METHOD in
     DELETE)
         read -r HTTP_BODY
         # Should match only when {id} is a number
-        if [[ "$URI" =~ ^/dikt(/([0-9]+))$ ]]; then
+        if [[ "$URI" =~ ^/dikt(/([0-9]+))?/?$ ]]; then
             # Run my delete function
             delete_dikt_from_id
         else
-            echo "<error>Cannot delete all dikts at once. {id} for dikt/{id} has to be a number.</error>"
+            echo "<error>Faulty request.</error>"
         fi
         ;;
 esac
