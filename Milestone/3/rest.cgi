@@ -311,10 +311,27 @@ delete_dikt_from_id() {
     # If the user is logged in
     if is_logged_in; then
         if [[ $user_match -eq 1 ]]; then
-            # Delete given dikt
-            sqlite3 $DATABASE_PATH "DELETE FROM Dikt WHERE diktID=$diktID AND epostadresse='$email';"
-            
-            write_body "<message>SQLite entry deleted.</message>"
+            # Delete the dikt with DiktID
+            if [[ -n $diktID ]]; then
+                # Validate that the variable is numeric
+                if [[ $diktID =~ ^[0-9]+$ ]]; then
+                    local dikt_exists=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE diktID='$diktID';")
+                    # Prints Dikt if exists, error if not
+                    if [ $dikt_exists -eq 1 ]; then
+                        sqlite3 $DATABASE_PATH "DELETE FROM Dikt WHERE diktID=$diktID AND epostadresse='$email';"
+                        write_body "<message>A single SQLite entry was deleted.</message>"
+                    else
+                        write_body "<error>Dikt not found</error>"
+                    fi
+                # Prints errormessage if diktID is not a number
+                else
+                    write_body "<error>Invalid Dikt ID. It has to be a number.</error>"
+                fi
+            # If no ID specified, Delete all dikt
+            else
+                sqlite3 $DATABASE_PATH "DELETE FROM Dikt WHERE epostadresse='$email';"
+                write_body "<message>All your entries deleted.</message>"
+            fi
         else
             write_body "<error>You can't delete someone elses dikt.</error>"
         fi
