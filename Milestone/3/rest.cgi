@@ -33,6 +33,19 @@ parse_xml() {
 }
 
 
+# Produce different dtd location based on environment
+detect_environment() {
+    # Check if running inside Docker
+    if [ -f /.dockerenv ]; then
+        # Docker environment
+        echo "http://host.docker.internal:8080/response.dtd"
+    else
+        # Host environment
+        echo "http://localhost:8080/response.dtd"
+    fi
+}
+
+
 # MARK: - REFACTORING SPECIAL XML CHARACTERS
 # TODO: This could be used more in the following functions
 # Special XML characters should be replaced
@@ -48,12 +61,14 @@ escape_xml() {
 
 
 write_start() {
+# Get dtd path
+    local dtd_path=$(detect_environment)
 # Blank line to separate from header
     echo ""
     
 # Echo XML schema reference
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-    echo "<!DOCTYPE root SYSTEM \"response.dtd\">"
+    echo "<!DOCTYPE root SYSTEM \"$dtd_path\">"
     
 # Echo root element start tag
     echo "<root>"
@@ -61,6 +76,7 @@ write_start() {
 # First argument to function is message
     echo "$1"
 }
+
 
 write_end() {
     if [ -n "$1" ]; then
