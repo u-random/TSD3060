@@ -4,7 +4,7 @@ FROM cgi-image:base
 WORKDIR ./
 
 # ROUTE traffic
-RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' conf/httpd.conf
+RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/local/apache2/cgi-bin/rest.cgi|' conf/httpd.conf
 
 # Change httpd user
 RUN sed -i 's|User www-data|User #11|' conf/httpd.conf
