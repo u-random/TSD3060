@@ -79,6 +79,8 @@ $(PROG): $(OBJS)
 
 
 .PHONY: clean
+		m4stop
+
 clean:
 	rm -f $(OBJS) $(PROG) $(DIST)/bin/*
 	rm -rf tmp/
