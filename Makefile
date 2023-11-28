@@ -37,12 +37,14 @@ endif
 # Targets
 all: $(PROG)
 
-# kommandoer for å starte milestones
+# Keywords to run the milestones
 
 m1: $(PROG)
-	./TSD3060 -r Distribution -p 8080 -i
+# Run C Web Server interactible by default
+	TSD3060 -r Distribution -p 8080 -i
 
 m2: $(PROG)
+# Run the unshare container
 	./Milestone/2/unshare.sh
 	
 m3: $(M3_OBJS)
@@ -50,16 +52,17 @@ m3: $(M3_OBJS)
 	cp -a $(M3_OBJS) $(CGIBINDIR)
 	@echo "Use your browser and connect to localhost:80"
 
-m4: $(M3_OBJS)
-# Setup files to use
+m4: $(M3_OBJS) Milestone/4/SharedDockerfile
+# Setup files for restapi
 	cp -a $(M3_OBJS) ./Milestone/4/restapi/
+# Build Image
+	docker build -t cgi-image:base -f Milestone/4/SharedDockerfile .
 # Build with docker compose
-	docker-compose -f ./Milestone/4/docker-compose.yml up --build
+	docker-compose -f Milestone/4/docker-compose.yml up --build
 
-
-m4stop: $(M4_OBJS)
+m4stop:
 # Stop the containers
-	docker-compose  -f ./Milestone/4/docker-compose.yml stop
+	docker-compose  -f Milestone/4/docker-compose.yml stop
 
 
 $(PROG): $(OBJS)
@@ -81,6 +84,9 @@ clean:
 	rm -rf tmp/
 	rm -f Milestone/3/DiktDatabase.db
 	rm -f /usr/lib/cgi-bin/*
+# Cleanup Milestone 4 files
 	rm -f Milestone/4/restapi/DiktDatabase.db
 	rm -f Milestone/4/restapi/rest.cgi
-	docker-compose -f ./Milestone/4/docker-compose.yml down --volumes
+# Shutdown Milestone 4 docker compose containers and remove image
+	docker-compose -f Milestone/4/docker-compose.yml down --volumes
+	docker rmi cgi-image:base
