@@ -294,6 +294,7 @@ edit_dikt_from_id() {
 }
 
 
+# TODO: - Cleanup
 # MARK: - DELETE A DIKT
 # This function is made to delete single dikts based on id
 delete_dikt_from_id() {
@@ -306,17 +307,17 @@ delete_dikt_from_id() {
     local email=$(echo "$user_data" | awk '{print $2}')
     
     # Check if user is owner of dikt with ID = diktID. 1 if vaild
-    local user_match=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE epostadresse='$email' AND diktID='$diktID';")
+    local user_match=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE epostadresse='$email';")
 
     # If the user is logged in
     if is_logged_in; then
-        if [[ $user_match -eq 1 ]]; then
+        if [[ $user_match -ge 1 ]]; then
             # Delete the dikt with DiktID
             if [[ -n $diktID ]]; then
                 # Validate that the variable is numeric
                 if [[ $diktID =~ ^[0-9]+$ ]]; then
-                    local dikt_exists=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE diktID='$diktID';")
-                    # Prints Dikt if exists, error if not
+                    local dikt_exists=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Dikt WHERE epostadresse='$email' AND diktID='$diktID';")
+                    # Deletes Dikt if exists, error if not
                     if [ $dikt_exists -eq 1 ]; then
                         sqlite3 $DATABASE_PATH "DELETE FROM Dikt WHERE diktID=$diktID AND epostadresse='$email';"
                         write_body "<message>A single SQLite entry was deleted.</message>"
