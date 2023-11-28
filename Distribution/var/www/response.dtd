@@ -1,0 +1,8 @@
+<!ELEMENT root (dikt | message | error | debug)*>
+<!ELEMENT dikt (id, tittel, epost)*>
+<!ELEMENT id (#PCDATA)>
+<!ELEMENT tittel (#PCDATA)>
+<!ELEMENT epost (#PCDATA)>
+<!ELEMENT message (#PCDATA)>
+<!ELEMENT debug (#PCDATA)>
+<!ELEMENT error (#PCDATA)>
