@@ -15,3 +15,6 @@ COPY ./rest.cgi ./DiktDatabase.db /usr/lib/cgi-bin/
 # Change owner to www-data of Directory and Database
 RUN busybox chown www-data  /usr/lib/cgi-bin \
                             /usr/lib/cgi-bin/DiktDatabase.db
+
+#
+RUN deluser xfs && addgroup -g 33 www-data || groupmod -n www-data -g 33 www-data && adduser -u 33 -G www-data www-data

@@ -52,7 +52,7 @@
 		4F9DD4302AB9E7AF00228689 /* Distribution */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Distribution; sourceTree = "<group>"; };
 		4FF86E582AF8014D00690D53 /* web-application.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "web-application.scpt"; sourceTree = "<group>"; };
 		4FFDE34F2B134EE5006E10FA /* docker-compose.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "docker-compose.yml"; sourceTree = "<group>"; };
-		4FFDE3512B135079006E10FA /* Dockerfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Dockerfile; sourceTree = "<group>"; };
+		4FFDE3512B135079006E10FA /* Dockerfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Dockerfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.yaml; };
 		4FFDE3532B13507A006E10FA /* interface.cgi */ = {isa = PBXFileReference; lastKnownFileType = text; path = interface.cgi; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.sh; };
 		4FFDE3542B13507A006E10FA /* Dockerfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Dockerfile; sourceTree = "<group>"; };
 		B94AA58A2AD42D9100C66BA2 /* unshare.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = unshare.sh; sourceTree = "<group>"; };
