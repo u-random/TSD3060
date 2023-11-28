@@ -48,7 +48,7 @@ m2: $(PROG)
 	./Milestone/2/unshare.sh
 	
 m3: $(M3_OBJS)
-	chmod 666 Milestone/3/DiktDatabase.db
+	chmod 666 ./Milestone/3/DiktDatabase.db
 	cp -a $(M3_OBJS) $(CGIBINDIR)
 	@echo "Use your browser and connect to localhost:80"
 
