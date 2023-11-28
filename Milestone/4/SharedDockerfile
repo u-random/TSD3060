@@ -1,0 +1,33 @@
+# Code partly from Thomas Nordlis "Dockerfile-eksempel"
+
+# This is the shared Dockerfile, to be used as an
+# Image for both the REST API and WEB INTERFACE
+
+FROM httpd:alpine
+
+# Enable CGI
+RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
+    echo "AddHandler cgi-script .cgi"               >> conf/httpd.conf
+    
+# Let all requests be handled by interface.cgi
+RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' conf/httpd.conf
+
+# Replace default cgi-bin directory to my new one
+RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
+
+# Install CURL
+RUN apk update && apk add curl
+
+# Install Perl
+#RUN apk add perl
+
+# Install bash
+RUN apk add bash
+
+# Install XMLLINT needed for my xml request parsing
+RUN apk add libxml2-utils
+
+# Install Utilities, including uuidgen
+RUN apk add util-linux
+
+EXPOSE 80

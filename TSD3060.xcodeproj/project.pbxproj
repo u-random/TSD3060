@@ -98,8 +98,6 @@
 				4F6A75CA2ACF29DF00668276 /* 2 */,
 				4F6A75CB2ACF29FF00668276 /* 3 */,
 				4FF86E592AF801A400690D53 /* 4 */,
-				4FFDE34F2B134EE5006E10FA /* docker-compose.yml */,
-				4F7209B52B160F67009ED806 /* SharedDockerfile */,
 				4FF86E572AF8014D00690D53 /* 5 */,
 			);
 			path = Milestone;
@@ -157,6 +155,8 @@
 			children = (
 				4FFDE3502B135079006E10FA /* restapi */,
 				4FFDE3522B13507A006E10FA /* webinterface */,
+				4FFDE34F2B134EE5006E10FA /* docker-compose.yml */,
+				4F7209B52B160F67009ED806 /* SharedDockerfile */,
 			);
 			path = 4;
 			sourceTree = "<group>";
