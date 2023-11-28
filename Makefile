@@ -56,7 +56,7 @@ m4: $(M3_OBJS) Milestone/4/SharedDockerfile
 # Setup files for restapi
 	cp -a $(M3_OBJS) ./Milestone/4/restapi/
 # Build Image
-	docker build -t cgi-image:base -f Milestone/4/SharedDockerfile .
+	docker build -t cgi-image:base -f Milestone/4/SharedDockerfile Milestone/4
 # Build with docker compose
 	docker-compose -f Milestone/4/docker-compose.yml up --build
 
