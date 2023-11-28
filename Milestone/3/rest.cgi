@@ -3,56 +3,29 @@
 # HEADERS
 echo "Content-Type: text/xml"
 
-# XML Schema for validating incoming data
-xml_schema='
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="dikt">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="title" type="xs:string"/>
-        <xs:element name="user" type="xs:string" minOccurs="0"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="login">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="email" type="xs:string"/>
-        <xs:element name="password" type="xs:string"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-</xs:schema>
-'
-
 # MARK: - PARSE AND VALIDATE XML FROM REQUEST BODY
 # Function to parse XML using xmllint and xpath
 parse_xml() {
-    # $1 is expected to be the XML input
-    # $2 is expected to be the XPath expression
-    # Execute xmllint and check for errors
-    
-    # Debug: Echo input XML and XPath
-    #echo "XML Input: $1"
-    #echo "XPath: $2"
+# $1 is expected to be the XML input
+# $2 is expected to be the XPath expression
+# Execute xmllint and check for errors
 
-    # Check if xmllint is available
+# Debug: Echo input XML and XPath
+#echo "XML Input: $1"
+#echo "XPath: $2"
+
+# Check if xmllint is available
     if ! command -v xmllint &> /dev/null; then
-        write_body "<error>Xmllint not found.</error>"
+        write_start "<error>Xmllint not found.</error>"
+        write_end
         return 1
     fi
 
-    # Validate XML against the embedded schema
-    #if ! echo "$xml_schema" | xmllint --schema - --noout <(echo "$1") &> /dev/null; then
-    #    write_body "<error>XML not valid.</error>"
-    #    return 1
-    #fi
-
-    # Execute xmllint and capture any errors
+# Execute xmllint and capture any errors
     local result=$(echo "$1" | xmllint --xpath "$2" -)
     if [ $? -ne 0 ]; then
-        write_body "<error>Xmllint result: $result</error>"
+        write_start "<error>Xmllint result: $result</error>"
+        write_end
         return 1
     fi
 
@@ -74,11 +47,26 @@ escape_xml() {
 }
 
 
-write_body() {
-    # Blank line to separate from header
+write_start() {
+# Blank line to separate from header
     echo ""
-    # First argument to function is message
+    
+# Echo XML schema reference
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+    echo "<!DOCTYPE root SYSTEM \"response.dtd\">"
+    
+# Echo root element start tag
+    echo "<root>"
+    
+# First argument to function is message
     echo "$1"
+}
+
+write_end() {
+    if [ -n "$1" ]; then
+        echo "$1"
+    fi
+    echo "</root>"
 }
 
 
@@ -97,7 +85,8 @@ do_login() {
         # Check if user is logged in
         if is_logged_in; then
             # Never sent
-            write_body "<message>Hello, '$email'! You're already logged in!</message>"
+            write_start "<message>Hello, '$email'! You're already logged in!</message>"
+            write_end
         else
             # Generate a session ID token with UUIDGEN
             local session_cookie=$(uuidgen)
@@ -109,39 +98,14 @@ do_login() {
             sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_cookie' WHERE epostadresse='$email';"
             
             # Write welcome message
-            write_body "<message>Welcome back, '$email'! You're logged in!</message>"
-            echo "<debug>Cookie set with uuid: '$session_cookie'</debug>"
+            write_start "<message>Welcome back, '$email'! You're logged in!</message>"
+            write_end "<debug>Cookie set with uuid: '$session_cookie'</debug>"
         fi
     else
-        write_body "<error>Invalid credentials</error>"
+        write_start "<error>Invalid credentials</error>"
         echo "<debug>Passhash: '$password_hash'</debug>"
         echo "<debug>Pass: '$password'</debug>"
-        echo "<debug>Email: '$email'</debug>"
-    fi
-}
-
-
-# MARK: - LOG USER OUT
-# Function to logout a user
-do_logout() {
-    # Get the session cookie and user email from get_user function
-    local user_data=$(get_user)
-    # Get session id from cookie
-    local session_cookie=$(echo "$user_data" | awk '{print $1}')
-    # Get user belonging to session
-    local email=$(echo "$user_data" | awk '{print $2}')
-    
-    # If user is logged in
-    if is_logged_in; then
-        # Invalidate the session in the database
-        sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID=NULL WHERE sesjonsID='$session_cookie';"
-        # Send a header to remove the cookie
-        echo "Set-Cookie: session_id=; Path=/; HttpOnly; Secure; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
-        # Respond to confirm the user has been logged out
-        write_body "<message>User '$email' logged out.</message>"
-    else
-        # Respond to confirm the user has been logged out
-        write_body "<message>No session detected.</message>"
+        write_end "<debug>Email: '$email'</debug>"
     fi
 }
 
@@ -168,6 +132,33 @@ is_logged_in() {
         return 0 # Logged in
     else
         return 1 # Not logged in
+    fi
+}
+
+
+# MARK: - LOG USER OUT
+# Function to logout a user
+do_logout() {
+    # Get the session cookie and user email from get_user function
+    local user_data=$(get_user)
+    # Get session id from cookie
+    local session_cookie=$(echo "$user_data" | awk '{print $1}')
+    # Get user belonging to session
+    local email=$(echo "$user_data" | awk '{print $2}')
+    
+    # If user is logged in
+    if is_logged_in; then
+        # Invalidate the session in the database
+        sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID=NULL WHERE sesjonsID='$session_cookie';"
+        # Send a header to remove the cookie
+        echo "Set-Cookie: session_id=; Path=/; HttpOnly; Secure; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+        # Respond to confirm the user has been logged out
+        write_start "<message>User '$email' logged out.</message>"
+        write_end
+    else
+        # Respond to confirm the user has been logged out
+        write_start "<message>No session detected.</message>"
+        write_end
     fi
 }
 
@@ -209,11 +200,13 @@ get_dikt() {
             if [ -n "$single_output" ]; then
                 write_dikt "$single_output"
             else
-                write_body "<error>Dikt not found</error>"
+                write_start "<error>Dikt not found</error>"
+                write_end
             fi
         # Prints errormessage if diktID is not a number
         else
-            write_body "<error>Invalid Dikt ID. It has to be a number.</error>"
+            write_start "<error>Invalid Dikt ID. It has to be a number.</error>"
+            write_end
         fi
     # If no ID specified, send all dikt
     else
@@ -226,13 +219,13 @@ get_dikt() {
 # Small function for writing XML tables
 write_dikt() {
     # Write root element with space above, to seperate from header
-    write_body "<dikt>"
+    write_start "<dikt>"
     # SQLITE is pipe-seperated
     while IFS='|' read -r diktID dikt email; do
         local dikt=$(escape_xml "$dikt")
         echo "<id>$diktID</id><tittel>$dikt</tittel><epost>$email</epost>"
     done <<< "$1"
-    echo "</dikt>"
+    write_end "</dikt>"
 }
 
 
@@ -249,9 +242,11 @@ add_dikt() {
         # Insert the new dikt into the database
         sqlite3 $DATABASE_PATH "INSERT INTO Dikt (dikt, epostadresse) VALUES ('$new_title', '$email');"
         
-        write_body "<message>SQLite database updated.</message>"
+        write_start "<message>SQLite database updated.</message>"
+        write_end
     else
-        write_body "<error>You're not logged in. Log in to add a new dikt.</error>"
+        write_start "<error>You're not logged in. Log in to add a new dikt.</error>"
+        write_end
     fi
 }
 
@@ -280,16 +275,20 @@ edit_dikt_from_id() {
                 # Update dikt with new information
                 sqlite3 $DATABASE_PATH "UPDATE Dikt SET dikt = '$new_title' WHERE diktID = $diktID;"
 
-                write_body "<message>SQLite database updated.</message>"
+                write_start "<message>SQLite database updated.</message>"
+                write_end
                 #echo "<debug>Data: '$new_title', user $email</debug>"
             else
-                write_body "<error>You can't change someone elses dikt.</error>"
+                write_start "<error>You can't change someone elses dikt.</error>"
+                write_end
             fi
         else
-            write_body "<error>This dikt does not exist. Use an existing id for changes.</error>"
+            write_start "<error>This dikt does not exist. Use an existing id for changes.</error>"
+            write_end
         fi
     else
-        write_body "<error>You're not logged in. Log in to edit dikts.</error>"
+        write_start "<error>You're not logged in. Log in to edit dikts.</error>"
+        write_end
     fi
 }
 
@@ -320,24 +319,30 @@ delete_dikt_from_id() {
                     # Deletes Dikt if exists, error if not
                     if [ $dikt_exists -eq 1 ]; then
                         sqlite3 $DATABASE_PATH "DELETE FROM Dikt WHERE diktID=$diktID AND epostadresse='$email';"
-                        write_body "<message>A single SQLite entry was deleted.</message>"
+                        write_start "<message>A single SQLite entry was deleted.</message>"
+                        write_end
                     else
-                        write_body "<error>Dikt not found</error>"
+                        write_start "<error>Dikt not found</error>"
+                        write_end
                     fi
                 # Prints errormessage if diktID is not a number
                 else
-                    write_body "<error>Invalid Dikt ID. It has to be a number.</error>"
+                    write_start "<error>Invalid Dikt ID. It has to be a number.</error>"
+                    write_end
                 fi
             # If no ID specified, Delete all dikt
             else
                 sqlite3 $DATABASE_PATH "DELETE FROM Dikt WHERE epostadresse='$email';"
-                write_body "<message>All your entries deleted.</message>"
+                write_start "<message>All your entries deleted.</message>"
+                write_end
             fi
         else
-            write_body "<error>You can't delete someone elses dikt.</error>"
+            write_start "<error>You can't delete someone elses dikt.</error>"
+            write_end
         fi
     else
-        write_body "<error>You're not logged in. Log in to delete entries.</error>"
+        write_start "<error>You're not logged in. Log in to delete entries.</error>"
+        write_end
     fi
 }
 
@@ -362,7 +367,8 @@ case $METHOD in
             # Run my function to get dikts
             get_dikt
         else
-            write_body "<error>Invalid request. Use /dikt for all dikts or /dikt/{id} for a specific dikt.</error>"
+            write_start "<error>Invalid request. Use /dikt for all dikts or /dikt/{id} for a specific dikt.</error>"
+            write_end
         fi
         ;;
     
@@ -397,7 +403,8 @@ case $METHOD in
             # Run my edit function
             edit_dikt_from_id
         else
-            write_body "<error>Unable to update. {id} for dikt/{id} has to be a number.</error>"
+            write_start "<error>Unable to update. {id} for dikt/{id} has to be a number.</error>"
+            write_end
         fi
         ;;
 
@@ -410,7 +417,8 @@ case $METHOD in
             # Run my delete function
             delete_dikt_from_id
         else
-            echo "<error>Faulty request.</error>"
+            write_start "<error>Faulty request.</error>"
+            write_end
         fi
         ;;
 esac
