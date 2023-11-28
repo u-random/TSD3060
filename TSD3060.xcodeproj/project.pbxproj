@@ -32,6 +32,7 @@
 /* Begin PBXFileReference section */
 		4F5D96612AA4DBD0004B386E /* TSD3060 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TSD3060; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F6112B72B152EA9007A30C0 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		4F7209B52B160F67009ED806 /* SharedDockerfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = SharedDockerfile; sourceTree = "<group>"; };
 		4F9DD40B2AB9E4BC00228689 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		4F9DD40D2AB9E4BC00228689 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		4F9DD4182AB9E79C00228689 /* Mime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mime.h; sourceTree = "<group>"; };
@@ -97,6 +98,8 @@
 				4F6A75CA2ACF29DF00668276 /* 2 */,
 				4F6A75CB2ACF29FF00668276 /* 3 */,
 				4FF86E592AF801A400690D53 /* 4 */,
+				4FFDE34F2B134EE5006E10FA /* docker-compose.yml */,
+				4F7209B52B160F67009ED806 /* SharedDockerfile */,
 				4FF86E572AF8014D00690D53 /* 5 */,
 			);
 			path = Milestone;
@@ -154,7 +157,6 @@
 			children = (
 				4FFDE3502B135079006E10FA /* restapi */,
 				4FFDE3522B13507A006E10FA /* webinterface */,
-				4FFDE34F2B134EE5006E10FA /* docker-compose.yml */,
 			);
 			path = 4;
 			sourceTree = "<group>";
@@ -170,9 +172,9 @@
 		4FFDE3522B13507A006E10FA /* webinterface */ = {
 			isa = PBXGroup;
 			children = (
-				4F6112B72B152EA9007A30C0 /* README */,
-				4FFDE3532B13507A006E10FA /* interface.cgi */,
 				4FFDE3542B13507A006E10FA /* Dockerfile */,
+				4FFDE3532B13507A006E10FA /* interface.cgi */,
+				4F6112B72B152EA9007A30C0 /* README */,
 			);
 			path = webinterface;
 			sourceTree = "<group>";

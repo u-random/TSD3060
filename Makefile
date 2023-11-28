@@ -41,7 +41,7 @@ all: $(PROG)
 
 m1: $(PROG)
 # Run C Web Server interactible by default
-	TSD3060 -r Distribution -p 8080 -i
+	./TSD3060 -r Distribution -p 8080 -i
 
 m2: $(PROG)
 # Run the unshare container
