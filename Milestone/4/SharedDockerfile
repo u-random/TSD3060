@@ -10,7 +10,7 @@ RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
     echo "AddHandler cgi-script .cgi"               >> conf/httpd.conf
 
 # REPLACE default cgi-bin directory to the new one
-RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
+#RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
 
 # UPDATE
 RUN apk update
