@@ -17,4 +17,3 @@ RUN busybox chmod 666 /usr/local/apache2/cgi-bin/DiktDatabase.db
 # Change owner to www-data/dockremap of Directory and Database
 #RUN busybox chown dockremap  /usr/local/apache2/cgi-bin \
 #                            /usr/local/apache2/cgi-bin/DiktDatabase.db
-
