@@ -234,14 +234,12 @@ get_dikt() {
 
 # Small function for writing XML tables
 write_dikt() {
-    # Write root element with space above, to seperate from header
-    write_start "<dikt>"
     # SQLITE is pipe-seperated
     while IFS='|' read -r diktID dikt email; do
         local dikt=$(escape_xml "$dikt")
-        echo "<id>$diktID</id><title>$dikt</title><email>$email</email>"
+        write_start "<dikt><id>$diktID</id><title>$dikt</title><email>$email</email></dikt>"
     done <<< "$1"
-    write_end "</dikt>"
+    write_end
 }
 
 
