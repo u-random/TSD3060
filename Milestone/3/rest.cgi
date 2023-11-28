@@ -239,7 +239,7 @@ write_dikt() {
     # SQLITE is pipe-seperated
     while IFS='|' read -r diktID dikt email; do
         local dikt=$(escape_xml "$dikt")
-        echo "<id>$diktID</id><tittel>$dikt</tittel><epost>$email</epost>"
+        echo "<id>$diktID</id><title>$dikt</title><email>$email</email>"
     done <<< "$1"
     write_end "</dikt>"
 }
