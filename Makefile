@@ -41,7 +41,7 @@ all: $(PROG)
 
 m1: $(PROG)
 # Run C Web Server interactible by default
-	./TSD3060 -r Distribution -p 8080 -i
+	TSD3060 -r Distribution -p 8080 -i
 
 m2: $(PROG)
 # Run the unshare container
@@ -62,9 +62,13 @@ m4: $(M3_OBJS) Milestone/4/SharedDockerfile
 
 m4stop:
 # Stop the containers
-	docker-compose  -f Milestone/4/docker-compose.yml stop
+	docker-compose -f Milestone/4/docker-compose.yml stop
 
+m4restart:
+# Restart the containers without rebuilding them
+	docker-compose -f Milestone/4/docker-compose.yml up
 
+# Build the program from object files
 $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
@@ -79,7 +83,6 @@ $(PROG): $(OBJS)
 
 
 .PHONY: clean
-		m4stop
 
 clean:
 	rm -f $(OBJS) $(PROG) $(DIST)/bin/*
