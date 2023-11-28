@@ -1,46 +1,17 @@
-# Code partly from Thomas Nordlis "Dockerfile-eksempel"
+# REST API Dockerfile
 
-# This is the Dockerfile for the REST API
-
-FROM httpd:alpine
+FROM cgi-image:base
 WORKDIR ./
 
-# Install SQLite3
-RUN apk add sqlite
-
-# Enable CGI
-RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
-    echo "AddHandler cgi-script .cgi"               >> conf/httpd.conf
-    
-# Let all requests be handled by interface.cgi
+# ROUTE traffic
 RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/rest.cgi|' conf/httpd.conf
 
-# Replace default cgi-bin directory to my new one
-RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
+# INSTALL SQLite3
+RUN apk add sqlite
 
-# Install CURL
-RUN apk update && apk add curl
+# COPY over necessary files to cgi-bin
+COPY ./rest.cgi ./DiktDatabase.db /usr/lib/cgi-bin/
 
-# Install Perl
-#RUN apk add perl
-
-# Install bash
-RUN apk add bash
-
-# Install XMLLINT needed for my xml request parsing
-RUN apk add libxml2-utils
-
-# Install Utilities, including uuidgen
-RUN apk add util-linux
-
-
-COPY ./rest.cgi /usr/lib/cgi-bin/
-COPY ./DiktDatabase.db /usr/lib/cgi-bin/
-
-# Change owner to www-data in cgi bin
-RUN busybox chown www-data /usr/lib/cgi-bin
-
-# Change owner to www-data of DiktDatabase
-RUN busybox chown www-data /usr/lib/cgi-bin/DiktDatabase.db
-
-EXPOSE 80
+# Change owner to www-data of Directory and Database
+RUN busybox chown www-data  /usr/lib/cgi-bin \
+                            /usr/lib/cgi-bin/DiktDatabase.db

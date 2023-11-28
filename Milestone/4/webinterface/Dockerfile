@@ -1,26 +1,10 @@
-# Code partly from Thomas Nordlis "Dockerfile-eksempel"
+# WEB INTERFACE Dockerfile
 
-# This is the Dockerfile for the Web Interface
-
-FROM httpd:alpine
+FROM cgi-image:base
 WORKDIR ./
 
-# Enable CGI
-RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
-    echo "AddHandler cgi-script .cgi"               >> conf/httpd.conf
-
-# Let all requests be handled by interface.cgi
+# ROUTE traffic
 RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/lib/cgi-bin/interface.cgi|' conf/httpd.conf
 
-# Replace default cgi-bin directory to my new one
-RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
-
-# Install CURL
-RUN apk --no-cache add curl
-
-# Install bash
-RUN apk add --no-cache bash
-
+# COPY over necessary files to cgi-bin
 COPY ./interface.cgi /usr/lib/cgi-bin/
-
-EXPOSE 80
