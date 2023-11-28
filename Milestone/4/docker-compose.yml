@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8280:80"
-  deploy:
+    deploy:
       resources:
         limits:
           cpus: '0.5'
