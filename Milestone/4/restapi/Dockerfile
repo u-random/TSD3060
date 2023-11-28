@@ -20,6 +20,8 @@ RUN busybox chown www-data  /usr/lib/cgi-bin \
 RUN apk add shadow
 
 RUN deluser xfs
-RUN set -x ; \
-  addgroup -g 33 -S www-data ; \
-  adduser -u 33 -D -S -G www-data www-data && exit 0 ; exit 1
+RUN set -x; \
+    delgroup www-data && \
+    addgroup -g 33 -S www-data; \
+    deluser www-data && \
+    adduser -u 33 -D -S -G www-data www-data
