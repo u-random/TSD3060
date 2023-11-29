@@ -23,16 +23,24 @@ DELETE FROM sqlite_sequence;
 INSERT INTO Bruker (epostadresse, passordhash, fornavn, etternavn)
 VALUES ('demo@demomail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'D', 'Emo');
 
+INSERT INTO Bruker (epostadresse, passordhash, fornavn, etternavn)
+VALUES ('test@testmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'T', 'Est');
+
 -- Adding an entry to the Sesjon table
 INSERT INTO Sesjon (sesjonsID, epostadresse)
 VALUES ('0', 'demo@demomail.com');
 
+INSERT INTO Sesjon (sesjonsID, epostadresse)
+VALUES ('0', 'test@testmail.com');
+
 -- Adding entries to the Dikt table
 INSERT INTO Dikt (dikt, epostadresse)
-VALUES ('Skrønebok', 'demo@demomail.com');
+VALUES ('Skroenebok 1.', 'demo@demomail.com');
 INSERT INTO Dikt (dikt, epostadresse)
-VALUES ('Skrønebok 2. Vittighetenes tilbakekomst!', 'demo@demomail.com');
+VALUES ('Skroenebok 2. Vittighetenes tilbakekomst!', 'demo@demomail.com');
 INSERT INTO Dikt (dikt, epostadresse)
-VALUES ('Skrønebok 3. Atter en vits!', 'demo@demomail.com');
+VALUES ('Skroenebok 3. Atter en vits!', 'demo@demomail.com');
+INSERT INTO Dikt (dikt, epostadresse)
+VALUES ('Skroenebok 6. Den siste latter', 'test@testmail.com');
 
 COMMIT;
