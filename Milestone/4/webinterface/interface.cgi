@@ -4,9 +4,7 @@
 #cookie_file=""
 
 build_html() {
-  echo "Content-Type: text/html"
-  echo
-  cat <<EOF
+  cat <<EOF > login-status.html
 <!DOCTYPE html>
 <html>
 <head>
@@ -119,7 +117,10 @@ case $METHOD in
                 ;;
                 
             /status)
+                echo "Content-Type: text/html"
+                echo
                 build_html
+                cat login-status.html
                 ;;
         esac
         ;;
