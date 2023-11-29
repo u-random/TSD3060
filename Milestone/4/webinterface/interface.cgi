@@ -103,9 +103,12 @@ case $METHOD in
                 
             /index)
                 echo "Content-Type: text/html"
+                echo "Pragma: no-cache"
+                echo "Expires: Fri, 01 Jan 1990 00:00:00 GMT"
+                echo "Cache-Control: no-cache, must-revalidate, no-store, max-age=0, private"
                 echo "Connection: close"
                 echo ""
-                local logintxt="Not logged in"
+                logintxt="Not logged in"
                 if [[ -n "$HTTP_COOKIE" ]]; then
                     logintxt="You are logged in"
                 fi
