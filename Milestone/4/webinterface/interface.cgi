@@ -21,7 +21,13 @@ do_login() {
     
     # Login response passthrough
     curl -sS -i -X POST -H "Content-Type: text/xml; charset=UTF-8" -H "Cookie: $HTTP_COOKIE" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
-    
+    # PRG:
+#   local status=$(curl -sS -i -X POST -H "Content-Type: text/xml; charset=UTF-8" -H "Cookie: $HTTP_COOKIE" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig')
+#    if [[ $status -eq 0 ]]; then
+#        echo "Location: http://localhost:8180/index"
+#        echo ""
+#    fi
+
     #sed 's/<p>Status:.*<\/p>/<p>Status: Logged In<\/p>/' login-status.html
 }
 
