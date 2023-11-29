@@ -101,21 +101,11 @@ case $METHOD in
                 do_logout
                 ;;
                 
-            /status)
+            /index)
                 echo "Content-Type: text/html"
-                echo
-                cat <<EOF > login-status.html
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Login Status</title>
-                </head>
-                <body>
-                    <p>Status: Not logged in</p>
-                </body>
-                </html>
-                EOF
-                cat login-status.html
+                echo "Connection: close"
+                echo ""
+                cat index.html
                 ;;
         esac
         ;;
