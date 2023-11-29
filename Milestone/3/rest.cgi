@@ -434,7 +434,7 @@ case $METHOD in
             # Run my delete function
             delete_dikt_from_id
         else
-            write_start "<error>Faulty request.</error>"
+            write_start "<error>Faulty request. Remember, {id} has to be a number.</error>"
             write_end
         fi
         ;;
