@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Global Varables
-cookie_file=""
+#cookie_file=""
 
 # MARK: - LOGIN OK
 do_login() {
@@ -16,7 +16,7 @@ do_login() {
     # Changes non alphanumeric to underscore
     local sanitized_email=$(echo "$email" | sed 's/[^a-zA-Z0-9]/_/g')
     # Generate a unique cookie file name based on the user's email
-    cookie_file="/cookies_$sanitized_email.txt"
+    export cookie_file="/cookies_$sanitized_email.txt"
     
     # Login response passthrough
     curl -sS -i -c "$cookie_file" -b "$cookie_file" -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
