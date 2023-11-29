@@ -17,6 +17,9 @@ services:
       - SYS_TIME
       - CAP_SETUID
       - CAP_SETGID
+      - CAP_NET_ADMIN
+      - CAP_SYS_ADMIN
+    network_mode: "host"
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -36,5 +39,8 @@ services:
       - SYS_TIME
       - CAP_SETUID
       - CAP_SETGID
+      - CAP_NET_ADMIN
+      - CAP_SYS_ADMIN
+    network_mode: "host"
     extra_hosts:
       - "host.docker.internal:host-gateway"
