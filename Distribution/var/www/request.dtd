@@ -3,7 +3,3 @@
 <!ELEMENT id (#PCDATA)>
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT email (#PCDATA)>
-
-<!ELEMENT message (#PCDATA)>
-<!ELEMENT debug (#PCDATA)>
-<!ELEMENT error (#PCDATA)>
