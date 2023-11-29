@@ -10,15 +10,18 @@ do_login() {
     local email=$(echo "$email_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
     local password=$(echo "$password_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
 
+    # Generate a unique cookie file name based on the user's email
+    cookie_file="~/cookies_${email//[^a-zA-Z0-9]/_}.txt"
+    
     # Login response passthrough
-    curl -sS -i -c ~/cookies.txt -b ~/cookies.txt -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
+    curl -sS -i -c "$cookie_file" -b "$cookie_file" -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 
 # MARK: - LOGOUT OK
 do_logout() {
     # Logout to browser passthrough
-    curl -sS -i -b ~/cookies.txt -X POST -H "Content-Type: text/xml; charset=UTF-8" restapi/logout | egrep -v '^HTTP\/.*$' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
+    curl -sS -i -b "$cookie_file" -X POST -H "Content-Type: text/xml; charset=UTF-8" restapi/logout | egrep -v '^HTTP\/.*$' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 
@@ -47,7 +50,7 @@ add_dikt() {
     # Decode title
     local title=$(echo "$title_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
     # Add dikt and Write return to browser
-    curl -sS -i -b ~/cookies.txt -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<title>$title</title>" restapi/dikt | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
+    curl -sS -i -b "$cookie_file" -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<title>$title</title>" restapi/dikt | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 
@@ -60,7 +63,7 @@ edit_dikt_from_id() {
     local title=$(echo "$title_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
 
     # Edit dikt and Write return to browser
-    curl -sS -i -b ~/cookies.txt -X PUT -H "Content-Type: text/xml; charset=UTF-8" -d "<dikt><title>$title</title></dikt>" "restapi/dikt/$diktID" | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
+    curl -sS -i -b "$cookie_file" -X PUT -H "Content-Type: text/xml; charset=UTF-8" -d "<dikt><title>$title</title></dikt>" "restapi/dikt/$diktID" | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 
@@ -69,7 +72,7 @@ delete_dikt_from_id() {
     # Parse diktID
     local diktID=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "diktID") {print $(i+1); break}}')
     # Delete dikt and Write reply to browser
-    curl -sS -i -b ~/cookies.txt -X DELETE "restapi/dikt/$diktID" | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
+    curl -sS -i -b "$cookie_file" -X DELETE "restapi/dikt/$diktID" | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 
