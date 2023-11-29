@@ -1,39 +1,34 @@
 #!/bin/bash
 
-# HEADERS
+# TODO: HTTP only session cookies might cause a problem with javascript
+
+# HTTP HEADERS
 echo "Content-Type: text/xml"
 
-# MARK: - PARSE AND VALIDATE XML FROM REQUEST BODY
-# Function to parse XML using xmllint and xpath
+# MARK: - Parse XML with XPATH
 parse_xml() {
-# $1 is expected to be the XML input
-# $2 is expected to be the XPath expression
-# Execute xmllint and check for errors
-
-# Debug: Echo input XML and XPath
-#echo "XML Input: $1"
-#echo "XPath: $2"
-
-# Check if xmllint is available
-    if ! command -v xmllint &> /dev/null; then
-        write_start "<error>Xmllint not found.</error>"
-        write_end
-        return 1
-    fi
-
-# Execute xmllint and capture any errors
+    # $1 is XML input,$2 is the XPath expression
     local result=$(echo "$1" | xmllint --xpath "$2" -)
     if [ $? -ne 0 ]; then
-        write_start "<error>Xmllint result: $result</error>"
-        write_end
-        return 1
+        echo "error"
+    else
+        echo "$result"
     fi
-
-    echo "$result"
 }
 
 
-# Produce different dtd location based on environment
+test_xmllint(){
+    # Check if xmllint is available
+    if ! command -v xmllint &> /dev/null; then
+        write_start "<error>Xmllint not found.</error>"
+        echo "<message> To download, do: \"apt -y install libxml2-utils\"</message>"
+        write_end
+        return 1
+    fi
+}
+
+
+# Summary: Produce a different DTD location based on environment
 detect_environment() {
     # Check if running inside Docker
     if [ -f /.dockerenv ]; then
@@ -46,9 +41,8 @@ detect_environment() {
 }
 
 
-# MARK: - REFACTORING SPECIAL XML CHARACTERS
-# TODO: This could be used more in the following functions
-# Special XML characters should be replaced
+# MARK: - Refactor Special XML Characters
+# Summary: Special XML characters replaced on output from Database
 escape_xml() {
     local string="$1"
     string="${string//&/&amp;}"
@@ -60,26 +54,26 @@ escape_xml() {
 }
 
 
+# MARK: - Writing Top of Body
 write_start() {
-# Get dtd path
-    local dtd_path=$(detect_environment)
-# Blank line to separate from header
+    # Blank line to separate from header
     echo ""
     
-# Echo XML schema reference
+    # Echo XML schema reference
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-    echo "<!DOCTYPE root SYSTEM \"$dtd_path\">"
+    echo "<!DOCTYPE root SYSTEM \"$(detect_environment)\">"
     
-# Echo root element start tag
+    # Echo root element start tag
     echo "<root>"
     
-# First argument to function is message
+    # First argument to function is message
     if [ -n "$1" ]; then
         echo "$1"
     fi
 }
 
 
+# MARK: - Writing Bottom of Body
 write_end() {
     if [ -n "$1" ]; then
         echo "$1"
@@ -88,10 +82,10 @@ write_end() {
 }
 
 
-# MARK: - LOGIN
-# Function to check credentials and create a session
+# MARK: - Log In
+# Summary: Check input credentials and create a session
 do_login() {
-    # Extract email and password from XML body
+    # Extract email and password from XML body, and hash password
     local email=$(parse_xml "$HTTP_BODY" "//email/text()")
     local password=$(parse_xml "$HTTP_BODY" "//password/text()")
     local password_hash=$(echo -n $password | sha256sum | cut -d ' ' -f 1)
@@ -100,19 +94,18 @@ do_login() {
     local valid_credentials=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Bruker WHERE epostadresse='$email' AND passordhash='$password_hash';")
     
     if [[ $valid_credentials -eq 1 ]]; then
-        # Check if user is logged in
+        # Check if user is already logged in
         if is_logged_in; then
-            # Never sent
             write_start "<message>Hello, '$email'! You're already logged in!</message>"
             write_end
         else
-            # Generate a session ID token with UUIDGEN
+            # Generate a session ID token
             local session_cookie=$(uuidgen)
             
-            # Set a cookie HEADER with the session_id
+            # Set a cookie Header
             echo "Set-Cookie: session_id=$session_cookie; Path=/; HttpOnly;"
 
-            # Store session ID in the database for the user
+            # Store session ID token in the database
             sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_cookie' WHERE epostadresse='$email';"
             
             # Write welcome message
@@ -120,23 +113,24 @@ do_login() {
             write_end "<debug>Cookie set with uuid: '$session_cookie'</debug>"
         fi
     else
-        write_start "<error>Invalid credentials</error>"
-        echo "<debug>Passhash: '$password_hash'</debug>"
-        echo "<debug>Pass: '$password'</debug>"
-        write_end "<debug>Email: '$email'</debug>"
+        write_start "<error>You provided invalid credentials!</error>"
+        echo "<debug>Email provided: '$email'</debug>"
+        echo "<debug>Password provided: '$password'</debug>"
+        write_end "<debug>Password hash generated: '$password_hash'</debug>"
     fi
 }
 
 
-# MARK: - CHECK IF USER IS LOGGED IN
-# Test if user is logged in and session is valid
+# MARK: - Check Logged In Status
+# Summary: Test if user is logged in and session is valid
 is_logged_in() {
     # Get session id from cookie
     local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
     
     # Check if session_cookie is set
     if [ -z "$session_cookie" ]; then
-        return 1 # Not logged in if the session cookie is empty
+        # Not logged in if the session cookie is empty
+        return 1
     fi
 
     # Get user belonging to session
@@ -154,35 +148,33 @@ is_logged_in() {
 }
 
 
-# MARK: - LOG USER OUT
-# Function to logout a user
+# MARK: - Log Out
 do_logout() {
     # Get the session cookie and user email from get_user function
     local user_data=$(get_user)
-    # Get session id from cookie
     local session_cookie=$(echo "$user_data" | awk '{print $1}')
-    # Get user belonging to session
     local email=$(echo "$user_data" | awk '{print $2}')
     
     # If user is logged in
     if is_logged_in; then
         # Invalidate the session in the database
         sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID=NULL WHERE sesjonsID='$session_cookie';"
+        
         # Send a header to remove the cookie
-        echo "Set-Cookie: session_id=; Path=/; HttpOnly; Secure; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
-        # Respond to confirm the user has been logged out
+        echo "Set-Cookie: session_id=; Path=/; HttpOnly; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+        
+        # Respond with logout confirmation
         write_start "<message>User '$email' logged out.</message>"
         write_end
     else
-        # Respond to confirm the user has been logged out
-        write_start "<message>No session detected.</message>"
+        write_start "<message>No session detected. Log in to log out.</message>"
         write_end
     fi
 }
 
 
-# Mark: - GET USER DATA
-# Get the current User based on only on session id in HTTP header.
+# Mark: - Get User Data
+# Summary: Get the current user based only on session id from HTTP.
 get_user() {
     # Get session id from cookie environment variable
     local session_cookie=$(printf "%s\n" "$HTTP_COOKIE" | grep -o 'session_id=[^;]*' | sed 's/session_id=//')
@@ -200,14 +192,15 @@ get_user() {
         return 1
     fi
 
+    # Print out cookie and email in one string
     echo "$session_cookie $email"
 }
 
 
-# MARK: - GET DIKT, ONE OR ALL
-# Function to get a dikt from ID and return proper XML
+# MARK: - Get Dikts
+# Summary: Get a dikt from ID, if any, and return proper XML
 get_dikt() {
-    # Extract diktID from array variable Bash_rematch with result of regex match
+    # Extract diktID from array variable Bash_rematch with result of regex match from case
     local diktID=${BASH_REMATCH[2]}
     # Fetch the dikt with DiktID
     if [[ -n $diktID ]]; then
@@ -234,7 +227,7 @@ get_dikt() {
 }
 
 
-# Small function for writing XML tables
+# Summary: Small function for writing XML tables
 write_dikt() {
     write_start
     # SQLITE is pipe-seperated
@@ -312,7 +305,7 @@ edit_dikt_from_id() {
 
 # TODO: - Cleanup
 # MARK: - DELETE A DIKT
-# This function is made to delete single dikts based on id
+# Summary: This function is made to delete single dikts based on id
 delete_dikt_from_id() {
     # Extract diktID if provided
     local diktID=${BASH_REMATCH[2]}
@@ -372,9 +365,11 @@ DATABASE_PATH="$DATA_DIR/DiktDatabase.db"
 METHOD=$(echo "$REQUEST_METHOD")
 URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
 
+# Run to see if parser is availible
+test_xmllint
 
 # MARK: - CASE statement
-# REST API logic
+# Summary: REST API logic
 case $METHOD in
     # MARK: - HTTP GET request. Matches SQL: SELECT
     GET)
