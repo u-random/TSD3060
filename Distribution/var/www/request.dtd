@@ -1,6 +1,5 @@
-<!ELEMENT login (email, password)>
+<!ELEMENT login (email, password)*>
 <!ELEMENT email (#PCDATA)>
 <!ELEMENT password (#PCDATA)>
 
 <!ELEMENT title (#PCDATA)>
-

@@ -105,7 +105,12 @@ case $METHOD in
                 echo "Content-Type: text/html"
                 echo "Connection: close"
                 echo ""
-                cat index.html
+                local logintxt="Not logged in"
+                if [ -n $HTTP_COOKIE ]
+                then
+                    logintxt="You are logged in"
+                fi
+                cat index.html|sed 's/@loginstatus@/'"$logintxt"'/'
                 ;;
         esac
         ;;
