@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Global Varables
+cookie_file=""
+
 # MARK: - LOGIN OK
 do_login() {
     # Use awk to parse the email and password values
