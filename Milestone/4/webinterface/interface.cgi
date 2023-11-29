@@ -5,16 +5,16 @@
 
 build_html() {
     cat <<EOF > login-status.html
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Login Status</title>
-    </head>
-    <body>
-        <p>Status: Not logged in</p>
-    </body>
-    </html>
-    EOF
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Status</title>
+</head>
+<body>
+    <p>Status: Not logged in</p>
+</body>
+</html>
+EOF
 }
 
 build_html
