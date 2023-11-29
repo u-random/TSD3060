@@ -7,7 +7,7 @@ FROM httpd:alpine
 
 # INSTALL UPDATE CURL, BASH, XMLLINT, Utilities
 RUN apk update; \
-        add curl \
+    apk add curl \
             bash \
             libxml2-utils \
             util-linux
