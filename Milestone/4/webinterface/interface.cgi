@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Global Varables
-#cookie_file=""
+cookie_file=""
 
 # MARK: - LOGIN OK
 do_login() {
