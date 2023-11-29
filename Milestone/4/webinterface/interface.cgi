@@ -17,7 +17,7 @@ build_html() {
     EOF
 }
 
-
+build_html
 
 # MARK: - LOGIN OK
 do_login() {
@@ -119,7 +119,6 @@ case $METHOD in
             /status)
                 echo "Content-Type: text/html"
                 echo
-                build_html
                 cat login-status.html
                 ;;
         esac
