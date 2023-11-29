@@ -22,7 +22,7 @@ do_login() {
     # Login response passthrough
     curl -sS -i -X POST -H "Content-Type: text/xml; charset=UTF-8" -H "Cookie: $HTTP_COOKIE" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
     
-    sed 's/<p>Status:.*<\/p>/<p>Status: Logged In<\/p>/' login-status.html
+    #sed 's/<p>Status:.*<\/p>/<p>Status: Logged In<\/p>/' login-status.html
 }
 
 
@@ -31,7 +31,7 @@ do_logout() {
     # Logout to browser passthrough
     curl -sS -i -X POST -H "Content-Type: text/xml; charset=UTF-8" -H "Cookie: $HTTP_COOKIE" restapi/logout | egrep -v '^HTTP\/.*$' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
     
-    sed 's/<p>Status:.*<\/p>/<p>Status: Logged Out<\/p>/' login-status.html
+    #sed 's/<p>Status:.*<\/p>/<p>Status: Logged Out<\/p>/' login-status.html
 }
 
 
