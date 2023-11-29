@@ -11,7 +11,7 @@ do_login() {
     local password=$(echo "$password_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
 
     # Generate a unique cookie file name based on the user's email
-    cookie_file="~/cookies_$(email).txt"
+    cookie_file="~/cookies_$email.txt"
     
     # Login response passthrough
     curl -sS -i -c "$cookie_file" -b "$cookie_file" -X POST -H "Content-Type: text/xml; charset=UTF-8" -d "<login><email>$email</email><password>$password</password></login>" restapi/login | egrep -v '(^HTTP\/.*$)' | sed 's/Transfer\-Encoding.*/Connection\: close/ig'
