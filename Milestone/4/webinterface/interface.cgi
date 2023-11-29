@@ -4,17 +4,19 @@
 #cookie_file=""
 
 build_html() {
+  echo "Content-Type: text/html"
+  echo ""
   cat <<EOF
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login Status</title>
-</head>
-<body>
-    <p>Status: [LOGIN_STATUS]</p>
-</body>
-</html>
-EOF
+  <!DOCTYPE html>
+  <html>
+  <head>
+      <title>Login Status</title>
+  </head>
+  <body>
+      <p>Status: [LOGIN_STATUS]</p>
+  </body>
+  </html>
+  EOF
 }
 
 
@@ -116,7 +118,7 @@ case $METHOD in
                 ;;
                 
             /status)
-                build_html
+                $(build_html)
                 ;;
         esac
         ;;
