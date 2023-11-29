@@ -5,20 +5,15 @@
 
 FROM httpd:alpine
 
-# ENABLE CGI in httpd.conf
-RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
-    echo "AddHandler cgi-script .cgi"               >> conf/httpd.conf
-
-# REPLACE default cgi-bin directory to the new one
-#RUN sed -i 's|/usr/local/apache2/cgi-bin|/usr/lib/cgi-bin|g' conf/httpd.conf
-
-# UPDATE
-RUN apk update
-
-# INSTALL CURL, BASH, XMLLINT, Utilities
-RUN apk add curl \
+# INSTALL UPDATE CURL, BASH, XMLLINT, Utilities
+RUN apk update; \
+        add curl \
             bash \
             libxml2-utils \
             util-linux
+
+# ENABLE CGI in httpd.conf
+RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
+    echo "AddHandler cgi-script .cgi"               >> conf/httpd.conf
 
 EXPOSE 80
