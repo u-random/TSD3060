@@ -30,7 +30,7 @@
     <p>Type ID number. Leave empty to get all dikts</p>
     <form action="http://192.168.10.200:8180/dikt/get" method='post'>
         <label for="diktID">DiktID:</label><br>
-        <input type="number" id="diktID" name="diktID"><br>
+        <input type="text" id="diktID" name="diktID"><br>
         <input type="submit" value="Get dikts">
     </form>
 
@@ -48,7 +48,7 @@
     <p>Supply dikt id and new title</p>
     <form action="http://192.168.10.200:8180/dikt/edit" method='post'>
         <label for="diktID">Dikt ID:</label><br>
-        <input type="number" id="diktID" name="diktID"><br>
+        <input type="text" id="diktID" name="diktID"><br>
         <label for="title">Title:</label><br>
         <input type="text" id="title" name="title"><br>
         <input type="submit" value="Edit dikt">
@@ -59,7 +59,7 @@
     <p>Only diktID needed. No warning provided.</p>
     <form action="http://192.168.10.200:8180/dikt/delete" method='post'>
         <label for="diktID">Dikt ID:</label><br>
-        <input type="number" id="diktID" name="diktID"><br>
+        <input type="text" id="diktID" name="diktID"><br>
         <input type="submit" value="Delete dikt">
     </form>
 <hr>
