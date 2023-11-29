@@ -31,7 +31,7 @@ INSERT INTO Sesjon (sesjonsID, epostadresse)
 VALUES ('0', 'demo@demomail.com');
 
 INSERT INTO Sesjon (sesjonsID, epostadresse)
-VALUES ('0', 'test@testmail.com');
+VALUES ('1', 'test@testmail.com');
 
 -- Adding entries to the Dikt table
 INSERT INTO Dikt (dikt, epostadresse)
