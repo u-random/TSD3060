@@ -106,8 +106,7 @@ case $METHOD in
                 echo "Connection: close"
                 echo ""
                 local logintxt="Not logged in"
-                if [ -n $HTTP_COOKIE ]
-                then
+                if [[ -n "$HTTP_COOKIE" ]]; then
                     logintxt="You are logged in"
                 fi
                 cat index.html|sed 's/@loginstatus@/'"$logintxt"'/'
