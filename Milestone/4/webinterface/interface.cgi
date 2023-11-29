@@ -3,21 +3,6 @@
 # Global Varables
 #cookie_file=""
 
-build_html() {
-    cat <<EOF > login-status.html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login Status</title>
-</head>
-<body>
-    <p>Status: Not logged in</p>
-</body>
-</html>
-EOF
-}
-
-build_html
 
 # MARK: - LOGIN OK
 do_login() {
@@ -119,6 +104,17 @@ case $METHOD in
             /status)
                 echo "Content-Type: text/html"
                 echo
+                cat <<EOF > login-status.html
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Login Status</title>
+                </head>
+                <body>
+                    <p>Status: Not logged in</p>
+                </body>
+                </html>
+                EOF
                 cat login-status.html
                 ;;
         esac
