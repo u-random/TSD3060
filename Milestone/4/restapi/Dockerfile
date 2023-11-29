@@ -6,10 +6,6 @@ WORKDIR ./
 # ROUTE traffic
 RUN sed -i 's|ScriptAlias .*|ScriptAliasMatch .* /usr/local/apache2/cgi-bin/rest.cgi|' conf/httpd.conf
 
-# Change httpd user
-RUN sed -i 's|User www-data|User #11|' conf/httpd.conf
-RUN sed -i 's|Group www-data|Group #0|' conf/httpd.conf
-
 # INSTALL SQLite3
 RUN apk add sqlite
 
@@ -18,6 +14,6 @@ COPY ./rest.cgi ./DiktDatabase.db /usr/local/apache2/cgi-bin/
 
 RUN busybox chmod 666 /usr/local/apache2/cgi-bin/DiktDatabase.db
 
-# Change owner to www-data/dockremap of Directory and Database
-#RUN busybox chown dockremap  /usr/local/apache2/cgi-bin \
-#                            /usr/local/apache2/cgi-bin/DiktDatabase.db
+# Change owner to www-data of Directory and Database
+RUN busybox chown www-data  /usr/local/apache2/cgi-bin \
+                            /usr/local/apache2/cgi-bin/DiktDatabase.db
