@@ -1,5 +1,6 @@
-<!ELEMENT root (dikt | message | error | debug)*>
-<!ELEMENT dikt (id, title, email)*>
-<!ELEMENT id (#PCDATA)>
-<!ELEMENT title (#PCDATA)>
+<!ELEMENT login (email, password)>
 <!ELEMENT email (#PCDATA)>
+<!ELEMENT password (#PCDATA)>
+
+<!ELEMENT title (#PCDATA)>
+
