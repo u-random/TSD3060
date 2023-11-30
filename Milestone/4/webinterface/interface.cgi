@@ -114,11 +114,14 @@ case $METHOD in
                 echo "Cache-Control: no-cache, must-revalidate, no-store, max-age=0, private"
                 echo "Connection: close"
                 echo ""
-                logintxt="Not logged in"
+                #logintxt="Not logged in"
                 if [[ -n "$HTTP_COOKIE" ]]; then
-                    logintxt="You are logged in"
+                    #logintxt="You are logged in, $HTTP_COOKIE"
+                    cat index.html|sed 's/@loginstatus@/'"You are logged in, Cookie $HTTP_COOKIE"'/'
+                else
+                    cat index.html|sed 's/@loginstatus@/'"Not logged in, Cookie $HTTP_COOKIE"'/'
                 fi
-                cat index.html|sed 's/@loginstatus@/'"$logintxt"'/'
+                #cat index.html|sed 's/@loginstatus@/'"$logintxt"'/'
                 ;;
         esac
         ;;
