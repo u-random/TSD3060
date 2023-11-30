@@ -135,6 +135,8 @@ is_logged_in() {
 
     # Get user belonging to session
     local email=$(sqlite3 $DATABASE_PATH "SELECT epostadresse FROM Sesjon WHERE sesjonsID='$session_cookie';")
+    
+    # TODO: check if email $1 is equal to email of session
 
     # Check if session is set in database
     local valid_session=$(sqlite3 $DATABASE_PATH "SELECT COUNT(*) FROM Sesjon WHERE epostadresse='$email' AND sesjonsID='$session_cookie';")
