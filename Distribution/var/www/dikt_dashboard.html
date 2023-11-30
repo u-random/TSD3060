@@ -7,17 +7,16 @@
     </head>
     <body>
         <center>
-            <iframe src="http://192.168.10.200:8180/status" width="200" height="30"></iframe>
             <!--@status-->
             <!--LOGIN.-->
             <h1>Login box</h1>
             <form action="http://192.168.10.200:8180/login" method='post'>
                 <label for="email">Username:</label><br>
                 <input type="text" id="email" name="email"><br>
-                    <label for="password">Password:</label><br>
-                    <input type="password" id="password" name="password"><br>
-                        <input type="submit" value="Login">
-                            </form>
+                <label for="password">Password:</label><br>
+                <input type="password" id="password" name="password"><br>
+                <input type="submit" value="Login" onclick="x();return false;">
+            </form>
             <!--Log out-->
             <hr>
             <h1>Logout box</h1>
@@ -70,6 +69,11 @@
             <h1>Homepage</h1>
             <a href="index.html">Go home</a>
         </center>
+        <script>
+            function x() {
+                alert("Hello World")
+            }
+        </script>
     </body>
 </html>
 
