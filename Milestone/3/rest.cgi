@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# TODO: HTTP only session cookies might cause a problem with javascript
-
 # HTTP HEADERS
 echo "Content-Type: text/xml"
 
@@ -103,7 +101,7 @@ do_login() {
             local session_cookie=$(uuidgen)
             
             # Set a cookie Header
-            echo "Set-Cookie: session_id=$session_cookie; Path=/; HttpOnly;"
+            echo "Set-Cookie: session_id=$session_cookie; Path=/;"
 
             # Store session ID token in the database
             sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID='$session_cookie' WHERE epostadresse='$email';"
@@ -163,7 +161,7 @@ do_logout() {
         sqlite3 $DATABASE_PATH "UPDATE Sesjon SET sesjonsID=NULL WHERE sesjonsID='$session_cookie';"
         
         # Send a header to remove the cookie
-        echo "Set-Cookie: session_id=; Path=/; HttpOnly; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+        echo "Set-Cookie: session_id=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
         
         # Respond with logout confirmation
         write_start "<message>User '$email' logged out.</message>"
