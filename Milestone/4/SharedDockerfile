@@ -12,8 +12,7 @@ RUN apk update; \
             libxml2-utils \
             util-linux
 
-# ENABLE CGI in httpd.conf
-RUN echo "LoadModule cgi_module modules/mod_cgi.so" >> conf/httpd.conf; \
-    echo "AddHandler cgi-script .cgi"               >> conf/httpd.conf
+# REPLACE standard conf with my own httpd.conf
+COPY httpd.conf conf/httpd.conf
 
 EXPOSE 80
