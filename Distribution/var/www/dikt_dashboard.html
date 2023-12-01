@@ -1,137 +1,190 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-            <title>Main form page</title>
-            <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
-    <body onload="doInit()">
-        <h3 id="loginstatus" style="text-align: right; margin: 20px;"></h3>
-        <center>
-            <!--@status-->
-            <!--LOGIN.-->
-            <h1>Login box</h1>
-            <form id="loginform" action="http://192.168.10.200:8180/login" method='post'>
-                <label for="email">Username:</label><br>
-                <input type="text" id="email" name="email"><br>
-                <label for="password">Password:</label><br>
-                <input type="password" id="password" name="password"><br>
-                <input type="submit" value="Login" >
-            </form>
+<html lang="en" >
+<head>
+    <meta charset="utf-8">
+    <title>Main form page</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body onload="doInit()" style="text-align: center">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>Main Form Page</h1>
+    <div id="loginstatus" style="text-align: right; margin: 20px;">You are not logged in</div>
+</div>
 
-            <!--Log out-->
-            <hr>
-            <h1>Logout box</h1>
-            <form action="http://192.168.10.200:8180/logout" method='post'>
-                <input type="submit" value="Logout">
-                    </form>
-            
-            <!--Get dikt, one or all.-->
-            <hr>
-            <h1>Get Dikts</h1>
-            <p>Type ID number. Leave empty to get all dikts</p>
-            <form action="http://192.168.10.200:8180/dikt/get" method='post'>
-                <label for="diktID">DiktID:</label><br>
-                <input type="text" id="diktID" name="diktID"><br>
-                    <input type="submit" value="Get dikts">
-                        </form>
-            
-            <!--ADD dikt.-->
-            <hr>
-            <h1>Add Dikts here</h1>
-            <form action="http://192.168.10.200:8180/dikt/add" method='post'>
-                <label for="title">Title:</label><br>
-                <input type="text" id="title" name="title"><br>
-                    <input type="submit" value="ADD new dikt">
-                        </form>
-            <!--Edit dikt.-->
-            <hr>
-            <h1>Edit Dikts here</h1>
-            <p>Supply dikt id and new title</p>
-            <form action="http://192.168.10.200:8180/dikt/edit" method='post'>
-                <label for="labelEditDiktId">Dikt ID:</label><br>
-                <input type="text" id="labelEditDiktId" name="diktID"><br>
-                    <label for="labelEditDiktTitle">Title:</label><br>
-                    <input type="text" id="labelEditDiktTitle" name="title"><br>
-                    <input type="submit" value="Edit dikt">
-            </form>
-            <!--DELETE dikt, one or all.-->
-            <hr>
-            <h1>Delete Dikts here</h1>
-            <p>Only diktID needed. No warning provided.</p>
-            <form action="http://192.168.10.200:8180/dikt/delete" method='post'>
-                <label for="labelDeleteDiktId">Dikt ID:</label><br>
-                <input type="text" id="labelDeleteDiktId" name="diktID"><br>
-                    <input type="submit" value="Delete dikt">
-                        </form>
-            <hr>
-            <h1>Surprise</h1>
-            <a href="surprise.asis">Surprise NOW!</a>
-            <hr>
-            <h1>Homepage</h1>
-            <a href="index.html">Go home</a>
-        </center>
+    <!--LOGIN.-->
+    <h2>Login box</h2>
+    <form id="loginForm">
+        <label for="email">Username:</label><br>
+        <input type="text" id="email" name="email"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br>
+        <input type="submit" value="Login">
+    </form>
+    <!--Log out-->
+    <hr>
+    <h2>Logout box</h2>
+    <form id="logoutForm">
+        <input type="submit" value="Logout">
+    </form>
+
+    <!--Get dikt, one or all.-->
+    <hr>
+    <h2>Get Dikts</h2>
+    <p>Type ID number. Leave empty to get all dikts</p>
+    <form id="get">
+        <label for="getDiktID">DiktID:</label><br>
+        <input type="text" id="getDiktID" name="diktID"><br>
+        <input type="submit" value="Get dikts">
+    </form>
+
+    <!--ADD dikt.-->
+    <hr>
+    <h2>Add Dikts here</h2>
+    <form id="add">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title"><br>
+        <input type="submit" value="ADD new dikt">
+    </form>
+    <!--Edit dikt.-->
+    <hr>
+    <h2>Edit Dikts here</h2>
+    <p>Supply dikt id and new title</p>
+    <form id="edit">
+        <label for="editDiktID">Dikt ID:</label><br>
+        <input type="text" id="editDiktID" name="diktID"><br>
+        <label for="editTitle">Title:</label><br>
+        <input type="text" id="editTitle" name="title"><br>
+        <input type="submit" value="Edit dikt">
+    </form>
+    <!--DELETE dikt, one or all.-->
+    <hr>
+    <h2>Delete Dikts here</h2>
+    <p>Only diktID needed. No warning provided.</p>
+    <form id="delete">
+        <label for="deleteDiktID">Dikt ID:</label><br>
+        <input type="text" id="deleteDiktID" name="diktID"><br>
+        <input type="submit" value="Delete dikt">
+    </form>
+    <hr>
+    <h2>Surprise</h2>
+    <a href="surprise.asis">Surprise NOW!</a>
+    <hr>
+    <h2>Homepage</h2>
+    <a href="index.html">Go home</a>
 <!--        <script src="web-application.js"></script>-->
 
-        <script type="application/ecmascript">
-            // Helpers
-            function getCookie(cname) {
-                let name = cname + "=";
-                let ca = document.cookie.split(';');
-                for(let i = 0; i < ca.length; i++) {
-                    let c = ca[i];
-                    while (c.charAt(0) == ' ') {
-                        c = c.substring(1);
-                    }
-                    if (c.indexOf(name) == 0) {
-                        return c.substring(name.length, c.length);
-                    }
-                }
-                return "";
-            }
+<script type="application/ecmascript">
 
-            document.getElementById('loginform').addEventListener('submit', function(event) {
-                event.preventDefault();
-                let formData = new FormData(this);
-                // Process formData to XML
+    // Map of form IDs to their respective XML construction functions
+    const xmlConstructors = {
+        'loginForm': constructLoginXML,
+        'edit': constructEditDiktXML,
+        'add': constructAddDiktXML
+        // Add more form-specific XML constructors here
+    };
+
+    function doFormAction(formId, urlPath, method) {
+        document.getElementById(formId).addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting to server
+            let formData = new FormData(this);
+
+            let xmlData = null;
+            if (xmlConstructors[formId]) {
+                xmlData = xmlConstructors[formId](formData);
+            }
+            sendRestRequest(xmlData, urlPath, method);
+        });
+    }
+
+    // Login action
+    doFormAction('loginForm', 'login', 'POST');
+
+    // Logout action
+    doFormAction('logoutForm', 'logout', 'POST');
+
+    // Add Dikt action
+    doFormAction('add', 'dikt', 'POST');
+
+    // For actions dependent on the ID of the Dikt
+    function urlManipulationAction(formId, method) {
+        const diktId = document.getElementById(formId + 'DiktID').value;
+        let path = `dikt/${diktId}`;
+        doFormAction(formId, path, method);
+    }
+
+    // Set up actions Form:Method
+
+    // Get Dikt action
+    urlManipulationAction('get', 'GET');
+    // Edit Dikt action
+    urlManipulationAction('edit', 'PUT');
+    // Delete Dikt action
+    urlManipulationAction('delete', 'DELETE');
+
+    function constructLoginXML(formData) {
+        let email = formData.get('email');
+        let password = formData.get('password');
+        return `<login><email>${email}</email><password>${password}</password></login>`;
+    }
+
+    function constructEditDiktXML(formData) {
+        let title = formData.get('title');
+        return `<title>${title}</title>`;
+    }
+
+    function constructAddDiktXML(formData) {
+        let title = formData.get('title');
+        return `<title>${title}</title>`;
+    }
+
+
+
+    function sendRestRequest(xmlData, urlPath, method) {
+        const baseUrl = 'http://192.168.10.200:8280/';
+        const options = {
+            method: method,
+            headers: {
+                'Content-Type': 'text/xml; charset=UTF-8'
+            }
+        };
+
+        if (xmlData && method.toUpperCase() !== 'GET') {
+            options.body = xmlData;
+        }
+
+        fetch(baseUrl + urlPath, options)
+            .then(response => {
+
+                if (response.ok) {
+                    // TODO: Get session_id cookie from response and store it in a variable
+                    return response.text();
+                } else {
+                    throw new Error('Network response was not ok.');
+                }
+            })
+            .then(data => {
+                domParser = new DOMParser();
+                xmlDoc = domParser.parseFromString(data, "text/xml");
+
+                alert(xmlDoc.documentElement.textContent);
+            })
+            .catch(error => {
+                console.error('Errormessage:', error);
             });
+    }
 
-            //use the form data to construct the XML request body
-            function constructLoginXML(formData) {
-                let email = formData.get('email');
-                let password = formData.get('password');
-                return `<login><email>${email}</email><password>${password}</password></login>`;
-            }
+    function doInit() {
+        setLoginStatus()
+    }
 
-
-            function sendLoginRequest(xmlData) {
-                fetch('restapi/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'text/xml; charset=UTF-8'
-                    },
-                    body: xmlData
-                })
-                    .then(response => response.text())
-                    .then(data => {
-                        // Handle the response data
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            }
-
-            function doInit() {
-                setLoginStatus()
-            }
-            function setLoginStatus() {
-                var status = "Not logged in"
-                if (getCookie("session_id")) {
-                    status="You are logged in"
-                }
-                document.getElementById('loginstatus').textContent = status
-            }
-        </script>
-    </body>
+    function setLoginStatus() {
+        var status = "Not logged in"
+        if (getCookie("session_id")) {
+            status="You are logged in"
+        }
+        document.getElementById('loginstatus').textContent = status
+    }
+</script>
+</body>
 </html>
 
