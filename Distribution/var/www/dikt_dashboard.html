@@ -5,12 +5,11 @@
     <title>Main form page</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body onload="doInit()" style="text-align: center">
+<body style="text-align: center">
 <div style="display: flex; justify-content: space-between; align-items: center;">
     <h1>Main Form Page</h1>
     <div id="loginstatus" style="text-align: right; margin: 20px;">You are not logged in</div>
 </div>
-
     <!--LOGIN.-->
     <h2>Login box</h2>
     <form id="loginForm">
@@ -83,43 +82,36 @@
         // Add more form-specific XML constructors here
     };
 
-    function doFormAction(formId, urlPath, method) {
+    // Setup event handlers for forms
+    function setupFormHandlers(formId, urlPath, method) {
         document.getElementById(formId).addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent form from submitting to server
             let formData = new FormData(this);
-
+            var path = urlPath;
+            if (formId === 'get' || formId === 'edit' || formId === 'delete') {
+                let diktID = formData.get('diktID');
+                if (diktID) {
+                    path += '/' + diktID;
+                }
+            }
             let xmlData = null;
             if (xmlConstructors[formId]) {
                 xmlData = xmlConstructors[formId](formData);
             }
-            sendRestRequest(xmlData, urlPath, method);
+            sendRestRequest(xmlData, path, method);
         });
     }
 
-    // Login action
-    doFormAction('loginForm', 'login', 'POST');
-
-    // Logout action
-    doFormAction('logoutForm', 'logout', 'POST');
-
-    // Add Dikt action
-    doFormAction('add', 'dikt', 'POST');
-
     // For actions dependent on the ID of the Dikt
-    function urlManipulationAction(formId, method) {
-        const diktId = document.getElementById(formId + 'DiktID').value;
-        let path = `dikt/${diktId}`;
-        doFormAction(formId, path, method);
-    }
 
     // Set up actions Form:Method
 
-    // Get Dikt action
-    urlManipulationAction('get', 'GET');
-    // Edit Dikt action
-    urlManipulationAction('edit', 'PUT');
-    // Delete Dikt action
-    urlManipulationAction('delete', 'DELETE');
+    // // Get Dikt action
+    // urlManipulationAction('get', 'GET');
+    // // Edit Dikt action
+    // urlManipulationAction('edit', 'PUT');
+    // // Delete Dikt action
+    // urlManipulationAction('delete', 'DELETE');
 
     function constructLoginXML(formData) {
         let email = formData.get('email');
@@ -143,6 +135,7 @@
         const baseUrl = 'http://192.168.10.200:8280/';
         const options = {
             method: method,
+            credentials: 'include',
             headers: {
                 'Content-Type': 'text/xml; charset=UTF-8'
             }
@@ -154,18 +147,7 @@
 
         fetch(baseUrl + urlPath, options)
             .then(response => {
-                // Get the Set-Cookie header from the response
-                const cookie = response.headers.get('Set-Cookie');
-
-                // If the Set-Cookie header is present
-                if (cookie) {
-                    // Add the cookie to the document's cookie
-                    document.cookie = cookie;
-
-                }
-                console.log(response.headers.get('Set-Cookie')); // Log the Set-Cookie header
                 if (response.ok) {
-                    // TODO: Get session_id cookie from response and store it in a variable
                     return response.text();
                 } else {
                     throw new Error('Network response was not ok.');
@@ -182,17 +164,42 @@
             });
     }
 
-    function doInit() {
-        setLoginStatus()
-    }
-
-    function setLoginStatus() {
+    // TODO: Create a GET /isloggedin method that returns true or false
+    (function (){
         var status = "Not logged in"
-        if (getCookie("session_id")) {
-            status="You are logged in"
-        }
+        fetch('http://192.168.10.200:8280/isloggedin', {
+            method: 'GET',
+            credentials: 'include'
+        })
+            .then(response => {
+                var user = response.headers.get('user')
+                if (user) {
+                    status = `You are logged in as ${user}`
+                } else {
+                    status = "Not logged in"
+                }
+            })
+            .catch(error => {
+                console.error('Errormessage:', error);
+            });
         document.getElementById('loginstatus').textContent = status
-    }
+
+        // Login action
+        setupFormHandlers('loginForm', 'login', 'POST');
+
+        // Logout action
+        setupFormHandlers('logoutForm', 'logout', 'POST');
+
+        // Add Dikt action
+        setupFormHandlers('add', 'dikt', 'POST');
+
+        setupFormHandlers('get', 'dikt', 'GET');
+
+        setupFormHandlers('edit', 'dikt', 'PUT');
+
+        setupFormHandlers('delete', 'dikt', 'DELETE');
+
+    })();
 </script>
 </body>
 </html>
