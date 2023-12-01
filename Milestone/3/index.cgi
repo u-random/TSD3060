@@ -358,20 +358,16 @@ delete_dikt_from_id() {
     fi
 }
 
-return_user() {
+
+login_status() {
     # Get the session cookie and user email from get_user function
     local user_data=$(get_user)
     local session_cookie=$(echo "$user_data" | awk '{print $1}')
     local email=$(echo "$user_data" | awk '{print $2}')
-
-    # If user is logged in
     if is_logged_in; then
-        write_start "<message>$email</message>"
-        write_end
-    else
-        write_start "<message>No session detected.</message>"
-        write_end
+        echo "User: $email"
     fi
+    echo ""
 }
 
 
@@ -396,9 +392,8 @@ case $METHOD in
         if [[ "$URI" =~ ^/dikt(/([0-9]+))?/?$ ]]; then
             # Run my function to get dikts
             get_dikt
-
         elif [[ "$URI" = "/isloggedin" ]]; then
-            return_user
+            login_status
         else
             write_start "<error>Invalid request. Use /dikt for all dikts or /dikt/{id} for a specific dikt.</error>"
             write_end

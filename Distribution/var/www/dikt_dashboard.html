@@ -11,20 +11,23 @@
     <div id="loginstatus" style="text-align: right; margin: 20px;">You are not logged in</div>
 </div>
     <!--LOGIN.-->
-    <h2>Login box</h2>
-    <form id="loginForm">
-        <label for="email">Username:</label><br>
-        <input type="text" id="email" name="email"><br>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password"><br>
-        <input type="submit" value="Login">
-    </form>
+    <div id="login" >
+        <h2>Login box</h2>
+        <form id="loginForm">
+            <label for="email">Username:</label><br>
+            <input type="text" id="email" name="email"><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password"><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
     <!--Log out-->
-    <hr>
-    <h2>Logout box</h2>
-    <form id="logoutForm">
-        <input type="submit" value="Logout">
-    </form>
+    <div id="logout">
+        <h2>Logout box</h2>
+        <form id="logoutForm">
+            <input type="submit" value="Logout">
+        </form>
+    </div>
 
     <!--Get dikt, one or all.-->
     <hr>
@@ -102,8 +105,6 @@
         });
     }
 
-    // For actions dependent on the ID of the Dikt
-
     // Set up actions Form:Method
 
     // // Get Dikt action
@@ -158,6 +159,7 @@
                 xmlDoc = domParser.parseFromString(data, "text/xml");
 
                 alert(xmlDoc.documentElement.textContent);
+                window.location.reload()
             })
             .catch(error => {
                 console.error('Errormessage:', error);
@@ -166,23 +168,24 @@
 
     // TODO: Create a GET /isloggedin method that returns true or false
     (function (){
-        var status = "Not logged in"
         fetch('http://192.168.10.200:8280/isloggedin', {
             method: 'GET',
             credentials: 'include'
         })
             .then(response => {
+                var status = "Not logged in"
                 var user = response.headers.get('user')
                 if (user) {
                     status = `You are logged in as ${user}`
+                    document.getElementById('login').style.display = 'none'
                 } else {
-                    status = "Not logged in"
+                    document.getElementById('logout').style.display = 'none'
                 }
+                document.getElementById('loginstatus').textContent = status
             })
             .catch(error => {
                 console.error('Errormessage:', error);
             });
-        document.getElementById('loginstatus').textContent = status
 
         // Login action
         setupFormHandlers('loginForm', 'login', 'POST');
