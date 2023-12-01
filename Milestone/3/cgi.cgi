@@ -4,7 +4,6 @@
 
 # HTTP HEADERS
 echo "Content-Type: text/xml"
-echo "Access-Control-Allow-Origin: *"
 
 # MARK: - Parse XML with XPATH
 parse_xml() {
