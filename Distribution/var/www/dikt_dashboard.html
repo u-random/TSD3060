@@ -154,7 +154,16 @@
 
         fetch(baseUrl + urlPath, options)
             .then(response => {
+                // Get the Set-Cookie header from the response
+                const cookie = response.headers.get('Set-Cookie');
 
+                // If the Set-Cookie header is present
+                if (cookie) {
+                    // Add the cookie to the document's cookie
+                    document.cookie = cookie;
+
+                }
+                console.log(response.headers.get('Set-Cookie')); // Log the Set-Cookie header
                 if (response.ok) {
                     // TODO: Get session_id cookie from response and store it in a variable
                     return response.text();

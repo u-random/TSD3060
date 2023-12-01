@@ -20,7 +20,7 @@ SRCS =  Source/main.c \
         Source/File.c
 OBJS = $(SRCS:.c=.o)
 
-M3_OBJS	 = ./Milestone/3/cgi.cgi \
+M3_OBJS	 = ./Milestone/3/index.cgi \
 		   ./Milestone/3/DiktDatabase.db
 		   
 		   

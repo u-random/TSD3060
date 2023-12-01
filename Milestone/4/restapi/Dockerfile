@@ -7,7 +7,7 @@ WORKDIR ./
 RUN apk add sqlite
 
 # COPY over necessary files to cgi-bin
-COPY ./cgi.cgi ./DiktDatabase.db /usr/local/apache2/cgi-bin/
+COPY ./index.cgi ./DiktDatabase.db /usr/local/apache2/cgi-bin/
 
 # Change owner to www-data of Directory and Database
 RUN busybox chown www-data  /usr/local/apache2/cgi-bin \
