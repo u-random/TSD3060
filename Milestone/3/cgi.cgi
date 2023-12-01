@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# This is the CGI script for the REST API. All requests to 192.168.10.200:8280/ is handled by this script.
+
 # HTTP HEADERS
 echo "Content-Type: text/xml"
+echo "Access-Control-Allow-Origin: *"
 
 # MARK: - Parse XML with XPATH
 parse_xml() {
