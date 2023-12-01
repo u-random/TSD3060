@@ -55,7 +55,7 @@
 		4FFDE34F2B134EE5006E10FA /* docker-compose.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "docker-compose.yml"; sourceTree = "<group>"; };
 		4FFDE3512B135079006E10FA /* Dockerfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Dockerfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.yaml; };
 		4FFDE3532B13507A006E10FA /* interface.cgi */ = {isa = PBXFileReference; lastKnownFileType = text; path = interface.cgi; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.sh; };
-		4FFDE3542B13507A006E10FA /* Dockerfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Dockerfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.yaml; };
+		4FFDE3542B13507A006E10FA /* cgi.cgi */ = {isa = PBXFileReference; lastKnownFileType = text; path = cgi.cgi; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.yaml; };
 		B94AA58A2AD42D9100C66BA2 /* unshare.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = unshare.sh; sourceTree = "<group>"; };
 		B95B36922AFE1CE50000BE27 /* cgi.cgi */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = text.script.sh; path = cgi.cgi; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.sh; };
 		B993122C2B1A235A006646B1 /* httpd.conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = httpd.conf; sourceTree = "<group>"; };
@@ -175,7 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				4F2ADEF82B17A3500058B846 /* index.html */,
-				4FFDE3542B13507A006E10FA /* Dockerfile */,
+				4FFDE3542B13507A006E10FA /* cgi.cgi */,
 				4FFDE3532B13507A006E10FA /* interface.cgi */,
 			);
 			path = webinterface;
