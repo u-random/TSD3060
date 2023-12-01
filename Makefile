@@ -20,7 +20,7 @@ SRCS =  Source/main.c \
         Source/File.c
 OBJS = $(SRCS:.c=.o)
 
-M3_OBJS	 = ./Milestone/3/rest.cgi \
+M3_OBJS	 = ./Milestone/3/cgi.cgi \
 		   ./Milestone/3/DiktDatabase.db
 		   
 		   
@@ -91,7 +91,7 @@ clean:
 	rm -f /usr/lib/cgi-bin/*
 # Cleanup Milestone 4 files
 	rm -f Milestone/4/restapi/DiktDatabase.db
-	rm -f Milestone/4/restapi/rest.cgi
+	rm -f Milestone/4/restapi/cgi.cgi
 # Shutdown Milestone 4 docker compose containers and remove image
 	docker-compose -f Milestone/4/docker-compose.yml down --volumes
 	docker rmi cgi-image:base
