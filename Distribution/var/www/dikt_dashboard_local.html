@@ -133,7 +133,7 @@
 
 
     function sendRestRequest(xmlData, urlPath, method) {
-        const baseUrl = 'http://192.168.10.200:8280/';
+        const baseUrl = 'http://localhost:8280/';
         const options = {
             method: method,
             credentials: 'include',
@@ -168,7 +168,7 @@
 
     // TODO: Create a GET /isloggedin method that returns true or false
     (function (){
-        fetch('http://192.168.10.200:8280/isloggedin', {
+        fetch('http://localhost:8280/isloggedin', {
             method: 'GET',
             credentials: 'include'
         })
@@ -206,15 +206,15 @@
 
 </script>
 <script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/serviceWorker.js').then(function(registration) {
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }, function(err) {
-                console.log('ServiceWorker registration failed: ', err);
-            });
-        });
-    }
+    // if ('serviceWorker' in navigator) {
+    //     window.addEventListener('load', function() {
+    //         navigator.serviceWorker.register('/serviceWorker.js').then(function(registration) {
+    //             console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    //         }, function(err) {
+    //             console.log('ServiceWorker registration failed: ', err);
+    //         });
+    //     });
+    // }
 </script>
 </body>
 </html>
