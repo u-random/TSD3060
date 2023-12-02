@@ -41,6 +41,6 @@ VALUES ('Skroenebok 2. Vittighetenes tilbakekomst!', 'demo@demomail.com');
 INSERT INTO Dikt (dikt, epostadresse)
 VALUES ('Skroenebok 3. Atter en vits!', 'demo@demomail.com');
 INSERT INTO Dikt (dikt, epostadresse)
-VALUES ('Skroenebok 6. Den siste latter', 'test@testmail.com');
+VALUES ('Skroenebok 4. Den siste latter', 'test@testmail.com');
 
 COMMIT;
