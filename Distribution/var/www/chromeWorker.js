@@ -15,7 +15,7 @@
 
 // Names of the two caches used in this version of the service worker.
 // Change to v2, etc. when you update any of the local resources, which will
-// in turn trigger the install event again.
+// in turn trigger the installation event again.
 const PRECACHE = 'precache-v1';
 const RUNTIME = 'runtime';
 
@@ -24,12 +24,12 @@ const PRECACHE_URLS = [
     'index.html',
     './', // Alias for index.html
     'style.css',
-    // 'dikt_dashboard_local.html',
+    'dikt_dashboard_local.html',
     'http://localhost:8280/dikt'
 ];
 
 
-// The install handler takes care of precaching the resources we always need.
+// The installation handler takes care of precaching the resources we always need.
 self.addEventListener('install', event => {
     // Browser should wait until the promise is resolved
     event.waitUntil(
