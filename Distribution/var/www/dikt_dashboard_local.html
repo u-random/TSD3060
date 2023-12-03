@@ -11,7 +11,7 @@
     <div id="loginstatus" style="text-align: right; margin: 20px;">You are not logged in</div>
 </div>
     <!--LOGIN.-->
-    <div id="login" >
+    <div id="login" style="display:none">
         <h2>Login box</h2>
         <form id="loginForm">
             <label for="email">Username:</label><br>
@@ -22,7 +22,7 @@
         </form>
     </div>
     <!--Log out-->
-    <div id="logout">
+    <div id="logout" style="display:none">
         <h2>Logout box</h2>
         <form id="logoutForm">
             <input type="submit" value="Logout">
@@ -73,6 +73,14 @@
     <hr>
     <h2>Homepage</h2>
     <a href="index.html">Go home</a>
+
+<!--    <dialog id="dialog">-->
+<!--        <p id="dialogText">-->
+<!--            lorem ipsum ldskjf laskdj flaskdj flaskdj flsakdjf lskdjf slfkdj sldkfj lkjlksdjflsakdjflsdkfjlkjsf-->
+<!--        </p>-->
+<!--        <button id="dialogButton">OK</button>-->
+<!--    </dialog>-->
+<!--<a href="" onclick="document.getElementById('dialog').showModal(); return false;">Show dialog</a>-->
 <!--        <script src="web-application.js"></script>-->
 
 <script type="application/ecmascript">
@@ -105,15 +113,6 @@
         });
     }
 
-    // Set up actions Form:Method
-
-    // // Get Dikt action
-    // urlManipulationAction('get', 'GET');
-    // // Edit Dikt action
-    // urlManipulationAction('edit', 'PUT');
-    // // Delete Dikt action
-    // urlManipulationAction('delete', 'DELETE');
-
     function constructLoginXML(formData) {
         let email = formData.get('email');
         let password = formData.get('password');
@@ -131,9 +130,8 @@
     }
 
 
-
     function sendRestRequest(xmlData, urlPath, method) {
-        const baseUrl = 'http://localhost:8280/';
+        const baseUrl = 'http://192.168.10.142:8280/';
         const options = {
             method: method,
             credentials: 'include',
@@ -159,7 +157,12 @@
                 xmlDoc = domParser.parseFromString(data, "text/xml");
 
                 alert(xmlDoc.documentElement.textContent);
-                window.location.reload()
+                // if path is login or logout, reload page
+                if (urlPath === 'login' || urlPath === 'logout') {
+                    window.location.reload()
+                }
+
+                //window.location.reload()
             })
             .catch(error => {
                 console.error('Errormessage:', error);
@@ -168,7 +171,7 @@
 
     // TODO: Create a GET /isloggedin method that returns true or false
     (function (){
-        fetch('http://localhost:8280/isloggedin', {
+        fetch('http://192.168.10.142:8280/isloggedin', {
             method: 'GET',
             credentials: 'include'
         })
@@ -178,7 +181,9 @@
                 if (user) {
                     status = `You are logged in as ${user}`
                     document.getElementById('login').style.display = 'none'
+                    document.getElementById('logout').style.display = 'block'
                 } else {
+                    document.getElementById('login').style.display = 'block'
                     document.getElementById('logout').style.display = 'none'
                 }
                 document.getElementById('loginstatus').textContent = status
@@ -206,15 +211,60 @@
 
 </script>
 <script>
-    // if ('serviceWorker' in navigator) {
-    //     window.addEventListener('load', function() {
-    //         navigator.serviceWorker.register('/serviceWorker.js').then(function(registration) {
-    //             console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    //         }, function(err) {
-    //             console.log('ServiceWorker registration failed: ', err);
-    //         });
-    //     });
-    // }
+
+    if ('serviceWorker' in navigator) {
+        try {
+                        const registration =  navigator.serviceWorker.register("/chromeWorker.js", {
+                        });
+                        if (registration.installing) {
+                            console.log("Service worker installing");
+                        } else if (registration.waiting) {
+                            console.log("Service worker installed");
+                        } else if (registration.active) {
+                            console.log("Service worker active");
+                        }
+                    } catch (error) {
+                        console.error(`Service worker error: ${error}`);
+                    }
+
+    } else {
+        console.log('Service workers are not supported.');
+    }
+
+    // q: What does the following code do?
+    // a: Registers a service worker for the page
+    // q: I dont get the error message in the console, but the service worker is not registered. Why?
+    // a: The service worker is only registered if the page is served over HTTPS
+
+    // const registerServiceWorker = async () => {
+    //     if ("serviceWorker" in navigator) {
+    //         try {
+    //             const registration = await navigator.serviceWorker.register("/chromeWorker.js", {
+    //                 scope: "/",
+    //             });
+    //             if (registration.installing) {
+    //                 console.log("Service worker installing");
+    //             } else if (registration.waiting) {
+    //                 console.log("Service worker installed");
+    //             } else if (registration.fetch) {
+    //                 console.log("Service worker fetch installed");
+    //             } else if (registration.active) {
+    //                 console.log("Service worker active");
+    //             }
+    //         } catch (error) {
+    //             console.error(`Service worker not supported`);
+    //         }
+    //     }
+    // };
+    //
+    // registerServiceWorker();
+    //    //
+       //  if (navigator.serviceWorker.controller) {
+       //     console.log("Active service worker found, no need to register")
+       // } else {
+       //     //Register the ServiceWorker
+       //
+       // }
 </script>
 </body>
 </html>

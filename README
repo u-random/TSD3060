@@ -33,13 +33,16 @@ stop        To stop the server
 
 
 START the server from TSD3060 directory:
-./TSD3060 -r Distribution -p 55556 -i
+./TSD3060 -r Distribution -p 8080 -i
 
 
 STOP the server from TSD3060 directory: (You only need Distribution directory as an agrument here, because that is used as reference to the pid file, which is needed to stop the server in its daemonized state, as it has no shell connected.)
 ./TSD3060 -r Distribution stop
 
-STOP server can also be done with ctrl+c in the shell if server is not daemonized.
+STOP server can also be done with ctrl+c in the shell if the server is not daemonized.
 
 
 Let it be known that OpenAIs ChatGPT 4 has been used in parts of this solution.
+
+Other credits include the service worker "chromeWorker.js", which are based on Google authored code. See: https://googlechrome.github.io/samples/service-worker/basic/
+I have modified this to allow for cross-origin requests.

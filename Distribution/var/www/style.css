@@ -20,3 +20,11 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+body.dialog-open {
+    filter: blur(5px);
+}
+
+body.dialog-open > dialog {
+    filter: none;
+}
