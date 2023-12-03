@@ -74,31 +74,25 @@
     <h2>Homepage</h2>
     <a href="index.html">Go home</a>
 
-<!--    <dialog id="dialog">-->
-<!--        <p id="dialogText">-->
-<!--            lorem ipsum ldskjf laskdj flaskdj flaskdj flsakdjf lskdjf slfkdj sldkfj lkjlksdjflsakdjflsdkfjlkjsf-->
-<!--        </p>-->
-<!--        <button id="dialogButton">OK</button>-->
-<!--    </dialog>-->
-<!--<a href="" onclick="document.getElementById('dialog').showModal(); return false;">Show dialog</a>-->
-<!--        <script src="web-application.js"></script>-->
-
 <script type="application/ecmascript">
 
-    // Map of form IDs to their respective XML construction functions
+    // Map of form IDs (key) to their respective XML construction functions
     const xmlConstructors = {
         'loginForm': constructLoginXML,
         'edit': constructEditDiktXML,
         'add': constructAddDiktXML
-        // Add more form-specific XML constructors here
     };
 
     // Setup event handlers for forms
     function setupFormHandlers(formId, urlPath, method) {
+        // Add event listener to forms
         document.getElementById(formId).addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form from submitting to server
+            // Prevent form from submitting to server. Bubble up.
+            event.preventDefault();
+            // Get form data
             let formData = new FormData(this);
             var path = urlPath;
+            // If form is get, edit or delete, add diktID to path
             if (formId === 'get' || formId === 'edit' || formId === 'delete') {
                 let diktID = formData.get('diktID');
                 if (diktID) {
@@ -106,9 +100,11 @@
                 }
             }
             let xmlData = null;
+            // If form has a constructor function, call it to get XML data
             if (xmlConstructors[formId]) {
                 xmlData = xmlConstructors[formId](formData);
             }
+            // Send request to REST API server
             sendRestRequest(xmlData, path, method);
         });
     }
@@ -169,8 +165,9 @@
             });
     }
 
-    // TODO: Create a GET /isloggedin method that returns true or false
+    // Function run on page load
     (function (){
+        // Check if user is logged in START
         fetch('http://192.168.10.142:8280/isloggedin', {
             method: 'GET',
             credentials: 'include'
@@ -178,6 +175,7 @@
             .then(response => {
                 var status = "Not logged in"
                 var user = response.headers.get('user')
+                // Toggle login/logout forms based on status
                 if (user) {
                     status = `You are logged in as ${user}`
                     document.getElementById('login').style.display = 'none'
@@ -191,80 +189,39 @@
             .catch(error => {
                 console.error('Errormessage:', error);
             });
+        // Check if user is logged in END
 
-        // Login action
-        setupFormHandlers('loginForm', 'login', 'POST');
-
-        // Logout action
-        setupFormHandlers('logoutForm', 'logout', 'POST');
-
-        // Add Dikt action
-        setupFormHandlers('add', 'dikt', 'POST');
-
-        setupFormHandlers('get', 'dikt', 'GET');
-
-        setupFormHandlers('edit', 'dikt', 'PUT');
-
-        setupFormHandlers('delete', 'dikt', 'DELETE');
-
+        // Handle form submissions
+        setupFormHandlers('loginForm', 'login', 'POST');           // Login action
+        setupFormHandlers('logoutForm', 'logout', 'POST');      // Logout action
+        setupFormHandlers('add', 'dikt', 'POST');                       // Add Dikt action
+        setupFormHandlers('get', 'dikt', 'GET');                          // Get Dikt action
+        setupFormHandlers('edit', 'dikt', 'PUT');                         // Edit Dikt action
+        setupFormHandlers('delete', 'dikt', 'DELETE');               // Delete Dikt action
     })();
-
 </script>
 <script>
-
+    // Register service worker
     if ('serviceWorker' in navigator) {
         try {
-                        const registration =  navigator.serviceWorker.register("/chromeWorker.js", {
-                        });
-                        if (registration.installing) {
-                            console.log("Service worker installing");
-                        } else if (registration.waiting) {
-                            console.log("Service worker installed");
-                        } else if (registration.active) {
-                            console.log("Service worker active");
-                        }
-                    } catch (error) {
-                        console.error(`Service worker error: ${error}`);
-                    }
+            const registration =  navigator.serviceWorker.register("/chromeWorker.js", {
+            });
+            // Registration was successful
+            console.log("Service worker registered");
+            if (registration.installing) {
+                console.log("Service worker installing");
+            } else if (registration.waiting) {
+                console.log("Service worker installed");
+            } else if (registration.active) {
+                console.log("Service worker active");
+            }
+        } catch (error) {
+            console.error(`Service worker error: ${error}`);
+        }
 
     } else {
         console.log('Service workers are not supported.');
     }
-
-    // q: What does the following code do?
-    // a: Registers a service worker for the page
-    // q: I dont get the error message in the console, but the service worker is not registered. Why?
-    // a: The service worker is only registered if the page is served over HTTPS
-
-    // const registerServiceWorker = async () => {
-    //     if ("serviceWorker" in navigator) {
-    //         try {
-    //             const registration = await navigator.serviceWorker.register("/chromeWorker.js", {
-    //                 scope: "/",
-    //             });
-    //             if (registration.installing) {
-    //                 console.log("Service worker installing");
-    //             } else if (registration.waiting) {
-    //                 console.log("Service worker installed");
-    //             } else if (registration.fetch) {
-    //                 console.log("Service worker fetch installed");
-    //             } else if (registration.active) {
-    //                 console.log("Service worker active");
-    //             }
-    //         } catch (error) {
-    //             console.error(`Service worker not supported`);
-    //         }
-    //     }
-    // };
-    //
-    // registerServiceWorker();
-    //    //
-       //  if (navigator.serviceWorker.controller) {
-       //     console.log("Active service worker found, no need to register")
-       // } else {
-       //     //Register the ServiceWorker
-       //
-       // }
 </script>
 </body>
 </html>
