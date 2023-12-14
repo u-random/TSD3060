@@ -41,7 +41,6 @@ static Http_Method _parseMethod(char *method) {
 }
 
 
-
 // MARK: - Public methods
 
 // Return a RFC1123 date string
@@ -53,7 +52,6 @@ char *Http_date(char *result, int size) {
         *result = 0;
     return result;
 }
-
 
 
 // Creates new header and adds it to the end of the headers list in Request_T
@@ -73,7 +71,6 @@ void Http_addHeader(Header_T headers, char *name, char *value) {
     else
         headers = new_header;  // This is the first header in the list. This is processed if list is empty.
 }
-
 
 
 // Read full request and fill out Request_T object
@@ -116,7 +113,7 @@ Request_T Http_getRequest(Request_T request, Response_T response) {
 }
 
 
-
+// FEILMELDING
 // Handle Request: find file, check if it exists and set real path
 Request_T Http_handleRequest(Request_T request) {
     char buffer[PATH_MAX] = {};
@@ -151,6 +148,8 @@ size_t Http_writeResponse(Request_T request) {
     if (!requested_file) {
         Http_sendError(request, SC_INTERNAL_SERVER_ERROR, "Could not open requested file for reading\n");
     }
+    
+    // ASIS
     // MARK: - Spesial exception for asis files.
     // These files are sent as-is and expected to contain a full HTTP response with headers.
     // Otherwise send the file as a proper HTTP response with headers
@@ -182,7 +181,6 @@ size_t Http_writeResponse(Request_T request) {
     fflush(response->output_stream);
     return bytes_written;
 }
-
 
 
 // Send a canned system error message and exit

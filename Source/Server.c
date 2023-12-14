@@ -168,6 +168,7 @@ void Server_init(void) {
     _setSignalHandler(SIGCHLD, _waitforchildren);
 }
 
+
 void Server_start(void) {
     // Read and setup mime types
     Mime_initiate();
@@ -255,6 +256,7 @@ void Server_start(void) {
     close(Server.socket_descriptor);
     exit(0);
 }
+
 
 void Server_stop(void) {
     pid_t pid = File_readPidFile();

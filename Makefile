@@ -29,9 +29,7 @@ CGIBINDIR = /Library/WebServer/CGI-Executables
 
 # Conditional logic for Linux
 ifeq ($(OS),LINUX)
-	CGIBINDIR = /usr/lib/cgi-bin
-	CFLAGS += -DUNSHARE
-    LDFLAGS += -static
+	CGIBINDIR=/usr/lib/cgi-bin
 endif
 
 # Targets
@@ -43,10 +41,12 @@ m1: $(PROG)
 # Run C Web Server interactible by default
 	./TSD3060 -r Distribution -p 8080 -i
 
+m2: CFLAGS += -DUNSHARE
+m2: LDFLAGS += -static
 m2: $(PROG)
-# Run the unshare container
+    # Run the unshare container
 	./Milestone/2/unshare.sh
-	
+
 m3: $(M3_OBJS)
 	chmod 666 ./Milestone/3/DiktDatabase.db
 	cp -a $(M3_OBJS) $(CGIBINDIR)
