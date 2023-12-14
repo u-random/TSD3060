@@ -92,6 +92,7 @@ clean:
 	rm -f Milestone/4/restapi/DiktDatabase.db
 	rm -f Milestone/4/restapi/cgi.cgi
 # If root, Shutdown Milestone 4 docker compose containers and remove image
+# TODO: This fails in linux.
 	@if [ $$UID -eq 0 ]; then \
 		docker-compose -f Milestone/4/docker-compose.yml down --volumes; \
 		docker rmi cgi-image:base; \

@@ -116,13 +116,15 @@ Request_T Http_getRequest(Request_T request, Response_T response) {
 // Milestone 1.2: Skriv feilmelding om fil ikke finnes eller eksisterer
 // Handle Request: find file, check if it exists and set real path
 Request_T Http_handleRequest(Request_T request) {
+    char t[PATH_MAX] = {};
     char buffer[PATH_MAX] = {};
     Response_T response = request->response;
     // 1. Compute file path
     snprintf(buffer, sizeof(buffer), "%s/%s", Server.web_root, request->path);
     // 2. If file is directory, add a welcome file, index.html
     if (File_is_directory(buffer)) {
-        snprintf(buffer, sizeof(buffer), "%s/index.html", File_removeTrailingSlash(buffer));
+        strncpy(t, File_removeTrailingSlash(buffer), sizeof(t));
+        snprintf(buffer, sizeof(buffer), "%s/index.html", t);
     }
     // 3. Does file exist in the file system?
     if (!File_exist(buffer)) {
