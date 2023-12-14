@@ -160,7 +160,7 @@ size_t Http_writeResponse(Request_T request) {
         fprintf(response->output_stream, "Server: %s\r\n", Program_Name);
         // Tell the browser what type of file it recieves
         fprintf(response->output_stream, "Content-Type: %s\r\n", response->mime_type);
-        fprintf(response->output_stream, "Content-Length: %lld\r\n", File_size(request->file_path));
+        fprintf(response->output_stream, "Content-Length: %lld\r\n", (long long)File_size(request->file_path));
         fprintf(response->output_stream, "Connection: close\r\n");
         fprintf(response->output_stream, "\r\n");
     }

@@ -26,6 +26,12 @@ Server_T Server = {};
 
 // Change user to the systems www user. If failed, exit
 static void _change_user(void){
+#ifndef UNSHARE
+    // If we run in a chroot/unshare environment (on Linux)
+    // we link the whole server static. The function getpwnam
+    // is part of the NSS dynamic module in libc and cannot be
+    // easily static linked in this environment. So the change
+    // uid/guid functionality is maintained outside from a script
 #ifdef DARWIN
     char *user = "www";
 #else // Assume Linux
@@ -46,6 +52,7 @@ static void _change_user(void){
     if (setuid(uid) != 0) {
         Config_error(Server.log, "setuid failed for '%s'", user);
     }
+#endif
 }
 
 
@@ -196,14 +203,8 @@ void Server_start(void) {
             // Need to modify web_root to '/'
             strncpy(Server.web_root, "/", sizeof("/"));
         }
-#ifndef UNSHARE
-        // If we run in a chroot/unshare environment (on Linux)
-        // we link the whole server static. The function getpwnam
-        // is part of the NSS dynamic module in libc and cannot be
-        // easily static linked in this environment. So the change
-        // uid/guid functionality is maintained outside from a script
+        // Change the user to www user to drop privileges, if any
         _change_user();
-#endif
     } else {
         Config_log(Server.log, "Warning: Cannot use chroot as regular user \n");
     }
