@@ -83,6 +83,11 @@
         'add': constructAddDiktXML
     };
 
+    // IP address of REST API server
+    const APIUrl = 'http://192.168.10.142:8280/'
+    // Use this ip for school test
+    //const APIUrl = 'http://172.29.86.34:8280/'
+
     // Setup event handlers for forms
     function setupFormHandlers(formId, urlPath, method) {
         // Add event listener to forms
@@ -127,7 +132,7 @@
 
 
     function sendRestRequest(xmlData, urlPath, method) {
-        const baseUrl = 'http://192.168.10.142:8280/';
+        const baseUrl = APIUrl
         const options = {
             method: method,
             credentials: 'include',
@@ -168,7 +173,7 @@
     // Function run on page load
     (function (){
         // Check if user is logged in START
-        fetch('http://192.168.10.142:8280/isloggedin', {
+        fetch(APIUrl + 'isloggedin', {
             method: 'GET',
             credentials: 'include'
         })
