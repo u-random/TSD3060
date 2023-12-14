@@ -3,6 +3,7 @@
 # This is the shared Dockerfile, to be used as an
 # Image for both the REST API and WEB INTERFACE
 
+# Milestone 4.3: Basert på det offisielle Docker-bildet httpd:alpine
 FROM httpd:alpine
 
 # INSTALL UPDATE CURL, BASH, XMLLINT, Utilities
@@ -13,6 +14,7 @@ RUN apk update; \
             util-linux
 
 # REPLACE standard conf with my own httpd.conf
+# Milestone 4.4: Satt opp slik at web-tjeneren Apache støtter CGI-standarden
 COPY httpd.conf conf/httpd.conf
 
 EXPOSE 80

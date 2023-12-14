@@ -22,8 +22,7 @@ OBJS = $(SRCS:.c=.o)
 
 M3_OBJS	 = ./Milestone/3/index.cgi \
 		   ./Milestone/3/DiktDatabase.db
-		   
-		   
+		  
 # For macOS
 CGIBINDIR = /Library/WebServer/CGI-Executables
 
@@ -92,6 +91,8 @@ clean:
 # Cleanup Milestone 4 files
 	rm -f Milestone/4/restapi/DiktDatabase.db
 	rm -f Milestone/4/restapi/cgi.cgi
-# Shutdown Milestone 4 docker compose containers and remove image
-	docker-compose -f Milestone/4/docker-compose.yml down --volumes
-	docker rmi cgi-image:base
+# If root, Shutdown Milestone 4 docker compose containers and remove image
+	@if [ $$UID -eq 0 ]; then \
+		docker-compose -f Milestone/4/docker-compose.yml down --volumes; \
+		docker rmi cgi-image:base; \
+	fi

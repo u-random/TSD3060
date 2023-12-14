@@ -8,7 +8,7 @@
 #include "File.h"
 
 
-// TODO: Make comments
+
 
 bool File_exist(const char *path) {
     if (path) {
@@ -18,7 +18,7 @@ bool File_exist(const char *path) {
     return false;
 }
 
-// TODO: more documentation here
+
 bool File_is_directory(const char *path) {
     if (path) {
         struct stat buffer;

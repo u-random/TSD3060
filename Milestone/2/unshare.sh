@@ -7,8 +7,8 @@
 # which is expected to be in the path $PWD/Distribution
 
 function error() {
-        msg=${1?:"need a message"}
-        >&2 echo "Error: $msg"
+        message=${1?:"need a message"}
+        >&2 echo "Error: $message"
         exit 1
 }
 
@@ -23,6 +23,7 @@ rm -rf $ROOT_FILE_SYSTEM
 # Check if the root file system directory exists; if not, create it
 if [ ! -d $ROOT_FILE_SYSTEM ]; then
     
+    # Milestone 2.5: Filtreet i containeren er speilet av Distribution
     # Makes root file system from distribution template
     cp -a $TEMPLATE_FILE_SYSTEM $ROOT_FILE_SYSTEM || error "Make root file system failed"
     
@@ -32,6 +33,7 @@ if [ ! -d $ROOT_FILE_SYSTEM ]; then
     # Navigate to the bin directory inside the root file system
     cd $ROOT_FILE_SYSTEM/bin/ || error "Could not cd to bin"
     
+    # Milestone 2.4: Kopier busybox-binære til kontainerroot/bin/
     # Copy busybox (a multi-call binary combining many Unix utilities)
     # from the host system to the new root file system
     cp /bin/busybox . || error "Could not copy busybox"
@@ -42,6 +44,8 @@ if [ ! -d $ROOT_FILE_SYSTEM ]; then
     done
 
 fi
+
+# Milestone 2.3: Konteineren opprettes
 
 # Use unshare to set up the contaier with various isolated namespaces
 # Then execute init.sh located in the Scripts/Container directory relative to

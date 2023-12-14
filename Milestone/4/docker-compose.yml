@@ -1,5 +1,6 @@
 version: '3.8'
 
+# Milestone 4.6: Funksjonell docker-compose-fil for start og stopp av konteiner
 services:
   webinterface:
     build:
@@ -8,9 +9,11 @@ services:
     ports:
       - "8180:80"
     deploy:
+# Milestone 4.1: Prosessorbruken til containeren skal begrenses med cgroups
       resources:
         limits:
           cpus: '0.5'
+# Milestone 4.2: Sikkerheten skal økes ved hjelp av capabilities
     cap_drop:
       - ALL
     cap_add:

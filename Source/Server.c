@@ -56,17 +56,19 @@ static void _change_user(void){
 }
 
 
+// Milestone 1.4: Sett opp Demonisert
 // Daemonize server process - loose controlling terminal and fork twice to avoid creating zombies
 static void _daemonize(void) {
     pid_t pid;
     umask(0);
     int i;
-    int descriptors = getdtablesize(); // Get process file descriptor size
+    int descriptors = getdtablesize(); // Get number of file descriptors for the process
     if ((pid = fork ()) < 0) {
         Config_error(Server.log, "Cannot fork a new Server process\n");
     } else if (pid != 0)
         // Using _exit in case we have atexit handlers, we don't want them called here
         _exit(0);
+    // Milestone 1.4: Ingen kontrollterminal
     setsid(); // loose controlling terminal by becoming a session leader
     signal(SIGHUP, SIG_IGN); // Ensure future opens won't allocate controlling TTYs
     if ((pid = fork ()) < 0) {
@@ -89,13 +91,14 @@ static void _daemonize(void) {
             redirect_error = true;
         }
     }
-    // MARK: - FIXED. Open Server.log again here after deamonize, as daemonize closes all descriptors
+    // MARK: - Open Server.log again here after deamonize, as daemonize closes all descriptors
     Config_openlog();
     // Failure to redirect stdio file descriptors is an error
     if (redirect_error) {
         Config_error(Server.log, "Error: Could not open standard descriptors to /dev/null\n");
     }
-    // MARK: - Set standard err to logfile.
+    // Set standard err to logfile.
+    // Milestone 1.4: Koble fil til stderr
     stderr = Server.log;
     // Note: If it is required to map stderr fileno to Server.log fileno, use fileno(Server.log) and dup etc
 }
@@ -150,6 +153,7 @@ static void _setupServerSocket(void) {
         .sin_addr.s_addr = htonl(INADDR_ANY)
     };
     
+    // Milestone 1.5: Programmet skal binde seg til porten kun en gang
     // Connecting socket and local address
     if ( 0 == bind(Server.socket_descriptor, (struct sockaddr *) &local_address, sizeof(local_address)) )
         Config_log(Server.log, "Process %d is connected to port %d.\n", getpid(), Server.bind_port);
@@ -180,6 +184,7 @@ void Server_start(void) {
     // Read and setup mime types
     Mime_initiate();
         
+    // Milestone 1.4: Kjør demonisert
     if (Server.is_daemon)
         _daemonize();
     
@@ -196,6 +201,7 @@ void Server_start(void) {
 
     // Use chroot(2) and change root directory to Server.web_root
     if (getuid() == 0) {
+        // Milestone 1.6: Endre serverens root til web-root
         if (chroot(Server.web_root) < 0) {
             Config_error(Server.log, "Cannot chroot to '%s'\n", Server.web_root);
         } else {
@@ -222,6 +228,7 @@ void Server_start(void) {
             Config_debug(Server.log, "Accepted client connection (%d)\n", client_socket);
         }
         
+        // Milestone 1.3: Hver forespørsel skal bli behandlet i egen prosess
         pid_t pid = fork();
         
         if (pid == 0) { // Child Process
@@ -237,7 +244,7 @@ void Server_start(void) {
             Config_debug(Server.log, "Start Handling request in child\n");
             // Main process pipeline; Read request and write Response
             off_t bytes_written = Http_writeResponse(Http_handleRequest(Http_getRequest(&request, &response)));
-            // TODO: Write access Logfile
+            // Write access Logfile
             Config_log(Server.log, "%s - %i - %lld\n", request.file_path, response.http_status, (long long)bytes_written);
             // Closing socket for read and write
             shutdown(client_socket, SHUT_RDWR);

@@ -54,6 +54,7 @@ Action_T ArgumentParser_handleArguments(int argc, char **argv) {
                         exit(1);
                     }
                     // Sets web root to buffer
+                    // Milestone 1.6: Sett opp web-root
                     Server.web_root = strdup(buffer);
                     
                     // MARK: - Test and Setup pid_directory

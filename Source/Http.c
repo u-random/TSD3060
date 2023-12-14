@@ -113,26 +113,26 @@ Request_T Http_getRequest(Request_T request, Response_T response) {
 }
 
 
-// FEILMELDING
+// Milestone 1.2: Skriv feilmelding om fil ikke finnes eller eksisterer
 // Handle Request: find file, check if it exists and set real path
 Request_T Http_handleRequest(Request_T request) {
     char buffer[PATH_MAX] = {};
     Response_T response = request->response;
-    // 1. Does file exist in the file system?
+    // 1. Compute file path
     snprintf(buffer, sizeof(buffer), "%s/%s", Server.web_root, request->path);
-    // If file is directory, add a welcome file, index.html
+    // 2. If file is directory, add a welcome file, index.html
     if (File_is_directory(buffer)) {
         snprintf(buffer, sizeof(buffer), "%s/index.html", File_removeTrailingSlash(buffer));
     }
+    // 3. Does file exist in the file system?
     if (!File_exist(buffer)) {
         Config_debug(Server.log, "Requested file '%s' not found\n", buffer);
         Http_sendError(request, SC_NOT_FOUND, "Requested file not found\n");
     }
     request->file_path = strdup(buffer);
-    // 2. Does it have a known mime type? Otherwise send error unsupported media type
+    // 4. Does it have a known mime type? If not, send error unsupported media type
+    // Milestone 2.1: Utvid tjeneren til å støtte alle filer i mime type
     response->mime_type = File_mimeType(request->file_path);
-    
-    // MARK: - Fixed unsupported file type error.
     if (!response->mime_type) {
         Http_sendError(request, SC_UNSUPPORTED_MEDIA_TYPE, "Requested file type not supported\n");
     }
@@ -141,7 +141,7 @@ Request_T Http_handleRequest(Request_T request) {
 
 
 // Write response (write headers, write file)
-size_t Http_writeResponse(Request_T request) {
+off_t Http_writeResponse(Request_T request) {
     char buffer[1500]; // One TCP frame
     Response_T response = request->response;
     FILE *requested_file = fopen(request->file_path, "r");
@@ -149,11 +149,12 @@ size_t Http_writeResponse(Request_T request) {
         Http_sendError(request, SC_INTERNAL_SERVER_ERROR, "Could not open requested file for reading\n");
     }
     
-    // ASIS
+    // Milestone 1.1: Server Asis filer
     // MARK: - Spesial exception for asis files.
     // These files are sent as-is and expected to contain a full HTTP response with headers.
     // Otherwise send the file as a proper HTTP response with headers
     if (!File_is_asis(request->file_path)) {
+      // Milestone 2.1: Utvid tjeneren til å støtte alle filer i mime type
         // Write the response headers to the output stream/browser
         fprintf(response->output_stream, "%s %d %s\r\n", request->http_version, response->http_status, HttpStatus_description(response->http_status));
         fprintf(response->output_stream, "Date: %s\r\n", _date((char[32]){}, 32));

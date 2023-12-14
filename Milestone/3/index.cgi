@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # This is the CGI script for the REST API. All requests to 192.168.10.200:8280/ is handled by this script.
+# Milestone 3.1: Rest API til sqlite databasen
 
 # HTTP HEADERS
 echo "Content-Type: text/xml"
@@ -59,6 +60,7 @@ write_start() {
     # Blank line to separate from header
     echo ""
     
+    # Milestone 3.7: Referere til DTD
     # Echo XML schema reference
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
     echo "<!DOCTYPE root SYSTEM \"$(detect_environment)\">"
@@ -82,6 +84,7 @@ write_end() {
 }
 
 
+# Milestone 3.2: Logge inn
 # MARK: - Log In
 # Summary: Check input credentials and create a session
 do_login() {
@@ -150,6 +153,7 @@ is_logged_in() {
 }
 
 
+# Milestone 3.3: Logge ut
 # MARK: - Log Out
 do_logout() {
     # Get the session cookie and user email from get_user function
@@ -199,6 +203,7 @@ get_user() {
 }
 
 
+# Milestone 3.4: Hente ut ett eller alle dikt
 # MARK: - Get Dikts
 # Summary: Get a dikt from ID, if any, and return proper XML
 get_dikt() {
@@ -241,6 +246,7 @@ write_dikt() {
 }
 
 
+# Milestone 3.5: Legge til nytt dikt
 # MARK: - ADD A NEW DIKT
 add_dikt() {
     # Get session id from cookie environment variable
@@ -305,7 +311,7 @@ edit_dikt_from_id() {
 }
 
 
-# TODO: - Cleanup
+# Milestone 3.6: Slette eget dikt
 # MARK: - DELETE A DIKT
 # Summary: This function is made to delete single dikts based on id
 delete_dikt_from_id() {
@@ -387,6 +393,7 @@ test_xmllint
 case $METHOD in
     # MARK: - HTTP GET request. Matches SQL: SELECT
     GET)
+        # Milestone 3.4: Hente ut ett eller alle dikt
         # REGEX for URI to match: /dikt, /dikt/ and /dikt/{id} where {id} is a number.
         # I later use Bash Rematch to get the ID, if any
         if [[ "$URI" =~ ^/dikt(/([0-9]+))?/?$ ]]; then
@@ -405,16 +412,19 @@ case $METHOD in
     POST)
         read -r HTTP_BODY
         case "$URI" in
+            # Milestone 3.2: Logge inn
             /login)
                 # Run my log in function
                 do_login
                 ;;
 
+            # Milestone 3.3: Logge ut
             /logout)
                 # Run my log out function
                 do_logout
                 ;;
     
+            # Milestone 3.5: Legge til nytt dikt
             /dikt)
                 # Run my add new dikt function
                 add_dikt
@@ -438,6 +448,7 @@ case $METHOD in
 
 
     # MARK: - HTTP DELETE request. Matches SQL: DELETE
+    # Milestone 3.6: Slette eget dikt
     DELETE)
         read -r HTTP_BODY
         # Should match only when {id} is a number

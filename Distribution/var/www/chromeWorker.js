@@ -19,6 +19,7 @@
 const PRECACHE = 'precache-v1';
 const RUNTIME = 'runtime';
 
+// Milestone 5.3: Service worker skal cache alle filene den trenger
 // A list of local resources we always want to be cached.
 const PRECACHE_URLS = [
     'index.html',
@@ -97,6 +98,7 @@ self.addEventListener('fetch', event => {
                 return fetch(event.request).then(networkResponse => {
                     // Cloning the response before caching it, as the response is a stream
                     // and its body can only be consumed once.
+                    // Milestone 5.4: Cache alle dikt i Databasen
                     cache.put(event.request, networkResponse.clone()).catch(err => {
                         // Handle error during cache storage
                         console.error('Cache put failed: ', err);
@@ -112,7 +114,7 @@ self.addEventListener('fetch', event => {
                             console.log('Serving from cache');
                             return cachedResponse;
                         }
-                        // TODO: If no cache is available, return a default response or response with an error
+                        
                     });
                 });
             })
@@ -142,7 +144,7 @@ self.addEventListener('fetch', event => {
                             console.log('Serving CORS from cache');
                             return cachedResponse;
                         }
-                        // TODO: If no cache is available, return a default response or response with an error
+                        
                     });
                 });
             })

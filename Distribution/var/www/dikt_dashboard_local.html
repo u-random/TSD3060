@@ -145,6 +145,7 @@
             options.body = xmlData;
         }
 
+        // Milestone 5.1: Kommunisere med diktdatabasens REST-API ved hjelp av Fetch
         fetch(baseUrl + urlPath, options)
             .then(response => {
                 if (response.ok) {
@@ -196,6 +197,7 @@
             });
         // Check if user is logged in END
 
+        // Milestone 5.2: Samme funksjonalitet som CGI interface
         // Handle form submissions
         setupFormHandlers('loginForm', 'login', 'POST');           // Login action
         setupFormHandlers('logoutForm', 'logout', 'POST');      // Logout action

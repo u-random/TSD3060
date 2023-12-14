@@ -1,16 +1,12 @@
 #!/bin/bash
 
-# Global Varables
-#cookie_file=""
-
-
 # MARK: - LOGIN OK
 do_login() {
     # Use awk to parse the email and password values
     local email_encoded=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "email") {print $(i+1); break}}')
     local password_encoded=$(echo "$HTTP_BODY" | awk -F'[=&]' '{for(i=1; i<=NF; i++) if ($i == "password") {print $(i+1); break}}')
     
-    #TODO URL decode email and password
+    # URL decode email and password
     local email=$(echo "$email_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
     local password=$(echo "$password_encoded" | sed 's/%/\\x/g' | xargs -0 printf "%b")
 
@@ -97,6 +93,7 @@ METHOD=$(echo "$REQUEST_METHOD")
 URI=$(echo "$REQUEST_URI" | awk -F'?' '{print $1}')
 
 
+# Milestone 4.7: Kommuniserer med Diktdatabasens via REST-API-et
 # MARK: - CASE statement OK
 read -r HTTP_BODY
 case $METHOD in
@@ -106,7 +103,8 @@ case $METHOD in
                 # Run my log out function
                 do_logout
                 ;;
-                
+            
+            # Milestone 4.8: Bruker HTML skjema til å hente data fra bruker
             /index)
                 echo "Content-Type: text/html"
                 echo "Pragma: no-cache"

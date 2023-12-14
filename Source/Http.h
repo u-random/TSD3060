@@ -54,7 +54,7 @@ char *Http_date(char *result, int size);
 void Http_addHeader(Header_T headers, char *name, char *value);
 Request_T Http_getRequest(Request_T request, Response_T response);
 Request_T Http_handleRequest(Request_T request);
-size_t Http_writeResponse(Request_T request);
+off_t Http_writeResponse(Request_T request);
 void Http_sendError(Request_T request, Http_Status status_code, const char *error);
 const char *HttpStatus_description(Http_Status code);
 

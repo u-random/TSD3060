@@ -1,5 +1,6 @@
 # WEB INTERFACE Dockerfile
 
+# Milestone 4.5: Containernes Dockerfiler skal være basert på egendefinert bilde
 FROM cgi-image:base
 WORKDIR ./
 
