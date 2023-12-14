@@ -11,7 +11,7 @@
  limitations under the License.
  */
 
-// Modified by me to allow for cross-origin requests
+// Modified by me to allow for cross-origin requests and to do network first caching
 
 // Names of the two caches used in this version of the service worker.
 // Change to v2, etc. when you update any of the local resources, which will
